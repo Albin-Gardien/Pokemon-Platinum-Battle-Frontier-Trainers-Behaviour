@@ -464,15 +464,17 @@ function buildPokemonDetailCard(mon, stats, ivTier) {
     const info = document.createElement("div");
     info.className = "pokemon-detail-info";
 
-    const itemSpriteUrl = getItemSpriteUrl(mon.item);
-
-    info.append(
+    const infoLines = [
         buildTypeInfoLine(mon.types),
         buildAbilitiesInfoLine(mon.abilities),
-        buildNatureInfoLine(mon.nature),
-        buildItemInfoLine(mon.item, itemSpriteUrl),
-        buildSimpleInfoLine(translate("columns", "iv"), ivTier)
-    );
+        buildNatureInfoLine(mon.nature)
+    ];
+    if (!isArcadeMode()) {
+        infoLines.push(buildItemInfoLine(mon.item, getItemSpriteUrl(mon.item)));
+    }
+    infoLines.push(buildSimpleInfoLine(translate("columns", "iv"), ivTier));
+
+    info.append(...infoLines);
 
     const statsBlock = buildStatsBlock(stats);
     const movesBlock = buildMovesBlock(mon);

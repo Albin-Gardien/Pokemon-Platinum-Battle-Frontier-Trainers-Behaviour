@@ -31,6 +31,7 @@ function refreshBattleExclusionInterface() {
 
     dom.excludedPokemonLabel.textContent = translate("ui", "excludedPokemonLabel");
     dom.excludedItemLabel.textContent = translate("ui", "excludedItemLabel");
+    dom.excludedItemField.hidden = isArcadeMode();
 
     renderBattleExclusionTags();
     updateBattleExclusionInputsState();

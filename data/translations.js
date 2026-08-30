@@ -13,6 +13,15 @@ window.appTranslations = {
       fr: "-- Sélectionnez un dresseur --",
       en: "-- Select a trainer --"
     },
+    facilityModeLabel: { fr: "Mode", en: "Mode" },
+    facilityNormal: { fr: "Normal", en: "Normal" },
+    facilityFactory: { fr: "Usine", en: "Factory" },
+    facilityArcade: { fr: "Arcade", en: "Arcade" },
+    facilityHall: { fr: "Scène", en: "Hall" },
+    battleFormatLabel: { fr: "Combat", en: "Battle" },
+    battleFormatSingles: { fr: "Solo", en: "Single" },
+    battleFormatDoubles: { fr: "Duo", en: "Double" },
+    battleFormatMulti: { fr: "Multi", en: "Multi" },
     opponentPokemonSelectPlaceholder: {
       fr: "-- Sélectionnez le Pokémon affronté --",
       en: "-- Select the Pokémon you are battling --"

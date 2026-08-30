@@ -89,7 +89,7 @@ function getPokemonRowCells(mon, trainer, stats) {
       value: translateEntity("natures", mon.nature),
       className: getNatureBoostedStat(mon.nature) ? `nature-boost-${getNatureBoostedStat(mon.nature)}` : ""
     },
-    translateEntity("items", mon.item),
+    isArcadeMode() ? "—" : translateEntity("items", mon.item),
 
     { value: stats.hp, className: getEvClass(mon.evs.hp ?? 0), statKey: "hp" },
     { value: stats.atk, className: getEvClass(mon.evs.atk ?? 0), statKey: "atk" },
@@ -149,7 +149,7 @@ function applyCellPresentation(td, cellData, index, mon) {
         applyTypeColor(td, mon.types[1], "table");
     }
 
-    if (index === 7) {
+    if (index === 7 && !isArcadeMode()) {
         setSpriteTextCell(td, getItemSpriteUrl(mon.item), translateEntity("items", mon.item), translateEntity("items", mon.item), "item");
     }
 
@@ -202,6 +202,7 @@ function renderTrainerTeam(trainer) {
   trainerTitle.textContent = getName(trainer);
   trainerInfo.textContent = `${translate("ui", "iv")} : ${trainer.ivTier} — ${translate("ui", "pool")} : ${trainer.poolId.toUpperCase()}`;
   pokemonTable.replaceChildren();
+  pokemonTable.classList.toggle("arcade-mode", isArcadeMode());
 
   if (!team) {
     const row = pokemonTable.insertRow();

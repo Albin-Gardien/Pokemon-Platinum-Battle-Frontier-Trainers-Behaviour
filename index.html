@@ -26,34 +26,85 @@
         <form id="trainer-form" class="flex-column">
             <label for="trainer-text-input" id="trainer-label" class="trainer-label"></label>
 
-            <div class="flex-row">
-                <div class="autocomplete-field">
-                    <input
-                        type="text"
-                        id="trainer-text-input"
-                        autocomplete="off"
-                    />
-                    <div id="trainer-suggestions" class="suggestions-menu" hidden></div>
+            <div class="trainer-controls-row">
+                <div class="trainer-main-controls">
+                    <div class="autocomplete-field">
+                        <input
+                            type="text"
+                            id="trainer-text-input"
+                            autocomplete="off"
+                        />
+                        <div id="trainer-suggestions" class="suggestions-menu" hidden></div>
+                    </div>
+
+                    <select id="trainer-select"></select>
+
+                    <label for="level-input" class="level-field">
+                        <span id="level-label"></span>
+                        <input
+                            type="number"
+                            id="level-input"
+                            class="level-input"
+                            value="50"
+                            min="1"
+                            max="100"
+                        />
+                    </label>
+
+                    <div class="series-filter-dropdown">
+                        <button type="button" id="series-filter-button"></button>
+
+                        <div id="series-filter-menu" class="series-filter-menu" hidden></div>
+                    </div>
                 </div>
 
-                <select id="trainer-select"></select>
+                <div class="battle-mode-selector">
+                    <fieldset class="battle-mode-group">
+                        <legend id="facility-mode-label"></legend>
 
-                <label for="level-input" class="level-field">
-                    <span id="level-label"></span>
-                    <input
-                        type="number"
-                        id="level-input"
-                        class="level-input"
-                        value="50"
-                        min="1"
-                        max="100"
-                    />
-                </label>
+                        <div class="facility-mode-grid">
+                            <label class="battle-mode-option">
+                                <input type="radio" name="facility-mode" value="normal" checked />
+                                <span id="facility-normal-label"></span>
+                            </label>
 
-                <div class="series-filter-dropdown">
-                    <button type="button" id="series-filter-button"></button>
+                            <label class="battle-mode-option">
+                                <input type="radio" name="facility-mode" value="arcade" />
+                                <span id="facility-arcade-label"></span>
+                            </label>
 
-                    <div id="series-filter-menu" class="series-filter-menu" hidden></div>
+                            <label class="battle-mode-option is-future">
+                                <input type="radio" name="facility-mode" value="factory" disabled />
+                                <span id="facility-factory-label"></span>
+                            </label>
+
+                            <label class="battle-mode-option is-future">
+                                <input type="radio" name="facility-mode" value="hall" disabled />
+                                <span id="facility-hall-label"></span>
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="battle-mode-group">
+                        <legend id="battle-format-label"></legend>
+
+                        <div class="battle-format-list">
+                            <label class="battle-mode-option">
+                                <input type="radio" name="battle-format" value="singles" checked />
+                                <span id="battle-format-singles-label"></span>
+                            </label>
+
+                            <label class="battle-mode-option is-future">
+                                <input type="radio" name="battle-format" value="doubles" disabled />
+                                <span id="battle-format-doubles-label"></span>
+                            </label>
+
+                            <label class="battle-mode-option is-future">
+                                <input type="radio" name="battle-format" value="multi" disabled />
+                                <span id="battle-format-multi-label"></span>
+                            </label>
+                        </div>
+                    </fieldset>
                 </div>
             </div>
         </form>
@@ -90,7 +141,7 @@
                 <div id="excluded-pokemon-suggestions" class="suggestions-menu" hidden></div>
             </div>
 
-            <div class="battle-exclusion-field">
+            <div id="excluded-item-field" class="battle-exclusion-field">
                 <label id="excluded-item-label" for="excluded-item-input"></label>
                 <div class="multi-select-field">
                     <div id="excluded-item-tags" class="multi-select-tags"></div>

@@ -7,6 +7,8 @@
 let currentLang = "fr";
 let currentTrainer = null;
 let selectedSeriesId = "all";
+let selectedFacilityMode = "normal";
+let selectedBattleFormat = "singles";
 
 // -----------------------------------------------------------------------------
 // Text and translation helpers
@@ -50,6 +52,10 @@ function getOtherLang() {
     return currentLang === "fr" ? "en" : "fr";
 }
 
+function isArcadeMode() {
+    return selectedFacilityMode === "arcade";
+}
+
 // -----------------------------------------------------------------------------
 // Language handling
 // -----------------------------------------------------------------------------
@@ -66,6 +72,17 @@ function applyLanguage() {
     dom.trainerLabel.textContent = translate("ui", "trainerLabel");
     dom.trainerTextInput.placeholder = translate("ui", "trainerPlaceholder");
     dom.languageToggle.textContent = currentLang === "fr" ? "EN" : "FR";
+
+    dom.facilityModeLabel.textContent = translate("ui", "facilityModeLabel");
+    dom.facilityNormalLabel.textContent = translate("ui", "facilityNormal");
+    dom.facilityFactoryLabel.textContent = translate("ui", "facilityFactory");
+    dom.facilityArcadeLabel.textContent = translate("ui", "facilityArcade");
+    dom.facilityHallLabel.textContent = translate("ui", "facilityHall");
+
+    dom.battleFormatLabel.textContent = translate("ui", "battleFormatLabel");
+    dom.battleFormatSinglesLabel.textContent = translate("ui", "battleFormatSingles");
+    dom.battleFormatDoublesLabel.textContent = translate("ui", "battleFormatDoubles");
+    dom.battleFormatMultiLabel.textContent = translate("ui", "battleFormatMulti");
 
     const selectedTrainerId = dom.trainerSelect.value;
 
@@ -102,6 +119,45 @@ function toggleLanguage() {
     applyLanguage();
 }
 
+function refreshCurrentBattleView() {
+    if (!currentTrainer) {
+        return;
+    }
+
+    const selectedOpponentSpeciesId = currentOpponentSpeciesId;
+    renderTrainerTeam(currentTrainer);
+    if (!selectedOpponentSpeciesId) {
+        return;
+    }
+
+    const selectedMon = findOpponentPokemonBySpeciesId(currentTrainer, selectedOpponentSpeciesId);
+
+    if (!selectedMon) {
+        currentOpponentSpeciesId = null;
+        possibleSetIds.clear();
+        return;
+    }
+
+    dom.opponentPokemonSelect.value = selectedOpponentSpeciesId;
+    dom.opponentPokemonInput.value = getName(selectedMon);
+    renderSelectedPokemonDetails(currentTrainer, selectedOpponentSpeciesId);
+}
+
+function handleFacilityModeChange(event) {
+    selectedFacilityMode = event.target.value;
+
+    if (isArcadeMode()) {
+        battleExclusions.itemIds.clear();
+        clearExcludedItemInput();
+    }
+
+    refreshCurrentBattleView();
+}
+
+function handleBattleFormatChange(event) {
+    selectedBattleFormat = event.target.value;
+}
+
 // -----------------------------------------------------------------------------
 // App initialization
 // -----------------------------------------------------------------------------
@@ -113,6 +169,8 @@ function initApp() {
     bindTextToTrainerSelect();
 
     dom.languageToggle.addEventListener("click", toggleLanguage);
+    dom.facilityModeInputs.forEach((input) => { input.addEventListener("change", handleFacilityModeChange); });
+    dom.battleFormatInputs.forEach((input) => { input.addEventListener("change", handleBattleFormatChange); });
 
     dom.seriesFilterButton.addEventListener("click", (event) => {
         event.stopPropagation();

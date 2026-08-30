@@ -187,6 +187,19 @@ const dom = {
     seriesFilterButton: document.getElementById("series-filter-button"),
     seriesFilterMenu: document.getElementById("series-filter-menu"),
 
+    facilityModeLabel: document.getElementById("facility-mode-label"),
+    facilityNormalLabel: document.getElementById("facility-normal-label"),
+    facilityFactoryLabel: document.getElementById("facility-factory-label"),
+    facilityArcadeLabel: document.getElementById("facility-arcade-label"),
+    facilityHallLabel: document.getElementById("facility-hall-label"),
+    facilityModeInputs: document.querySelectorAll('input[name="facility-mode"]'),
+
+    battleFormatLabel: document.getElementById("battle-format-label"),
+    battleFormatSinglesLabel: document.getElementById("battle-format-singles-label"),
+    battleFormatDoublesLabel: document.getElementById("battle-format-doubles-label"),
+    battleFormatMultiLabel: document.getElementById("battle-format-multi-label"),
+    battleFormatInputs: document.querySelectorAll('input[name="battle-format"]'),
+
     resultsContainer: document.getElementById("results-container"),
     trainerTitle: document.getElementById("trainer-title"),
     trainerInfo: document.getElementById("trainer-info"),
@@ -199,6 +212,7 @@ const dom = {
     excludedPokemonTags: document.getElementById("excluded-pokemon-tags"),
     excludedPokemonSuggestions: document.getElementById("excluded-pokemon-suggestions"),
 
+    excludedItemField: document.getElementById("excluded-item-field"),
     excludedItemLabel: document.getElementById("excluded-item-label"),
     excludedItemInput: document.getElementById("excluded-item-input"),
     excludedItemTags: document.getElementById("excluded-item-tags"),

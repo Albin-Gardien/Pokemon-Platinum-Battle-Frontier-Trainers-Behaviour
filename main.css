@@ -223,6 +223,92 @@ label:focus-visible {
     text-align: center;
 }
 
+.trainer-controls-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+}
+
+.trainer-main-controls {
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.battle-mode-selector {
+    grid-column: 3;
+    display: grid;
+    grid-template-columns: auto auto;
+    width: max-content;
+    min-width: max-content;
+    gap: 8px;
+    justify-self: center;
+    padding: 6px 8px;
+    background: linear-gradient(180deg, #f8f9fd 0%, #e8ebf4 100%);
+    border: 2px solid #68708c;
+    border-radius: 6px;
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -2px 0 rgba(69, 76, 103, 0.12);
+}
+
+.battle-mode-group {
+    min-width: max-content;
+    margin: 0;
+    padding: 3px 7px 6px;
+    border: 1px solid #a1a8bc;
+    border-radius: 4px;
+}
+
+.battle-mode-group legend {
+    padding: 0 4px;
+    color: #4a5168;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.facility-mode-grid {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 4px 12px;
+}
+
+.battle-format-list {
+    display: grid;
+    gap: 4px;
+}
+
+.battle-mode-option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-height: 20px;
+    color: #30354d;
+    font-size: 0.82rem;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.battle-mode-option input[type="radio"] {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+}
+
+.battle-mode-option.is-future {
+    opacity: 0.48;
+    cursor: not-allowed;
+}
+
+.battle-mode-option.is-future input[type="radio"] {
+    cursor: not-allowed;
+}
+
 .level-input {
     width: 80px;
 }
@@ -438,6 +524,20 @@ label:focus-visible {
 .pokemon-table td:nth-child(8) {
     min-width: 160px;
     max-width: 160px;
+}
+
+.pokemon-table.arcade-mode th:nth-child(8) {
+    color: #d8dbe3;
+    background: linear-gradient(180deg, #777d8d 0%, #626876 62%, #555b68 100%);
+    border-color: #555b68;
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.16);
+    text-shadow: none;
+}
+
+.pokemon-table.arcade-mode td:nth-child(8) {
+    color: #7d8290;
+    text-align: center;
+    background: #e1e3e9;
 }
 
 /* Stats */
@@ -1322,6 +1422,18 @@ label:focus-visible {
 @media (max-width: 1600px) {
     .selected-pokemon-details {
         grid-template-columns: minmax(min(100%, 900px), 1100px);
+    }
+}
+
+@media (max-width: 1450px) {
+    .trainer-controls-row {
+        grid-template-columns: 1fr;
+    }
+
+    .trainer-main-controls,
+    .battle-mode-selector {
+        grid-column: 1;
+        justify-self: center;
     }
 }
 
