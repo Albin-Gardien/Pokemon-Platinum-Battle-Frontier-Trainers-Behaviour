@@ -23,132 +23,212 @@
     </div>
 
     <div class="form-container">
-        <form id="trainer-form" class="flex-column">
-            <label for="trainer-text-input" id="trainer-label" class="trainer-label"></label>
+        <form id="trainer-form" class="trainer-form-layout">
+            <div class="trainer-selection-area">
+                <label for="trainer-text-input" id="trainer-label" class="trainer-label"></label>
 
-            <div class="trainer-controls-row">
                 <div class="trainer-main-controls">
-                    <div class="autocomplete-field">
-                        <input
-                            type="text"
-                            id="trainer-text-input"
-                            autocomplete="off"
-                        />
-                        <div id="trainer-suggestions" class="suggestions-menu" hidden></div>
+                    <div id="trainer-selectors-container" class="trainer-selectors-container">
+                        <div id="trainer-slot-0" class="trainer-selector-slot">
+                            <span id="trainer-slot-label-0" class="trainer-slot-label" hidden></span>
+
+                            <div class="autocomplete-field">
+                                <input type="text" id="trainer-text-input" autocomplete="off" />
+                                <div id="trainer-suggestions" class="suggestions-menu" hidden></div>
+                            </div>
+
+                            <select id="trainer-select"></select>
+                        </div>
+
+                        <div id="trainer-slot-1" class="trainer-selector-slot" hidden>
+                            <span id="trainer-slot-label-1" class="trainer-slot-label"></span>
+
+                            <div class="autocomplete-field">
+                                <input type="text" id="trainer-text-input-2" autocomplete="off" />
+                                <div id="trainer-suggestions-2" class="suggestions-menu" hidden></div>
+                            </div>
+
+                            <select id="trainer-select-2"></select>
+                        </div>
                     </div>
 
-                    <select id="trainer-select"></select>
+                    <div class="trainer-meta-controls">
+                        <label for="level-input" class="level-field">
+                            <span id="level-label"></span>
+                            <input type="number" id="level-input" class="level-input" value="50" min="1" max="100" />
+                        </label>
 
-                    <label for="level-input" class="level-field">
-                        <span id="level-label"></span>
-                        <input
-                            type="number"
-                            id="level-input"
-                            class="level-input"
-                            value="50"
-                            min="1"
-                            max="100"
-                        />
-                    </label>
-
-                    <div class="series-filter-dropdown">
-                        <button type="button" id="series-filter-button"></button>
-
-                        <div id="series-filter-menu" class="series-filter-menu" hidden></div>
+                        <div class="series-filter-dropdown">
+                            <button type="button" id="series-filter-button"></button>
+                            <div id="series-filter-menu" class="series-filter-menu" hidden></div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="battle-mode-selector">
-                    <fieldset class="battle-mode-group">
-                        <legend id="facility-mode-label"></legend>
+            <div class="battle-mode-selector">
+                <fieldset class="battle-mode-group">
+                    <legend id="facility-mode-label"></legend>
 
-                        <div class="facility-mode-grid">
-                            <label class="battle-mode-option">
-                                <input type="radio" name="facility-mode" value="normal" checked />
-                                <span id="facility-normal-label"></span>
-                            </label>
+                    <div class="facility-mode-grid">
+                        <label class="battle-mode-option">
+                            <input type="radio" name="facility-mode" value="normal" checked />
+                            <span id="facility-normal-label"></span>
+                        </label>
 
-                            <label class="battle-mode-option">
-                                <input type="radio" name="facility-mode" value="arcade" />
-                                <span id="facility-arcade-label"></span>
-                            </label>
+                        <label class="battle-mode-option">
+                            <input type="radio" name="facility-mode" value="arcade" />
+                            <span id="facility-arcade-label"></span>
+                        </label>
 
-                            <label class="battle-mode-option is-future">
-                                <input type="radio" name="facility-mode" value="factory" disabled />
-                                <span id="facility-factory-label"></span>
-                            </label>
+                        <label class="battle-mode-option is-future">
+                            <input type="radio" name="facility-mode" value="factory" disabled />
+                            <span id="facility-factory-label"></span>
+                        </label>
 
-                            <label class="battle-mode-option is-future">
-                                <input type="radio" name="facility-mode" value="hall" disabled />
-                                <span id="facility-hall-label"></span>
-                            </label>
-                        </div>
-                    </fieldset>
+                        <label class="battle-mode-option is-future">
+                            <input type="radio" name="facility-mode" value="hall" disabled />
+                            <span id="facility-hall-label"></span>
+                        </label>
+                    </div>
+                </fieldset>
 
-                    <fieldset class="battle-mode-group">
-                        <legend id="battle-format-label"></legend>
+                <fieldset class="battle-mode-group">
+                    <legend id="battle-format-label"></legend>
 
-                        <div class="battle-format-list">
-                            <label class="battle-mode-option">
-                                <input type="radio" name="battle-format" value="singles" checked />
-                                <span id="battle-format-singles-label"></span>
-                            </label>
+                    <div class="battle-format-list">
+                        <label class="battle-mode-option">
+                            <input type="radio" name="battle-format" value="singles" checked />
+                            <span id="battle-format-singles-label"></span>
+                        </label>
 
-                            <label class="battle-mode-option is-future">
-                                <input type="radio" name="battle-format" value="doubles" disabled />
-                                <span id="battle-format-doubles-label"></span>
-                            </label>
+                        <label class="battle-mode-option">
+                            <input type="radio" name="battle-format" value="doubles" />
+                            <span id="battle-format-doubles-label"></span>
+                        </label>
 
-                            <label class="battle-mode-option is-future">
-                                <input type="radio" name="battle-format" value="multi" disabled />
-                                <span id="battle-format-multi-label"></span>
-                            </label>
-                        </div>
-                    </fieldset>
-                </div>
+                        <label class="battle-mode-option">
+                            <input type="radio" name="battle-format" value="multi" />
+                            <span id="battle-format-multi-label"></span>
+                        </label>
+                    </div>
+                </fieldset>
             </div>
         </form>
     </div>
 
     <div class="results-container" id="results-container" hidden>
-        <h2 id="trainer-title"></h2>
-        <p id="trainer-info" class="muted"></p>
-
-        <div id="opponent-search-container" class="opponent-search-container" hidden>
-            <label for="opponent-pokemon-input" id="opponent-pokemon-label"></label>
-
-            <div class="autocomplete-field">
-                <input
-                    type="text"
-                    id="opponent-pokemon-input"
-                    autocomplete="off"
-                />
-                <div id="opponent-pokemon-suggestions" class="suggestions-menu" hidden></div>
-            </div>
-
-            <select id="opponent-pokemon-select"></select>
+        <div id="single-trainer-header">
+            <h2 id="trainer-title"></h2>
+            <p id="trainer-info" class="muted"></p>
         </div>
 
-        <div id="selected-pokemon-details" class="selected-pokemon-details" hidden></div>
+        <div id="opponent-search-container" class="opponent-search-container" hidden>
+            <div id="opponent-slot-0" class="opponent-slot">
+                <div class="opponent-search-row">
+                    <label for="opponent-pokemon-input" id="opponent-pokemon-label"></label>
 
-        <div id="battle-exclusions-container" class="battle-exclusions-container" hidden>
-            <div class="battle-exclusion-field">
-                <label id="excluded-pokemon-label" for="excluded-pokemon-input"></label>
-                <div class="multi-select-field">
-                    <div id="excluded-pokemon-tags" class="multi-select-tags"></div>
-                    <input type="text" id="excluded-pokemon-input" autocomplete="off" />
+                    <div class="autocomplete-field">
+                        <input type="text" id="opponent-pokemon-input" autocomplete="off"/>
+                        <div id="opponent-pokemon-suggestions" class="suggestions-menu" hidden></div>
+                    </div>
+
+                    <select id="opponent-pokemon-select"></select>
                 </div>
-                <div id="excluded-pokemon-suggestions" class="suggestions-menu" hidden></div>
+
+                <div id="selected-pokemon-details" class="selected-pokemon-details" hidden></div>
             </div>
 
-            <div id="excluded-item-field" class="battle-exclusion-field">
-                <label id="excluded-item-label" for="excluded-item-input"></label>
-                <div class="multi-select-field">
-                    <div id="excluded-item-tags" class="multi-select-tags"></div>
-                    <input type="text" id="excluded-item-input" autocomplete="off" />
+            <div id="opponent-slot-1" class="opponent-slot" hidden>
+                <div class="opponent-search-row">
+                    <label for="opponent-pokemon-input-2" id="opponent-pokemon-label-2"></label>
+
+                    <div class="autocomplete-field">
+                        <input type="text" id="opponent-pokemon-input-2" autocomplete="off"/>
+                        <div id="opponent-pokemon-suggestions-2" class="suggestions-menu" hidden></div>
+                    </div>
+
+                    <select id="opponent-pokemon-select-2"></select>
                 </div>
-                <div id="excluded-item-suggestions" class="suggestions-menu" hidden></div>
+
+                <div id="selected-pokemon-details-2" class="selected-pokemon-details" hidden></div>
             </div>
+        </div>
+
+        <div id="trainer-panels-container" class="trainer-panels-container">
+            <details id="trainer-panel-0" class="trainer-panel" open>
+                <summary class="trainer-panel-summary">
+                    <span id="trainer-panel-title-0" class="trainer-panel-title"></span>
+                    <span id="trainer-panel-info-0" class="trainer-panel-info"></span>
+                </summary>
+
+                <div class="trainer-panel-content">
+                    <div id="battle-exclusions-container" class="battle-exclusions-container" hidden>
+                        <div class="battle-exclusion-field">
+                            <label id="excluded-pokemon-label" for="excluded-pokemon-input"></label>
+
+                            <div class="multi-select-field">
+                                <div id="excluded-pokemon-tags" class="multi-select-tags"></div>
+                                <input type="text" id="excluded-pokemon-input" autocomplete="off" />
+                            </div>
+
+                            <div id="excluded-pokemon-suggestions" class="suggestions-menu" hidden></div>
+                        </div>
+
+                        <div id="excluded-item-field" class="battle-exclusion-field">
+                            <label id="excluded-item-label" for="excluded-item-input"></label>
+
+                            <div class="multi-select-field">
+                                <div id="excluded-item-tags" class="multi-select-tags"></div>
+                                <input type="text" id="excluded-item-input" autocomplete="off" />
+                            </div>
+
+                            <div id="excluded-item-suggestions" class="suggestions-menu" hidden></div>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table id="pokemon-results" class="pokemon-table"></table>
+                    </div>
+                </div>
+            </details>
+
+            <details id="trainer-panel-1" class="trainer-panel" open hidden>
+                <summary class="trainer-panel-summary">
+                    <span id="trainer-panel-title-1" class="trainer-panel-title"></span>
+                    <span id="trainer-panel-info-1" class="trainer-panel-info"></span>
+                </summary>
+
+                <div class="trainer-panel-content">
+                    <div id="battle-exclusions-container-2" class="battle-exclusions-container" hidden>
+                        <div class="battle-exclusion-field">
+                            <label id="excluded-pokemon-label-2" for="excluded-pokemon-input-2"></label>
+
+                            <div class="multi-select-field">
+                                <div id="excluded-pokemon-tags-2" class="multi-select-tags"></div>
+                                <input type="text" id="excluded-pokemon-input-2" autocomplete="off" />
+                            </div>
+
+                            <div id="excluded-pokemon-suggestions-2" class="suggestions-menu" hidden></div>
+                        </div>
+
+                        <div id="excluded-item-field-2" class="battle-exclusion-field">
+                            <label id="excluded-item-label-2" for="excluded-item-input-2"></label>
+
+                            <div class="multi-select-field">
+                                <div id="excluded-item-tags-2" class="multi-select-tags"></div>
+                                <input type="text" id="excluded-item-input-2" autocomplete="off" />
+                            </div>
+
+                            <div id="excluded-item-suggestions-2" class="suggestions-menu" hidden></div>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table id="pokemon-results-2" class="pokemon-table"></table>
+                    </div>
+                </div>
+            </details>
         </div>
 
         <div class="table-wrapper">
@@ -157,6 +237,7 @@
     </div>
 
     <script src="scripts/constants.js"></script>
+    <script src="scripts/battle-state.js"></script>
     <script src="scripts/app.js"></script>
     <script src="scripts/utils.js"></script>
     <script src="scripts/trainer-search.js"></script>

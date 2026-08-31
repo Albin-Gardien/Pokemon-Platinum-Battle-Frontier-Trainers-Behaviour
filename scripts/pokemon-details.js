@@ -4,12 +4,6 @@
 // Opponent Pokémon selector and Pokémon detail cards
 // -----------------------------------------------------------------------------
 
-let possibleSetIds = new Set();
-let currentOpponentSpeciesId = null;
-let showDoublesAi = false;
-
-const movePpState = new Map();
-
 function getSelectedPokemonSets(trainer, speciesId) {
     const level = getSelectedLevel();
 
@@ -17,23 +11,51 @@ function getSelectedPokemonSets(trainer, speciesId) {
         .filter((mon) => mon.speciesId === speciesId);
 }
 
-function findOpponentPokemonByInputValue(trainer, value) {
-    const normalizedValue = normalizeText(value);
+function getOpponentSlotDom(slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+    return dom.opponentSlots[slotIndex];
+}
+
+function isSpeciesSelectedInOtherOpponentSlot(speciesId, slotIndex) {
+    if (battleState.format !== "doubles") {
+        return false;
+    }
+
+    return battleState.opponents.some((opponentState, otherSlotIndex) =>
+        otherSlotIndex !== slotIndex && opponentState.speciesId === speciesId
+    );
+}
+
+function getUniqueAvailableOpponentSpecies(trainer, slotIndex) {
+    const trainerIndex = getTrainerIndexForOpponentSlot(slotIndex);
     const level = getSelectedLevel();
     const mons = getTrainerMonsForLevel(trainer, level);
+    const uniqueSpecies = [];
 
-    return mons.find((mon) =>
+    for (const mon of mons) {
+        if (isMonExcluded(mon, trainerIndex) || isSpeciesSelectedInOtherOpponentSlot(mon.speciesId, slotIndex)) {
+            continue;
+        }
+
+        if (!uniqueSpecies.some((existing) => existing.speciesId === mon.speciesId)) {
+            uniqueSpecies.push(mon);
+        }
+    }
+
+    return uniqueSpecies;
+}
+
+function findOpponentPokemonByInputValue(trainer, value, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+    const normalizedValue = normalizeText(value);
+
+    return getUniqueAvailableOpponentSpecies(trainer, slotIndex).find((mon) =>
         normalizeText(getPokemonDisplayName(mon)) === normalizedValue ||
         normalizeText(getName(mon, "fr")) === normalizedValue ||
         normalizeText(getName(mon, "en")) === normalizedValue
     );
 }
 
-function findOpponentPokemonBySpeciesId(trainer, speciesId) {
-    const level = getSelectedLevel();
-    const mons = getTrainerMonsForLevel(trainer, level);
-
-    return mons.find((mon) => mon.speciesId === speciesId && !isMonExcluded(mon));
+function findOpponentPokemonBySpeciesId(trainer, speciesId, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+    return getUniqueAvailableOpponentSpecies(trainer, slotIndex).find((mon) => mon.speciesId === speciesId);
 }
 
 function getPokemonDisplayName(mon) {
@@ -43,106 +65,172 @@ function getPokemonDisplayName(mon) {
     return mainName === secondaryName ? mainName : `${mainName} (${secondaryName})`;
 }
 
-function selectSingleSetFromTable(mon) {
-    if (!currentTrainer || !mon) {
+function selectSingleSetFromTable(mon, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+    const trainer = getTrainerForOpponentSlot(slotIndex);
+
+    if (!trainer || !mon) {
         return;
     }
 
-    currentOpponentSpeciesId = mon.speciesId;
-    possibleSetIds = new Set([mon.id]);
-
-    dom.opponentPokemonSelect.value = mon.speciesId;
-    dom.opponentPokemonInput.value = getName(mon);
-    dom.opponentPokemonSuggestions.hidden = true;
-
-    dom.opponentPokemonInput.blur();
-    dom.opponentPokemonSelect.blur();
-
-    renderSelectedPokemonDetails(currentTrainer, mon.speciesId);
-}
-
-function selectOpponentPokemonAndRender(mon) {
-    if (!currentTrainer || !mon) {
+    if (isSpeciesSelectedInOtherOpponentSlot(mon.speciesId, slotIndex)) {
         return;
     }
 
-    dom.opponentPokemonInput.value = getName(mon);
-    dom.opponentPokemonSelect.value = mon.speciesId;
-    dom.opponentPokemonSuggestions.hidden = true;
+    const opponentState = getOpponentBattleState(slotIndex);
+    const slotDom = getOpponentSlotDom(slotIndex);
 
-    dom.opponentPokemonInput.blur();
-    dom.opponentPokemonSelect.blur();
+    opponentState.speciesId = mon.speciesId;
+    opponentState.possibleSetIds = new Set([mon.id]);
 
-    resetPossibleSetsForPokemon(currentTrainer, mon.speciesId);
-    renderSelectedPokemonDetails(currentTrainer, mon.speciesId);
-}
+    slotDom.select.value = mon.speciesId;
+    slotDom.input.value = getName(mon);
+    slotDom.suggestions.hidden = true;
 
-function populateOpponentPokemonSelect(trainer) {
-    const container = dom.opponentSearchContainer;
-    const input = dom.opponentPokemonInput;
-    const select = dom.opponentPokemonSelect;
-    const level = getSelectedLevel();
-    const mons = getTrainerMonsForLevel(trainer, level);
+    renderSelectedPokemonDetails(trainer, mon.speciesId, slotIndex);
 
-    const uniqueSpecies = [];
+    if (battleState.format === "doubles") {
+        populateOpponentPokemonSelect(trainer, slotIndex === 0 ? 1 : 0);
 
-    for (const mon of mons) {
-        if (isMonExcluded(mon)) {
-            continue;
-        }
-        if (!uniqueSpecies.some((existing) => existing.speciesId === mon.speciesId)) {
-        uniqueSpecies.push(mon);
+        if (slotIndex === 0 && !getOpponentBattleState(1).speciesId) {
+            battleState.activeOpponentSlotIndex = 1;
         }
     }
-    populateOpponentPokemonSuggestions(uniqueSpecies, "");
+}
 
-    select.replaceChildren();
-    select.appendChild(createPlaceholderOption(translate("ui", "opponentPokemonSelectPlaceholder")));
+function selectOpponentPokemonAndRender(mon, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+    const trainer = getTrainerForOpponentSlot(slotIndex);
+
+    if (!trainer || !mon || isSpeciesSelectedInOtherOpponentSlot(mon.speciesId, slotIndex)) {
+        return;
+    }
+
+    const slotDom = getOpponentSlotDom(slotIndex);
+
+    battleState.activeOpponentSlotIndex = slotIndex;
+
+    slotDom.input.value = getName(mon);
+    slotDom.select.value = mon.speciesId;
+    slotDom.suggestions.hidden = true;
+
+    slotDom.input.blur();
+    slotDom.select.blur();
+
+    resetPossibleSetsForPokemon(trainer, mon.speciesId, slotIndex);
+    renderSelectedPokemonDetails(trainer, mon.speciesId, slotIndex);
+
+    if (battleState.format === "doubles") {
+        populateOpponentPokemonSelect(trainer, slotIndex === 0 ? 1 : 0);
+    }
+}
+
+function populateOpponentPokemonSelect(trainer, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+    const slotDom = getOpponentSlotDom(slotIndex);
+    const opponentState = getOpponentBattleState(slotIndex);
+    const uniqueSpecies = getUniqueAvailableOpponentSpecies(trainer, slotIndex);
+
+    slotDom.select.replaceChildren();
+    slotDom.select.appendChild(createPlaceholderOption(translate("ui", "opponentPokemonSelectPlaceholder")));
+    slotDom.suggestions.hidden = true;
 
     for (const mon of uniqueSpecies) {
         const option = document.createElement("option");
         option.value = mon.speciesId;
-
-        const mainName = getName(mon, currentLang);
-        const secondaryName = getName(mon, getOtherLang());
-
-        option.textContent =
-        mainName === secondaryName ? mainName : `${mainName} (${secondaryName})`;
-
-        select.appendChild(option);
+        option.textContent = getPokemonDisplayName(mon);
+        slotDom.select.appendChild(option);
     }
 
-    input.value = "";
-    container.hidden = false;
-    dom.selectedPokemonDetails.hidden = true;
+    const selectedMon = uniqueSpecies.find((mon) => mon.speciesId === opponentState.speciesId);
+
+    if (selectedMon) {
+        slotDom.select.value = selectedMon.speciesId;
+        slotDom.input.value = getName(selectedMon);
+        return;
+    }
+
+    if (opponentState.speciesId) {
+        resetOpponentBattleState(slotIndex);
+    }
+
+    slotDom.input.value = "";
+    slotDom.details.replaceChildren();
+    slotDom.details.hidden = true;
 }
 
-function populateOpponentPokemonSuggestions(uniqueSpecies, search = "") {
-    const menu = dom.opponentPokemonSuggestions;
-    menu.replaceChildren();
+function refreshOpponentBattleInterface() {
+    const opponentCount = getActiveOpponentCount();
+    let visibleOpponentCount = 0;
+
+    dom.opponentSlots.forEach((slotDom, slotIndex) => {
+        const trainer = slotIndex < opponentCount ? getTrainerForOpponentSlot(slotIndex) : null;
+        const isActive = Boolean(trainer);
+
+        slotDom.container.hidden = !isActive;
+
+        if (isActive) {
+            visibleOpponentCount++;
+            populateOpponentPokemonSelect(trainer, slotIndex);
+        }
+    });
+
+    dom.resultsContainer.classList.toggle("is-doubles", visibleOpponentCount === 2);
+    dom.opponentSearchContainer.hidden = visibleOpponentCount === 0;
+}
+
+function clearOpponentPokemonSelection(slotIndex, refreshOtherSlot = true) {
+    const trainer = getTrainerForOpponentSlot(slotIndex);
+    const slotDom = getOpponentSlotDom(slotIndex);
+
+    resetOpponentBattleState(slotIndex);
+
+    slotDom.input.value = "";
+    slotDom.select.value = "";
+    slotDom.suggestions.hidden = true;
+    slotDom.details.replaceChildren();
+    slotDom.details.hidden = true;
+
+    updateSelectedPokemonPresence();
+
+    if (refreshOtherSlot && trainer && battleState.format === "doubles") {
+        populateOpponentPokemonSelect(trainer, slotIndex === 0 ? 1 : 0);
+    }
+}
+
+function updateSelectedPokemonPresence() {
+    const hasSelectedPokemon = battleState.opponents
+        .slice(0, getActiveOpponentCount())
+        .some((opponentState) => opponentState.speciesId);
+
+    dom.resultsContainer.classList.toggle("has-selected-pokemon", hasSelectedPokemon);
+}
+
+function populateOpponentPokemonSuggestions(trainer, search = "", slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+    const slotDom = getOpponentSlotDom(slotIndex);
+    const opponentState = getOpponentBattleState(slotIndex);
+
+    slotDom.suggestions.replaceChildren();
 
     const normalizedSearch = normalizeText(search);
 
     if (normalizedSearch.length < 2) {
-        menu.hidden = true;
+        slotDom.suggestions.hidden = true;
         return;
     }
 
-    const matches = uniqueSpecies
+    const matches = getUniqueAvailableOpponentSpecies(trainer, slotIndex)
         .filter((mon) =>
-        normalizeText(getPokemonDisplayName(mon)).includes(normalizedSearch) ||
-        normalizeText(getName(mon, "fr")).includes(normalizedSearch) ||
-        normalizeText(getName(mon, "en")).includes(normalizedSearch)
+            normalizeText(getPokemonDisplayName(mon)).includes(normalizedSearch) ||
+            normalizeText(getName(mon, "fr")).includes(normalizedSearch) ||
+            normalizeText(getName(mon, "en")).includes(normalizedSearch)
         )
         .slice(0, 12);
 
+    opponentState.suggestionMatches = matches;
+    opponentState.suggestionActiveIndex = -1;
+
     if (matches.length === 0) {
-        menu.hidden = true;
+        slotDom.suggestions.hidden = true;
         return;
     }
-
-    opponentSuggestionMatches = matches;
-    opponentSuggestionActiveIndex = -1;
 
     matches.forEach((mon, index) => {
         const item = document.createElement("div");
@@ -152,52 +240,116 @@ function populateOpponentPokemonSuggestions(uniqueSpecies, search = "") {
 
         item.addEventListener("mousedown", (event) => {
             event.preventDefault();
-            selectOpponentPokemonAndRender(mon);
+            selectOpponentPokemonAndRender(mon, slotIndex);
         });
 
-        menu.appendChild(item);
+        slotDom.suggestions.appendChild(item);
     });
 
-    menu.hidden = false;
+    slotDom.suggestions.hidden = false;
 }
 
-function updateOpponentSuggestionActiveItem() {
-    const items = document.querySelectorAll("#opponent-pokemon-suggestions .suggestion-item");
+function updateOpponentSuggestionActiveItem(slotIndex) {
+    const slotDom = getOpponentSlotDom(slotIndex);
+    const opponentState = getOpponentBattleState(slotIndex);
+    const items = slotDom.suggestions.querySelectorAll(".suggestion-item");
 
     items.forEach((item, index) => {
-        item.classList.toggle("active", index === opponentSuggestionActiveIndex);
+        item.classList.toggle("active", index === opponentState.suggestionActiveIndex);
     });
 }
 
-function handleOpponentSuggestionKeyboard(event) {
-    const menu = dom.opponentPokemonSuggestions;
+function handleOpponentSuggestionKeyboard(event, slotIndex) {
+    const slotDom = getOpponentSlotDom(slotIndex);
+    const opponentState = getOpponentBattleState(slotIndex);
+    const matches = opponentState.suggestionMatches;
 
-    if (menu.hidden || opponentSuggestionMatches.length === 0) {
+    if (slotDom.suggestions.hidden || matches.length === 0) {
         return;
     }
 
     if (event.key === "ArrowDown") {
         event.preventDefault();
-        opponentSuggestionActiveIndex =
-            (opponentSuggestionActiveIndex + 1) % opponentSuggestionMatches.length;
-        updateOpponentSuggestionActiveItem();
+        opponentState.suggestionActiveIndex = (opponentState.suggestionActiveIndex + 1) % matches.length;
+        updateOpponentSuggestionActiveItem(slotIndex);
     }
 
     if (event.key === "ArrowUp") {
         event.preventDefault();
-        opponentSuggestionActiveIndex =
-            (opponentSuggestionActiveIndex - 1 + opponentSuggestionMatches.length) % opponentSuggestionMatches.length;
-        updateOpponentSuggestionActiveItem();
+        opponentState.suggestionActiveIndex =
+            (opponentState.suggestionActiveIndex - 1 + matches.length) % matches.length;
+        updateOpponentSuggestionActiveItem(slotIndex);
     }
 
-    if (event.key === "Enter" && opponentSuggestionActiveIndex >= 0) {
+    if (event.key === "Enter" && opponentState.suggestionActiveIndex >= 0) {
         event.preventDefault();
-        selectOpponentPokemonAndRender(opponentSuggestionMatches[opponentSuggestionActiveIndex]);
+        selectOpponentPokemonAndRender(matches[opponentState.suggestionActiveIndex], slotIndex);
     }
 
     if (event.key === "Escape") {
-        menu.hidden = true;
+        slotDom.suggestions.hidden = true;
     }
+}
+
+function bindOpponentPokemonSlotEvents(slotIndex) {
+    const slotDom = getOpponentSlotDom(slotIndex);
+
+    slotDom.input.addEventListener("focus", () => {
+        battleState.activeOpponentSlotIndex = slotIndex;
+    });
+
+    slotDom.select.addEventListener("focus", () => {
+        battleState.activeOpponentSlotIndex = slotIndex;
+    });
+
+    slotDom.input.addEventListener("keydown", (event) => {
+        handleOpponentSuggestionKeyboard(event, slotIndex);
+    });
+
+    slotDom.select.addEventListener("change", (event) => {
+        const trainer = getTrainerForOpponentSlot(slotIndex);
+
+        if (!trainer || !event.target.value) {
+            clearOpponentPokemonSelection(slotIndex);
+            return;
+        }
+
+        const mon = findOpponentPokemonBySpeciesId(trainer, event.target.value, slotIndex);
+        selectOpponentPokemonAndRender(mon, slotIndex);
+    });
+
+    slotDom.input.addEventListener("input", (event) => {
+        const trainer = getTrainerForOpponentSlot(slotIndex);
+
+        if (trainer) {
+            populateOpponentPokemonSuggestions(trainer, event.target.value, slotIndex);
+        }
+    });
+
+    slotDom.input.addEventListener("blur", () => {
+        setTimeout(() => {
+            slotDom.suggestions.hidden = true;
+        }, 100);
+    });
+
+    slotDom.input.addEventListener("change", (event) => {
+        const trainer = getTrainerForOpponentSlot(slotIndex);
+
+        if (!trainer) {
+            return;
+        }
+
+        if (!event.target.value.trim()) {
+            clearOpponentPokemonSelection(slotIndex);
+            return;
+        }
+
+        const mon = findOpponentPokemonByInputValue(trainer, event.target.value, slotIndex);
+
+        if (mon) {
+            selectOpponentPokemonAndRender(mon, slotIndex);
+        }
+    });
 }
 
 function getUniqueVisibleMoveIds(visibleSets) {
@@ -237,39 +389,6 @@ function buildAiRoutineList(routineTexts) {
     return list;
 }
 
-function updateDoublesAiVisibility() {
-    dom.selectedPokemonDetails
-        .querySelectorAll(".ai-routine-doubles")
-        .forEach((block) => {
-            block.hidden = !showDoublesAi;
-        });
-}
-
-function buildDoublesAiToggle() {
-    const container = document.createElement("div");
-    container.className = "ai-routine-options";
-
-    const label = document.createElement("label");
-    label.className = "ai-routine-doubles-toggle";
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = showDoublesAi;
-
-    checkbox.addEventListener("change", () => {
-        showDoublesAi = checkbox.checked;
-        updateDoublesAiVisibility();
-    });
-
-    const text = document.createElement("span");
-    text.textContent = translate("ui", "aiRoutineShowDoubles");
-
-    label.append(checkbox, text);
-    container.appendChild(label);
-
-    return container;
-}
-
 function buildDoublesAiSection(titleKey, routineTexts) {
     if (routineTexts.length === 0) {
         return null;
@@ -288,6 +407,10 @@ function buildDoublesAiSection(titleKey, routineTexts) {
 }
 
 function buildDoublesAiRoutineBlock(moveId) {
+    if (!usesDoublesAi()) {
+        return null;
+    }
+
     const enemyTexts = getMoveAiRoutineTexts(moveId, "doublesEnemy");
     const allyTexts = getMoveAiRoutineTexts(moveId, "doublesAlly");
 
@@ -307,7 +430,6 @@ function buildDoublesAiRoutineBlock(moveId) {
 
     const block = document.createElement("div");
     block.className = "ai-routine-doubles";
-    block.hidden = !showDoublesAi;
 
     if (enemySection) {
         block.appendChild(enemySection);
@@ -332,8 +454,6 @@ function buildAiRoutineAccordion(visibleSets) {
 
     const content = document.createElement("div");
     content.className = "ai-routine-content";
-
-    content.appendChild(buildDoublesAiToggle());
 
     for (const moveId of moveIds) {
         content.appendChild(buildMoveAiRoutineBlock(moveId));
@@ -378,26 +498,26 @@ function buildMoveAiRoutineBlock(moveId) {
     return details;
 }
 
-function renderSelectedPokemonDetails(trainer, speciesId) {
-    const container = dom.selectedPokemonDetails;
+function renderSelectedPokemonDetails(trainer, speciesId, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+    const opponentState = getOpponentBattleState(slotIndex);
+    const container = getOpponentSlotDom(slotIndex).details;
     const sets = getSelectedPokemonSets(trainer, speciesId);
 
     container.replaceChildren();
 
     if (sets.length === 0) {
-        dom.resultsContainer.classList.remove("has-selected-pokemon");
         container.hidden = true;
+        updateSelectedPokemonPresence();
         return;
     }
 
     const level = getSelectedLevel();
-    const visibleSets = sets.filter((mon) => possibleSetIds.has(mon.id));
-    const hiddenSets = sets.filter((mon) => !possibleSetIds.has(mon.id));
+    const visibleSets = sets.filter((mon) => opponentState.possibleSetIds.has(mon.id));
+    const hiddenSets = sets.filter((mon) => !opponentState.possibleSetIds.has(mon.id));
 
     for (const mon of visibleSets) {
         const stats = calculateStats(mon, trainer.ivTier, level);
-        const card = buildPokemonDetailCard(mon, stats, trainer.ivTier);
-        container.appendChild(card);
+        container.appendChild(buildPokemonDetailCard(mon, stats, trainer.ivTier, slotIndex));
     }
 
     if (visibleSets.length > 0) {
@@ -405,18 +525,21 @@ function renderSelectedPokemonDetails(trainer, speciesId) {
     }
 
     if (hiddenSets.length > 0) {
-        container.appendChild(buildHiddenSetsPanel(hiddenSets));
+        container.appendChild(buildHiddenSetsPanel(hiddenSets, slotIndex));
     }
 
-    dom.resultsContainer.classList.add("has-selected-pokemon");
     container.hidden = false;
+    updateSelectedPokemonPresence();
 }
 
-function resetPossibleSetsForPokemon(trainer, speciesId) {
-    currentOpponentSpeciesId = speciesId;
-    possibleSetIds = new Set(
+function resetPossibleSetsForPokemon(trainer, speciesId, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+    const trainerIndex = getTrainerIndexForOpponentSlot(slotIndex);
+    const opponentState = getOpponentBattleState(slotIndex);
+
+    opponentState.speciesId = speciesId;
+    opponentState.possibleSetIds = new Set(
         getSelectedPokemonSets(trainer, speciesId)
-            .filter((mon) => !isMonExcluded(mon))
+            .filter((mon) => !isMonExcluded(mon, trainerIndex))
             .map((mon) => mon.id)
     );
 }
@@ -425,19 +548,20 @@ function resetPossibleSetsForPokemon(trainer, speciesId) {
 // Initialization and events
 // ---------------------------------------------------------------------
 
-function buildPokemonDetailCard(mon, stats, ivTier) {
+function buildPokemonDetailCard(mon, stats, ivTier, slotIndex) {
     const card = document.createElement("article");
     card.className = "pokemon-detail-card";
 
     const title = document.createElement("h3");
     title.className = "pokemon-detail-title";
 
+    const opponentState = getOpponentBattleState(slotIndex);
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.checked = possibleSetIds.has(mon.id);
+    checkbox.checked = opponentState.possibleSetIds.has(mon.id);
 
     checkbox.addEventListener("change", () => {
-        togglePossibleSet(mon.id);
+        togglePossibleSet(mon.id, slotIndex);
     });
 
     const label = document.createElement("span");
@@ -449,7 +573,7 @@ function buildPokemonDetailCard(mon, stats, ivTier) {
         if (event.target === checkbox) {
             return;
         }
-        togglePossibleSet(mon.id);
+        togglePossibleSet(mon.id, slotIndex);
     });
 
     const content = document.createElement("div");
@@ -477,7 +601,7 @@ function buildPokemonDetailCard(mon, stats, ivTier) {
     info.append(...infoLines);
 
     const statsBlock = buildStatsBlock(stats);
-    const movesBlock = buildMovesBlock(mon);
+    const movesBlock = buildMovesBlock(mon, slotIndex);
 
     content.append(sprite, info, statsBlock);
     card.append(title, content, movesBlock);
@@ -608,17 +732,20 @@ function buildStatsBlock(stats) {
     return statsBlock;
 }
 
-function togglePossibleSet(monId) {
-    if (possibleSetIds.has(monId)) {
-        possibleSetIds.delete(monId);
+function togglePossibleSet(monId, slotIndex) {
+    const trainer = getTrainerForOpponentSlot(slotIndex);
+    const opponentState = getOpponentBattleState(slotIndex);
+
+    if (opponentState.possibleSetIds.has(monId)) {
+        opponentState.possibleSetIds.delete(monId);
     } else {
-        possibleSetIds.add(monId);
+        opponentState.possibleSetIds.add(monId);
     }
 
-    renderSelectedPokemonDetails(currentTrainer, currentOpponentSpeciesId);
+    renderSelectedPokemonDetails(trainer, opponentState.speciesId, slotIndex);
 }
 
-function buildHiddenSetsPanel(hiddenSets) {
+function buildHiddenSetsPanel(hiddenSets, slotIndex) {
     const panel = document.createElement("div");
     panel.className = "hidden-sets-panel";
 
@@ -638,7 +765,7 @@ function buildHiddenSetsPanel(hiddenSets) {
         checkbox.checked = false;
 
         checkbox.addEventListener("change", () => {
-            togglePossibleSet(mon.id);
+            togglePossibleSet(mon.id, slotIndex);
         });
 
         const text = document.createElement("span");
@@ -684,7 +811,8 @@ function getMovePpStateKey(mon, moveId, moveIndex) {
     return `${mon.id}:${moveIndex}:${moveId}`;
 }
 
-function getCurrentMovePp(mon, moveId, moveIndex) {
+function getCurrentMovePp(mon, moveId, moveIndex, slotIndex) {
+    const movePpState = getOpponentBattleState(slotIndex).movePpState;
     const maxPp = getMovePowerPoints(moveId);
     const key = getMovePpStateKey(mon, moveId, moveIndex);
 
@@ -695,18 +823,19 @@ function getCurrentMovePp(mon, moveId, moveIndex) {
     return movePpState.get(key);
 }
 
-function updateMovePp(mon, moveId, moveIndex, delta) {
+function updateMovePp(mon, moveId, moveIndex, delta, slotIndex) {
+    const opponentState = getOpponentBattleState(slotIndex);
     const maxPp = getMovePowerPoints(moveId);
     const key = getMovePpStateKey(mon, moveId, moveIndex);
-    const currentPp = getCurrentMovePp(mon, moveId, moveIndex);
+    const currentPp = getCurrentMovePp(mon, moveId, moveIndex, slotIndex);
     const nextPp = Math.max(0, Math.min(maxPp, currentPp + delta));
 
-    movePpState.set(key, nextPp);
+    opponentState.movePpState.set(key, nextPp);
 
-    renderSelectedPokemonDetails(currentTrainer, currentOpponentSpeciesId);
+    renderSelectedPokemonDetails(getTrainerForOpponentSlot(slotIndex), opponentState.speciesId, slotIndex);
 }
 
-function buildMovesBlock(mon) {
+function buildMovesBlock(mon, slotIndex) {
     const movesBlock = document.createElement("div");
     movesBlock.className = "pokemon-detail-moves";
 
@@ -719,7 +848,7 @@ function buildMovesBlock(mon) {
 
     mon.moves.forEach((moveId, moveIndex) => {
         const maxPp = getMovePowerPoints(moveId);
-        const currentPp = getCurrentMovePp(mon, moveId, moveIndex);
+        const currentPp = getCurrentMovePp(mon, moveId, moveIndex, slotIndex);
 
         const move = document.createElement("div");
         move.className = "move-detail move-detail-with-pp";
@@ -745,7 +874,7 @@ function buildMovesBlock(mon) {
         minusButton.textContent = "−";
         minusButton.disabled = currentPp <= 0;
         minusButton.addEventListener("click", () => {
-            updateMovePp(mon, moveId, moveIndex, -1);
+            updateMovePp(mon, moveId, moveIndex, -1, slotIndex);
         });
 
         const plusButton = document.createElement("button");
@@ -754,7 +883,7 @@ function buildMovesBlock(mon) {
         plusButton.textContent = "+";
         plusButton.disabled = currentPp >= maxPp;
         plusButton.addEventListener("click", () => {
-            updateMovePp(mon, moveId, moveIndex, 1);
+            updateMovePp(mon, moveId, moveIndex, 1, slotIndex);
         });
 
         const controls = document.createElement("span");

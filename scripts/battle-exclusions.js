@@ -1,58 +1,87 @@
 "use strict";
 
-const MAX_BATTLE_EXCLUSIONS = 2;
+function getBattleExclusionLimit() {
+    return getBattleFormatConfig().exclusionLimit;
+}
 
-const battleExclusions = {
-    speciesIds: new Set(),
-    itemIds: new Set()
-};
+function getBattleExclusions(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    return getTrainerBattleExclusions(trainerIndex);
+}
 
-let excludedPokemonSuggestionMatches = [];
-let excludedPokemonSuggestionActiveIndex = -1;
+function getBattleExclusionDom(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    return dom.trainerPanels[trainerIndex].exclusions;
+}
 
-let excludedItemSuggestionMatches = [];
-let excludedItemSuggestionActiveIndex = -1;
+function createExcludedSuggestionState() {
+    return {
+        pokemonMatches: [],
+        pokemonActiveIndex: -1,
+        itemMatches: [],
+        itemActiveIndex: -1
+    };
+}
 
-function resetBattleExclusions() {
+const excludedSuggestionStates = battleState.trainers.map(() => createExcludedSuggestionState());
+
+function getExcludedSuggestionState(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    return excludedSuggestionStates[trainerIndex];
+}
+
+function resetBattleExclusions(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    const battleExclusions = getBattleExclusions(trainerIndex);
+    const suggestionState = getExcludedSuggestionState(trainerIndex);
+
     battleExclusions.speciesIds.clear();
     battleExclusions.itemIds.clear();
+
+    suggestionState.pokemonMatches = [];
+    suggestionState.pokemonActiveIndex = -1;
+    suggestionState.itemMatches = [];
+    suggestionState.itemActiveIndex = -1;
 }
 
-function isMonExcluded(mon) {
-    return battleExclusions.speciesIds.has(mon.speciesId)
-        || battleExclusions.itemIds.has(mon.item);
+function isMonExcluded(mon, trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    const battleExclusions = getBattleExclusions(trainerIndex);
+
+    return battleExclusions.speciesIds.has(mon.speciesId) || battleExclusions.itemIds.has(mon.item);
 }
 
-function refreshBattleExclusionInterface() {
-    if (!currentTrainer) {
-        dom.battleExclusionsContainer.hidden = true;
+function refreshBattleExclusionInterface(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    const trainer = getTrainerBattleState(trainerIndex).trainer;
+    const exclusionDom = getBattleExclusionDom(trainerIndex);
+
+    if (!trainer) {
+        exclusionDom.container.hidden = true;
         return;
     }
 
-    dom.excludedPokemonLabel.textContent = translate("ui", "excludedPokemonLabel");
-    dom.excludedItemLabel.textContent = translate("ui", "excludedItemLabel");
-    dom.excludedItemField.hidden = isArcadeMode();
+    exclusionDom.pokemonLabel.textContent = translate("ui", "excludedPokemonLabel");
+    exclusionDom.itemLabel.textContent = translate("ui", "excludedItemLabel");
+    exclusionDom.itemField.hidden = isArcadeMode();
 
-    renderBattleExclusionTags();
-    updateBattleExclusionInputsState();
+    renderBattleExclusionTags(trainerIndex);
+    updateBattleExclusionInputsState(trainerIndex);
 
-    dom.battleExclusionsContainer.hidden = false;
+    exclusionDom.container.hidden = false;
 }
 
-function updateBattleExclusionInputsState() {
-    const pokemonLimitReached = battleExclusions.speciesIds.size >= MAX_BATTLE_EXCLUSIONS;
-    const itemLimitReached = battleExclusions.itemIds.size >= MAX_BATTLE_EXCLUSIONS;
+function updateBattleExclusionInputsState(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    const battleExclusions = getBattleExclusions(trainerIndex);
+    const exclusionDom = getBattleExclusionDom(trainerIndex);
+
+    const pokemonLimitReached = battleExclusions.speciesIds.size >= getBattleExclusionLimit();
+    const itemLimitReached = battleExclusions.itemIds.size >= getBattleExclusionLimit();
 
     updateBattleExclusionInputState({
-        input: dom.excludedPokemonInput,
-        suggestions: dom.excludedPokemonSuggestions,
+        input: exclusionDom.pokemonInput,
+        suggestions: exclusionDom.pokemonSuggestions,
         limitReached: pokemonLimitReached,
         placeholder: translate("ui", "excludedPokemonPlaceholder")
     });
 
     updateBattleExclusionInputState({
-        input: dom.excludedItemInput,
-        suggestions: dom.excludedItemSuggestions,
+        input: exclusionDom.itemInput,
+        suggestions: exclusionDom.itemSuggestions,
         limitReached: itemLimitReached,
         placeholder: translate("ui", "excludedItemPlaceholder")
     });
@@ -73,19 +102,22 @@ function updateBattleExclusionInputState({ input, suggestions, limitReached, pla
     }
 }
 
-function renderBattleExclusionTags() {
+function renderBattleExclusionTags(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    const battleExclusions = getBattleExclusions(trainerIndex);
+    const exclusionDom = getBattleExclusionDom(trainerIndex);
+
     renderMultiSelectTags({
-        container: dom.excludedPokemonTags,
+        container: exclusionDom.pokemonTags,
         values: [...battleExclusions.speciesIds],
-        getLabel: getExcludedSpeciesLabel,
-        onRemove: removeExcludedSpecies
+        getLabel: (speciesId) => getExcludedSpeciesLabel(speciesId, trainerIndex),
+        onRemove: (speciesId) => removeExcludedSpecies(speciesId, trainerIndex)
     });
 
     renderMultiSelectTags({
-        container: dom.excludedItemTags,
+        container: exclusionDom.itemTags,
         values: [...battleExclusions.itemIds],
         getLabel: (itemId) => translateEntity("items", itemId),
-        onRemove: removeExcludedItem
+        onRemove: (itemId) => removeExcludedItem(itemId, trainerIndex)
     });
 }
 
@@ -112,69 +144,86 @@ function renderMultiSelectTags({ container, values, getLabel, onRemove }) {
     }
 }
 
-function getExcludedSpeciesLabel(speciesId) {
-    const mon = getUniqueSpeciesFromCurrentTrainer()
-        .find((species) => species.speciesId === speciesId);
+function getExcludedSpeciesLabel(speciesId, trainerIndex) {
+    const mon = getUniqueSpeciesFromTrainer(trainerIndex).find((species) => species.speciesId === speciesId);
 
     return mon ? getPokemonDisplayName(mon) : speciesId;
 }
 
-function addExcludedSpecies(speciesId) {
+function addExcludedSpecies(speciesId, trainerIndex) {
+    const battleExclusions = getBattleExclusions(trainerIndex);
+
     if (battleExclusions.speciesIds.has(speciesId)) {
         return;
     }
 
-    if (battleExclusions.speciesIds.size >= MAX_BATTLE_EXCLUSIONS) {
+    if (battleExclusions.speciesIds.size >= getBattleExclusionLimit()) {
         return;
     }
 
     battleExclusions.speciesIds.add(speciesId);
-    clearExcludedPokemonInput();
-    refreshAfterBattleExclusionChange();
+
+    clearExcludedPokemonInput(trainerIndex);
+    refreshAfterBattleExclusionChange(trainerIndex);
 }
 
-function removeExcludedSpecies(speciesId) {
+function removeExcludedSpecies(speciesId, trainerIndex) {
+    const battleExclusions = getBattleExclusions(trainerIndex);
+
     battleExclusions.speciesIds.delete(speciesId);
-    refreshAfterBattleExclusionChange();
+    refreshAfterBattleExclusionChange(trainerIndex);
 }
 
-function addExcludedItem(itemId) {
+function addExcludedItem(itemId, trainerIndex) {
+    const battleExclusions = getBattleExclusions(trainerIndex);
+
     if (battleExclusions.itemIds.has(itemId)) {
         return;
     }
 
-    if (battleExclusions.itemIds.size >= MAX_BATTLE_EXCLUSIONS) {
+    if (battleExclusions.itemIds.size >= getBattleExclusionLimit()) {
         return;
     }
 
     battleExclusions.itemIds.add(itemId);
-    clearExcludedItemInput();
-    refreshAfterBattleExclusionChange();
+
+    clearExcludedItemInput(trainerIndex);
+    refreshAfterBattleExclusionChange(trainerIndex);
 }
 
-function removeExcludedItem(itemId) {
+function removeExcludedItem(itemId, trainerIndex) {
+    const battleExclusions = getBattleExclusions(trainerIndex);
+
     battleExclusions.itemIds.delete(itemId);
-    refreshAfterBattleExclusionChange();
+    refreshAfterBattleExclusionChange(trainerIndex);
 }
 
-function clearExcludedPokemonInput() {
-    dom.excludedPokemonInput.value = "";
-    dom.excludedPokemonSuggestions.hidden = true;
+function clearExcludedPokemonInput(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    const exclusionDom = getBattleExclusionDom(trainerIndex);
+
+    exclusionDom.pokemonInput.value = "";
+    exclusionDom.pokemonSuggestions.hidden = true;
 }
 
-function clearExcludedItemInput() {
-    dom.excludedItemInput.value = "";
-    dom.excludedItemSuggestions.hidden = true;
+function clearExcludedItemInput(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    const exclusionDom = getBattleExclusionDom(trainerIndex);
+
+    exclusionDom.itemInput.value = "";
+    exclusionDom.itemSuggestions.hidden = true;
 }
 
-function populateExcludedPokemonSuggestions(search) {
-    const menu = dom.excludedPokemonSuggestions;
+function populateExcludedPokemonSuggestions(search, trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    const battleExclusions = getBattleExclusions(trainerIndex);
+    const exclusionDom = getBattleExclusionDom(trainerIndex);
+    const suggestionState = getExcludedSuggestionState(trainerIndex);
+    const menu = exclusionDom.pokemonSuggestions;
+
     menu.replaceChildren();
 
-    excludedPokemonSuggestionMatches = [];
-    excludedPokemonSuggestionActiveIndex = -1;
+    suggestionState.pokemonMatches = [];
+    suggestionState.pokemonActiveIndex = -1;
 
-    if (battleExclusions.speciesIds.size >= MAX_BATTLE_EXCLUSIONS) {
+    if (battleExclusions.speciesIds.size >= getBattleExclusionLimit()) {
         menu.hidden = true;
         return;
     }
@@ -186,7 +235,7 @@ function populateExcludedPokemonSuggestions(search) {
         return;
     }
 
-    const matches = getUniqueSpeciesFromCurrentTrainer()
+    const matches = getUniqueSpeciesFromTrainer(trainerIndex)
         .filter((mon) => !battleExclusions.speciesIds.has(mon.speciesId))
         .filter((mon) =>
             normalizeText(getPokemonDisplayName(mon)).includes(normalizedSearch) ||
@@ -195,24 +244,28 @@ function populateExcludedPokemonSuggestions(search) {
         )
         .slice(0, 12);
 
-     excludedPokemonSuggestionMatches = matches;
+    suggestionState.pokemonMatches = matches;
 
     buildSuggestionMenu({
         menu,
         matches,
         getLabel: getPokemonDisplayName,
-        onSelect: (mon) => addExcludedSpecies(mon.speciesId)
+        onSelect: (mon) => addExcludedSpecies(mon.speciesId, trainerIndex)
     });
 }
 
-function populateExcludedItemSuggestions(search) {
-    const menu = dom.excludedItemSuggestions;
+function populateExcludedItemSuggestions(search, trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    const battleExclusions = getBattleExclusions(trainerIndex);
+    const exclusionDom = getBattleExclusionDom(trainerIndex);
+    const suggestionState = getExcludedSuggestionState(trainerIndex);
+    const menu = exclusionDom.itemSuggestions;
+
     menu.replaceChildren();
 
-    excludedItemSuggestionMatches = [];
-    excludedItemSuggestionActiveIndex = -1;
+    suggestionState.itemMatches = [];
+    suggestionState.itemActiveIndex = -1;
 
-    if (battleExclusions.itemIds.size >= MAX_BATTLE_EXCLUSIONS) {
+    if (battleExclusions.itemIds.size >= getBattleExclusionLimit()) {
         menu.hidden = true;
         return;
     }
@@ -224,20 +277,18 @@ function populateExcludedItemSuggestions(search) {
         return;
     }
 
-    const matches = getUniqueItemsFromCurrentTrainer()
+    const matches = getUniqueItemsFromTrainer(trainerIndex)
         .filter((itemId) => !battleExclusions.itemIds.has(itemId))
-        .filter((itemId) =>
-            normalizeText(translateEntity("items", itemId)).includes(normalizedSearch)
-        )
+        .filter((itemId) => normalizeText(translateEntity("items", itemId)).includes(normalizedSearch))
         .slice(0, 12);
 
-    excludedItemSuggestionMatches = matches;
+    suggestionState.itemMatches = matches;
 
     buildSuggestionMenu({
         menu,
         matches,
         getLabel: (itemId) => translateEntity("items", itemId),
-        onSelect: addExcludedItem
+        onSelect: (itemId) => addExcludedItem(itemId, trainerIndex)
     });
 }
 
@@ -263,55 +314,59 @@ function buildSuggestionMenu({ menu, matches, getLabel, onSelect }) {
     menu.hidden = false;
 }
 
-function updateExcludedSuggestionActiveItem(menu) {
+function updateExcludedSuggestionActiveItem(menu, activeIndex) {
     const items = menu.querySelectorAll(".suggestion-item");
 
     items.forEach((item, index) => {
-        item.classList.toggle("active", index === getExcludedSuggestionActiveIndex(menu));
+        item.classList.toggle("active", index === activeIndex);
     });
 }
 
-function getExcludedSuggestionActiveIndex(menu) {
-    return menu === dom.excludedPokemonSuggestions
-        ? excludedPokemonSuggestionActiveIndex
-        : excludedItemSuggestionActiveIndex;
-}
+function handleExcludedPokemonSuggestionKeyboard(event, trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    const exclusionDom = getBattleExclusionDom(trainerIndex);
+    const suggestionState = getExcludedSuggestionState(trainerIndex);
 
-function handleExcludedPokemonSuggestionKeyboard(event) {
-    if (dom.excludedPokemonInput.disabled) {
+    if (exclusionDom.pokemonInput.disabled) {
         return;
     }
 
-    if (handleExcludedSuggestionKeyboard({
+    const changed = handleExcludedSuggestionKeyboard({
         event,
-        menu: dom.excludedPokemonSuggestions,
-        matches: excludedPokemonSuggestionMatches,
-        getActiveIndex: () => excludedPokemonSuggestionActiveIndex,
+        menu: exclusionDom.pokemonSuggestions,
+        matches: suggestionState.pokemonMatches,
+        getActiveIndex: () => suggestionState.pokemonActiveIndex,
         setActiveIndex: (index) => {
-            excludedPokemonSuggestionActiveIndex = index;
+            suggestionState.pokemonActiveIndex = index;
         },
-        onSelect: (mon) => addExcludedSpecies(mon.speciesId)
-    })) {
-        updateExcludedSuggestionActiveItem(dom.excludedPokemonSuggestions);
+        onSelect: (mon) => addExcludedSpecies(mon.speciesId, trainerIndex)
+    });
+
+    if (changed) {
+        updateExcludedSuggestionActiveItem(exclusionDom.pokemonSuggestions, suggestionState.pokemonActiveIndex);
     }
 }
 
-function handleExcludedItemSuggestionKeyboard(event) {
-    if (dom.excludedItemInput.disabled) {
+function handleExcludedItemSuggestionKeyboard(event, trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    const exclusionDom = getBattleExclusionDom(trainerIndex);
+    const suggestionState = getExcludedSuggestionState(trainerIndex);
+
+    if (exclusionDom.itemInput.disabled) {
         return;
     }
 
-    if (handleExcludedSuggestionKeyboard({
+    const changed = handleExcludedSuggestionKeyboard({
         event,
-        menu: dom.excludedItemSuggestions,
-        matches: excludedItemSuggestionMatches,
-        getActiveIndex: () => excludedItemSuggestionActiveIndex,
+        menu: exclusionDom.itemSuggestions,
+        matches: suggestionState.itemMatches,
+        getActiveIndex: () => suggestionState.itemActiveIndex,
         setActiveIndex: (index) => {
-            excludedItemSuggestionActiveIndex = index;
+            suggestionState.itemActiveIndex = index;
         },
-        onSelect: addExcludedItem
-    })) {
-        updateExcludedSuggestionActiveItem(dom.excludedItemSuggestions);
+        onSelect: (itemId) => addExcludedItem(itemId, trainerIndex)
+    });
+
+    if (changed) {
+        updateExcludedSuggestionActiveItem(exclusionDom.itemSuggestions, suggestionState.itemActiveIndex);
     }
 }
 
@@ -347,26 +402,25 @@ function handleExcludedSuggestionKeyboard({
 
     if (event.key === "Escape") {
         menu.hidden = true;
-        return false;
     }
 
     return false;
 }
 
-function getCurrentTrainerAvailableMons() {
-    if (!currentTrainer) {
+function getTrainerAvailableMons(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    const trainer = getTrainerBattleState(trainerIndex).trainer;
+
+    if (!trainer) {
         return [];
     }
 
-    const level = getSelectedLevel();
-
-    return getTrainerMonsForLevel(currentTrainer, level);
+    return getTrainerMonsForLevel(trainer, getSelectedLevel());
 }
 
-function getUniqueSpeciesFromCurrentTrainer() {
+function getUniqueSpeciesFromTrainer(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const uniqueSpecies = [];
 
-    for (const mon of getCurrentTrainerAvailableMons()) {
+    for (const mon of getTrainerAvailableMons(trainerIndex)) {
         if (!uniqueSpecies.some((existing) => existing.speciesId === mon.speciesId)) {
             uniqueSpecies.push(mon);
         }
@@ -375,10 +429,10 @@ function getUniqueSpeciesFromCurrentTrainer() {
     return uniqueSpecies;
 }
 
-function getUniqueItemsFromCurrentTrainer() {
+function getUniqueItemsFromTrainer(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const uniqueItems = new Set();
 
-    for (const mon of getCurrentTrainerAvailableMons()) {
+    for (const mon of getTrainerAvailableMons(trainerIndex)) {
         if (mon.item) {
             uniqueItems.add(mon.item);
         }
@@ -387,43 +441,79 @@ function getUniqueItemsFromCurrentTrainer() {
     return [...uniqueItems];
 }
 
-function refreshAfterBattleExclusionChange() {
-    if (!currentTrainer) {
+function refreshAfterBattleExclusionChange(trainerIndex) {
+    const trainer = getTrainerBattleState(trainerIndex).trainer;
+
+    if (!trainer) {
         return;
     }
 
-    renderTrainerTeam(currentTrainer);
-    refreshSelectedPokemonDetailsAfterExclusionChange();
+    renderTrainerPanel(trainerIndex);
+    refreshOpponentBattleInterface();
+
+    for (const opponentSlotIndex of getOpponentSlotIndexesForTrainer(trainerIndex)) {
+        refreshSelectedPokemonDetailsAfterExclusionChange(opponentSlotIndex);
+    }
 }
 
-function refreshSelectedPokemonDetailsAfterExclusionChange() {
-    if (!currentOpponentSpeciesId) {
+function refreshSelectedPokemonDetailsAfterExclusionChange(slotIndex) {
+    const trainer = getTrainerForOpponentSlot(slotIndex);
+    const trainerIndex = getTrainerIndexForOpponentSlot(slotIndex);
+    const opponentState = getOpponentBattleState(slotIndex);
+    const slotDom = getOpponentSlotDom(slotIndex);
+
+    if (!trainer || !opponentState.speciesId) {
         return;
     }
 
-    const availableSets = getSelectedPokemonSets(currentTrainer, currentOpponentSpeciesId)
-        .filter((mon) => !isMonExcluded(mon));
+    const availableSets = getSelectedPokemonSets(trainer, opponentState.speciesId)
+        .filter((mon) => !isMonExcluded(mon, trainerIndex));
 
     if (availableSets.length === 0) {
-        currentOpponentSpeciesId = null;
-        possibleSetIds.clear();
-
-        dom.opponentPokemonInput.value = "";
-        dom.opponentPokemonSelect.value = "";
-        dom.selectedPokemonDetails.hidden = true;
+        clearOpponentPokemonSelection(slotIndex);
         return;
     }
 
-    possibleSetIds = new Set(
-        availableSets
-            .filter((mon) => possibleSetIds.has(mon.id))
-            .map((mon) => mon.id)
+    opponentState.possibleSetIds = new Set(
+        availableSets.filter((mon) => opponentState.possibleSetIds.has(mon.id)).map((mon) => mon.id)
     );
 
-    if (possibleSetIds.size === 0) {
-        possibleSetIds = new Set(availableSets.map((mon) => mon.id));
+    if (opponentState.possibleSetIds.size === 0) {
+        opponentState.possibleSetIds = new Set(availableSets.map((mon) => mon.id));
     }
 
-    dom.opponentPokemonSelect.value = currentOpponentSpeciesId;
-    renderSelectedPokemonDetails(currentTrainer, currentOpponentSpeciesId);
+    slotDom.select.value = opponentState.speciesId;
+    renderSelectedPokemonDetails(trainer, opponentState.speciesId, slotIndex);
+}
+
+function bindBattleExclusionEvents(trainerIndex) {
+    const exclusionDom = getBattleExclusionDom(trainerIndex);
+
+    exclusionDom.pokemonInput.addEventListener("input", (event) => {
+        populateExcludedPokemonSuggestions(event.target.value, trainerIndex);
+    });
+
+    exclusionDom.itemInput.addEventListener("input", (event) => {
+        populateExcludedItemSuggestions(event.target.value, trainerIndex);
+    });
+
+    exclusionDom.pokemonInput.addEventListener("keydown", (event) => {
+        handleExcludedPokemonSuggestionKeyboard(event, trainerIndex);
+    });
+
+    exclusionDom.itemInput.addEventListener("keydown", (event) => {
+        handleExcludedItemSuggestionKeyboard(event, trainerIndex);
+    });
+
+    exclusionDom.pokemonInput.addEventListener("blur", () => {
+        setTimeout(() => {
+            exclusionDom.pokemonSuggestions.hidden = true;
+        }, 100);
+    });
+
+    exclusionDom.itemInput.addEventListener("blur", () => {
+        setTimeout(() => {
+            exclusionDom.itemSuggestions.hidden = true;
+        }, 100);
+    });
 }

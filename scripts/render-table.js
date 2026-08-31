@@ -161,7 +161,7 @@ function applyCellPresentation(td, cellData, index, mon) {
 }
 
 // Creates one table row for one Pokémon set.
-function createPokemonTableRow(mon, trainer, level) {
+function createPokemonTableRow(mon, trainer, level, trainerIndex) {
   const stats = calculateStats(mon, trainer.ivTier, level);
   const cells = getPokemonRowCells(mon, trainer, stats);
   const row = document.createElement("tr");
@@ -172,15 +172,15 @@ function createPokemonTableRow(mon, trainer, level) {
     row.appendChild(td);
   });
 
-  if (isMonExcluded(mon)) {
+  if (isMonExcluded(mon, trainerIndex)) {
       row.classList.add("pokemon-row-excluded");
   }
 
   row.addEventListener("dblclick", () => {
-    if (isMonExcluded(mon)) {
+    if (isMonExcluded(mon, trainerIndex)) {
         return;
     }
-    selectSingleSetFromTable(mon);
+    selectSingleSetFromTable(mon, getOpponentSlotIndexForTrainerTable(trainerIndex));
   });
 
   return row;
@@ -192,39 +192,81 @@ function createPokemonTableRow(mon, trainer, level) {
 // ---------------------------------------------------------------------
 
 // Renders the selected trainer and all possible Pokémon sets.
-function renderTrainerTeam(trainer) {
-  const resultsContainer = dom.resultsContainer;
-  const trainerTitle = dom.trainerTitle;
-  const trainerInfo = dom.trainerInfo;
-  const pokemonTable = dom.pokemonResults;
-  const team = window.frontierTrainerTeams[trainer.poolId];
+function renderTrainerPanel(trainerIndex) {
+    const trainerState = getTrainerBattleState(trainerIndex);
+    const trainer = trainerState.trainer;
+    const panelDom = dom.trainerPanels[trainerIndex];
 
-  trainerTitle.textContent = getName(trainer);
-  trainerInfo.textContent = `${translate("ui", "iv")} : ${trainer.ivTier} — ${translate("ui", "pool")} : ${trainer.poolId.toUpperCase()}`;
-  pokemonTable.replaceChildren();
-  pokemonTable.classList.toggle("arcade-mode", isArcadeMode());
+    if (!trainer) {
+        panelDom.container.hidden = true;
+        panelDom.table.replaceChildren();
+        return;
+    }
 
-  if (!team) {
-    const row = pokemonTable.insertRow();
-    const cell = row.insertCell();
-    cell.textContent = translate("ui", "noTeamFound");
+    panelDom.container.hidden = false;
+    panelDom.title.textContent = getName(trainer);
+    panelDom.info.textContent =
+        `${translate("ui", "iv")} : ${trainer.ivTier} — ${translate("ui", "pool")} : ${trainer.poolId.toUpperCase()}`;
+
+    panelDom.table.replaceChildren();
+    panelDom.table.classList.toggle("arcade-mode", isArcadeMode());
+
+    const team = window.frontierTrainerTeams[trainer.poolId];
+
+    if (!team) {
+        const row = panelDom.table.insertRow();
+        const cell = row.insertCell();
+        cell.textContent = translate("ui", "noTeamFound");
+        return;
+    }
+
+    const level = getSelectedLevel();
+    const availableMons = getTrainerMonsForLevel(trainer, level);
+    const tbody = document.createElement("tbody");
+
+    for (const mon of availableMons) {
+        tbody.appendChild(createPokemonTableRow(mon, trainer, level, trainerIndex));
+    }
+
+    panelDom.table.append(createPokemonTableHead(), tbody);
+    refreshBattleExclusionInterface(trainerIndex);
+}
+
+function renderBattleResults() {
+    const primaryTrainer = getTrainerBattleState(0).trainer;
+    const isMulti = battleState.format === "multi";
+
+    const hasAnyTrainer = battleState.trainers
+        .slice(0, getActiveTrainerCount())
+        .some((trainerState) => trainerState.trainer);
+
+    if (!hasAnyTrainer) {
+        dom.resultsContainer.hidden = true;
+        return;
+    }
+
     dom.resultsContainer.hidden = false;
-    return;
-  }
+    dom.resultsContainer.classList.toggle("is-multi", isMulti);
+    dom.singleTrainerHeader.hidden = isMulti;
 
-  const level = getSelectedLevel();
-  const availableMons = getTrainerMonsForLevel(trainer, level);
-  const tbody = document.createElement("tbody");
+    if (!isMulti && primaryTrainer) {
+        dom.trainerTitle.textContent = getName(primaryTrainer);
+        dom.trainerInfo.textContent =
+            `${translate("ui", "iv")} : ${primaryTrainer.ivTier} — ${translate("ui", "pool")} : ${primaryTrainer.poolId.toUpperCase()}`;
+    }
 
-  for (const mon of availableMons) {
-    const row = createPokemonTableRow(mon, trainer, level);
-    tbody.appendChild(row);
-  }
+    for (let trainerIndex = 0; trainerIndex < battleState.trainers.length; trainerIndex++) {
+        const isActive = trainerIndex < getActiveTrainerCount();
 
-  pokemonTable.append(createPokemonTableHead(), tbody);
-  dom.resultsContainer.hidden = false;
-  populateOpponentPokemonSelect(trainer);
-  refreshBattleExclusionInterface();
+        if (!isActive) {
+            dom.trainerPanels[trainerIndex].container.hidden = true;
+            continue;
+        }
+
+        renderTrainerPanel(trainerIndex);
+    }
+
+    refreshOpponentBattleInterface();
 }
 
 function getTrainerMons(trainer) {
@@ -239,17 +281,31 @@ function getTrainerMons(trainer) {
     .filter(Boolean);
 }
 
-function selectTrainerAndRender(trainer) {
+function selectTrainerAndRender(trainer, trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     if (!trainer) {
         return;
     }
 
-    currentTrainer = trainer;
-    resetBattleExclusions();
+    const trainerState = getTrainerBattleState(trainerIndex);
+    const slotDom = getTrainerSlotDom(trainerIndex);
 
-    dom.trainerTextInput.value = getName(trainer);
-    dom.trainerSelect.value = trainer.id;
-    dom.trainerSuggestions.hidden = true;
+    trainerState.trainer = trainer;
+    resetTrainerBattleExclusions(trainerIndex);
 
-    renderTrainerTeam(trainer);
+    for (const opponentSlotIndex of getOpponentSlotIndexesForTrainer(trainerIndex)) {
+        resetOpponentBattleState(opponentSlotIndex);
+    }
+
+    slotDom.input.value = getName(trainer);
+    slotDom.select.value = trainer.id;
+    slotDom.suggestions.hidden = true;
+
+    if (battleState.format === "multi") {
+        for (let slotIndex = 0; slotIndex < getActiveTrainerCount(); slotIndex++) {
+            const selectedTrainerId = getTrainerBattleState(slotIndex).trainer?.id ?? null;
+            populateTrainerSelect(slotIndex, selectedTrainerId);
+        }
+    }
+
+    renderBattleResults();
 }

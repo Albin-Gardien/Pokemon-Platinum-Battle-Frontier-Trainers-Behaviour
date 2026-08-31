@@ -5,10 +5,8 @@
 // -----------------------------------------------------------------------------
 
 let currentLang = "fr";
-let currentTrainer = null;
 let selectedSeriesId = "all";
 let selectedFacilityMode = "normal";
-let selectedBattleFormat = "singles";
 
 // -----------------------------------------------------------------------------
 // Text and translation helpers
@@ -61,16 +59,21 @@ function isArcadeMode() {
 // -----------------------------------------------------------------------------
 
 // Applies the current language to static UI and refreshes visible dynamic content.
+function applyOpponentSlotLanguage() {
+    dom.opponentSlots.forEach((slotDom, slotIndex) => {
+        const labelKey = getActiveOpponentCount() === 2 ? `opponentPokemonLabel${slotIndex + 1}` : "opponentPokemonLabel";
+
+        slotDom.label.textContent = translate("ui", labelKey);
+        slotDom.input.placeholder = translate("ui", "opponentPokemonPlaceholder");
+    });
+}
+
 function applyLanguage() {
     document.documentElement.lang = currentLang;
 
     document.title = translate("ui", "pageTitle");
     dom.pageTitle.textContent = translate("ui", "pageTitle");
     dom.levelLabel.textContent = translate("ui", "levelLabel");
-    dom.opponentPokemonLabel.textContent = translate("ui", "opponentPokemonLabel");
-    dom.opponentPokemonInput.placeholder = translate("ui", "opponentPokemonPlaceholder");
-    dom.trainerLabel.textContent = translate("ui", "trainerLabel");
-    dom.trainerTextInput.placeholder = translate("ui", "trainerPlaceholder");
     dom.languageToggle.textContent = currentLang === "fr" ? "EN" : "FR";
 
     dom.facilityModeLabel.textContent = translate("ui", "facilityModeLabel");
@@ -84,33 +87,40 @@ function applyLanguage() {
     dom.battleFormatDoublesLabel.textContent = translate("ui", "battleFormatDoubles");
     dom.battleFormatMultiLabel.textContent = translate("ui", "battleFormatMulti");
 
-    const selectedTrainerId = dom.trainerSelect.value;
+    applyTrainerSlotLanguage();
+    applyOpponentSlotLanguage();
 
     populateSeriesFilter();
     updateSeriesFilterButtonLabel();
-    populateTrainerSelect(selectedTrainerId);
 
-    const trainer = getTrainerById(selectedTrainerId);
+    for (let trainerIndex = 0; trainerIndex < getActiveTrainerCount(); trainerIndex++) {
+        const trainer = getTrainerBattleState(trainerIndex).trainer;
+        const trainerId = trainer?.id ?? null;
 
-    if (trainer) {
-        dom.trainerTextInput.value = getName(trainer);
+        populateTrainerSelect(trainerIndex, trainerId);
 
-        if (!dom.resultsContainer.hidden) {
-            renderTrainerTeam(trainer);
-
-            if (currentOpponentSpeciesId) {
-                dom.opponentPokemonSelect.value = currentOpponentSpeciesId;
-
-                const selectedMon = getSelectedPokemonSets(trainer, currentOpponentSpeciesId)[0];
-
-                if (selectedMon) {
-                    dom.opponentPokemonInput.value = getName(selectedMon);
-                }
-
-                renderSelectedPokemonDetails(trainer, currentOpponentSpeciesId);
-            }
+        if (trainer) {
+            getTrainerSlotDom(trainerIndex).input.value = getName(trainer);
         }
     }
+
+    if (!dom.resultsContainer.hidden) {
+        renderBattleResults();
+        refreshSelectedOpponentViews();
+    }
+}
+
+function applyTrainerSlotLanguage() {
+    const isMulti = battleState.format === "multi";
+
+    dom.trainerLabel.textContent = translate("ui", isMulti ? "trainerLabelMulti" : "trainerLabel");
+
+    dom.trainerSlots.forEach((slotDom, slotIndex) => {
+        slotDom.container.hidden = slotIndex >= getActiveTrainerCount();
+        slotDom.label.hidden = !isMulti;
+        slotDom.label.textContent = translate("ui", slotIndex === 0 ? "trainerSlot1" : "trainerSlot2");
+        slotDom.input.placeholder = translate("ui", "trainerPlaceholder");
+    });
 }
 
 // Switches between French and English.
@@ -119,43 +129,85 @@ function toggleLanguage() {
     applyLanguage();
 }
 
+function refreshSelectedOpponentViews() {
+    for (let slotIndex = 0; slotIndex < getActiveOpponentCount(); slotIndex++) {
+        const trainer = getTrainerForOpponentSlot(slotIndex);
+        const opponentState = getOpponentBattleState(slotIndex);
+
+        if (!trainer || !opponentState.speciesId) {
+            continue;
+        }
+
+        const selectedMon = findOpponentPokemonBySpeciesId(trainer, opponentState.speciesId, slotIndex);
+
+        if (!selectedMon) {
+            clearOpponentPokemonSelection(slotIndex, false);
+            continue;
+        }
+
+        const slotDom = dom.opponentSlots[slotIndex];
+
+        slotDom.select.value = opponentState.speciesId;
+        slotDom.input.value = getName(selectedMon);
+
+        renderSelectedPokemonDetails(trainer, opponentState.speciesId, slotIndex);
+    }
+}
+
 function refreshCurrentBattleView() {
-    if (!currentTrainer) {
-        return;
-    }
-
-    const selectedOpponentSpeciesId = currentOpponentSpeciesId;
-    renderTrainerTeam(currentTrainer);
-    if (!selectedOpponentSpeciesId) {
-        return;
-    }
-
-    const selectedMon = findOpponentPokemonBySpeciesId(currentTrainer, selectedOpponentSpeciesId);
-
-    if (!selectedMon) {
-        currentOpponentSpeciesId = null;
-        possibleSetIds.clear();
-        return;
-    }
-
-    dom.opponentPokemonSelect.value = selectedOpponentSpeciesId;
-    dom.opponentPokemonInput.value = getName(selectedMon);
-    renderSelectedPokemonDetails(currentTrainer, selectedOpponentSpeciesId);
+    renderBattleResults();
+    refreshSelectedOpponentViews();
 }
 
 function handleFacilityModeChange(event) {
     selectedFacilityMode = event.target.value;
 
     if (isArcadeMode()) {
-        battleExclusions.itemIds.clear();
-        clearExcludedItemInput();
+        for (let trainerIndex = 0; trainerIndex < getActiveTrainerCount(); trainerIndex++) {
+            getTrainerBattleExclusions(trainerIndex).itemIds.clear();
+            clearExcludedItemInput(trainerIndex);
+        }
     }
 
     refreshCurrentBattleView();
 }
 
 function handleBattleFormatChange(event) {
-    selectedBattleFormat = event.target.value;
+    battleState.format = event.target.value;
+
+    resetAllOpponentBattleStates();
+    resetAllTrainerBattleExclusions();
+
+    battleState.trainers.forEach((_, trainerIndex) => {
+        clearExcludedPokemonInput(trainerIndex);
+        clearExcludedItemInput(trainerIndex);
+    });
+
+    if (battleState.format !== "multi") {
+        const secondTrainerState = getTrainerBattleState(1);
+        const secondTrainerDom = getTrainerSlotDom(1);
+
+        secondTrainerState.trainer = null;
+        secondTrainerState.suggestionMatches = [];
+        secondTrainerState.suggestionActiveIndex = -1;
+
+        secondTrainerDom.input.value = "";
+        secondTrainerDom.select.value = "";
+        secondTrainerDom.suggestions.replaceChildren();
+        secondTrainerDom.suggestions.hidden = true;
+    }
+
+    applyTrainerSlotLanguage();
+    applyOpponentSlotLanguage();
+
+    for (let trainerIndex = 0; trainerIndex < getActiveTrainerCount(); trainerIndex++) {
+        const trainerId = getTrainerBattleState(trainerIndex).trainer?.id ?? null;
+        populateTrainerSelect(trainerIndex, trainerId);
+    }
+
+    dom.resultsContainer.classList.remove("has-selected-pokemon");
+
+    renderBattleResults();
 }
 
 // -----------------------------------------------------------------------------
@@ -163,22 +215,31 @@ function handleBattleFormatChange(event) {
 // -----------------------------------------------------------------------------
 
 function initApp() {
-    populateSeriesFilter();
-    populateTrainerSelect();
     applyLanguage();
-    bindTextToTrainerSelect();
+
+    bindTrainerSlotEvents(0);
+    bindTrainerSlotEvents(1);
+
+    bindOpponentPokemonSlotEvents(0);
+    bindOpponentPokemonSlotEvents(1);
+
+    bindBattleExclusionEvents(0);
+    bindBattleExclusionEvents(1);
 
     dom.languageToggle.addEventListener("click", toggleLanguage);
-    dom.facilityModeInputs.forEach((input) => { input.addEventListener("change", handleFacilityModeChange); });
-    dom.battleFormatInputs.forEach((input) => { input.addEventListener("change", handleBattleFormatChange); });
+
+    dom.facilityModeInputs.forEach((input) => {
+        input.addEventListener("change", handleFacilityModeChange);
+    });
+
+    dom.battleFormatInputs.forEach((input) => {
+        input.addEventListener("change", handleBattleFormatChange);
+    });
 
     dom.seriesFilterButton.addEventListener("click", (event) => {
         event.stopPropagation();
         toggleSeriesFilterMenu();
     });
-
-    dom.trainerTextInput.addEventListener("keydown", handleTrainerSuggestionKeyboard);
-    dom.opponentPokemonInput.addEventListener("keydown", handleOpponentSuggestionKeyboard);
 
     document.addEventListener("click", (event) => {
         if (!dom.seriesFilterDropdown.contains(event.target)) {
@@ -186,90 +247,30 @@ function initApp() {
         }
     });
 
-    dom.levelInput.addEventListener("change", () => {
-        if (!currentTrainer) {
-            return;
-        }
-
-        resetBattleExclusions();
-        renderTrainerTeam(currentTrainer);
-        dom.resultsContainer.classList.remove("has-selected-pokemon");
-        dom.selectedPokemonDetails.hidden = true;
-    });
-
     dom.trainerForm.addEventListener("submit", (event) => {
         event.preventDefault();
     });
 
-    dom.opponentPokemonSelect.addEventListener("change", (event) => {
-        if (!currentTrainer || !event.target.value) {
-            currentOpponentSpeciesId = null;
-            possibleSetIds.clear();
-            dom.selectedPokemonDetails.hidden = true;
+    dom.levelInput.addEventListener("change", () => {
+        const hasTrainer = battleState.trainers
+            .slice(0, getActiveTrainerCount())
+            .some((trainerState) => trainerState.trainer);
+
+        if (!hasTrainer) {
             return;
         }
 
-        const mon = findOpponentPokemonBySpeciesId(currentTrainer, event.target.value);
-        selectOpponentPokemonAndRender(mon);
-    });
+        resetAllTrainerBattleExclusions();
+        resetAllOpponentBattleStates();
 
-    dom.opponentPokemonInput.addEventListener("input", (event) => {
-        if (!currentTrainer) {
-            return;
+        for (let trainerIndex = 0; trainerIndex < getActiveTrainerCount(); trainerIndex++) {
+            clearExcludedPokemonInput(trainerIndex);
+            clearExcludedItemInput(trainerIndex);
         }
 
-        const level = getSelectedLevel();
-        const mons = getTrainerMonsForLevel(currentTrainer, level);
-        const uniqueSpecies = [];
+        renderBattleResults();
 
-        for (const mon of mons) {
-            if (isMonExcluded(mon)) {
-                continue;
-            }
-            if (!uniqueSpecies.some((existing) => existing.speciesId === mon.speciesId)) {
-                uniqueSpecies.push(mon);
-            }
-        }
-
-        populateOpponentPokemonSuggestions(uniqueSpecies, event.target.value);
-    });
-
-    dom.excludedPokemonInput.addEventListener("input", (event) => {
-        populateExcludedPokemonSuggestions(event.target.value);
-    });
-
-    dom.excludedItemInput.addEventListener("input", (event) => {
-        populateExcludedItemSuggestions(event.target.value);
-    });
-
-    dom.excludedPokemonInput.addEventListener("keydown", handleExcludedPokemonSuggestionKeyboard);
-    dom.excludedItemInput.addEventListener("keydown", handleExcludedItemSuggestionKeyboard);
-
-    dom.excludedPokemonInput.addEventListener("blur", () => {
-        setTimeout(() => {
-            dom.excludedPokemonSuggestions.hidden = true;
-        }, 100);
-    });
-
-    dom.excludedItemInput.addEventListener("blur", () => {
-        setTimeout(() => {
-            dom.excludedItemSuggestions.hidden = true;
-        }, 100);
-    });
-
-    dom.opponentPokemonInput.addEventListener("blur", () => {
-        setTimeout(() => {
-            dom.opponentPokemonSuggestions.hidden = true;
-        }, 100);
-    });
-
-    dom.opponentPokemonInput.addEventListener("change", (event) => {
-        if (!currentTrainer) {
-            return;
-        }
-
-        const mon = findOpponentPokemonByInputValue(currentTrainer, event.target.value);
-        selectOpponentPokemonAndRender(mon);
+        dom.resultsContainer.classList.remove("has-selected-pokemon");
     });
 }
 

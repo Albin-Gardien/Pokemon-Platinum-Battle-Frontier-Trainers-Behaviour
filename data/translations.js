@@ -13,6 +13,9 @@ window.appTranslations = {
       fr: "-- Sélectionnez un dresseur --",
       en: "-- Select a trainer --"
     },
+    trainerLabelMulti: { fr: "Sélectionnez les dresseurs :", en: "Select the trainers:" },
+    trainerSlot1: { fr: "Dresseur 1 :", en: "Trainer 1:" },
+    trainerSlot2: { fr: "Dresseur 2 :", en: "Trainer 2:" },
     facilityModeLabel: { fr: "Mode", en: "Mode" },
     facilityNormal: { fr: "Normal", en: "Normal" },
     facilityFactory: { fr: "Usine", en: "Factory" },
@@ -28,6 +31,8 @@ window.appTranslations = {
     },
     opponentPokemonLabel: { fr: "Pokémon affronté :", en: "Opponent Pokémon:" },
     opponentPokemonPlaceholder: { fr: "Nom du Pokémon...", en: "Pokémon name..." },
+  opponentPokemonLabel1: { fr: "Pokémon affronté 1 :", en: "Opponent Pokémon 1:" },
+  opponentPokemonLabel2: { fr: "Pokémon affronté 2 :", en: "Opponent Pokémon 2:" },
     noTeamFound: { fr: "Aucune équipe trouvée pour ce dresseur.", en: "No team found for this trainer." },
     missingSet: { fr: "Set introuvable", en: "Missing set" },
     movesTitle: { fr: "Capacités :", en: "Moves:" },
@@ -40,10 +45,6 @@ window.appTranslations = {
     aiRoutineMissingData: {
       fr: "Aucune routine renseignée pour cette capacité.",
       en: "No AI routine available for this move."
-    },
-    aiRoutineShowDoubles: {
-      fr: "Afficher l’IA des combats Duo",
-      en: "Show Doubles AI"
     },
     aiRoutineDoublesEnemyTitle: {
       fr: "IA Duo — cible ennemie",

@@ -224,5 +224,79 @@ const dom = {
     opponentPokemonSuggestions: document.getElementById("opponent-pokemon-suggestions"),
     opponentPokemonSelect: document.getElementById("opponent-pokemon-select"),
 
-    selectedPokemonDetails: document.getElementById("selected-pokemon-details")
+    selectedPokemonDetails: document.getElementById("selected-pokemon-details"),
+
+    opponentSlots: [
+        {
+            container: document.getElementById("opponent-slot-0"),
+            label: document.getElementById("opponent-pokemon-label"),
+            input: document.getElementById("opponent-pokemon-input"),
+            suggestions: document.getElementById("opponent-pokemon-suggestions"),
+            select: document.getElementById("opponent-pokemon-select"),
+            details: document.getElementById("selected-pokemon-details")
+        },
+        {
+            container: document.getElementById("opponent-slot-1"),
+            label: document.getElementById("opponent-pokemon-label-2"),
+            input: document.getElementById("opponent-pokemon-input-2"),
+            suggestions: document.getElementById("opponent-pokemon-suggestions-2"),
+            select: document.getElementById("opponent-pokemon-select-2"),
+            details: document.getElementById("selected-pokemon-details-2")
+        }
+    ],
+    trainerSlots: [
+        {
+            container: document.getElementById("trainer-slot-0"),
+            label: document.getElementById("trainer-slot-label-0"),
+            input: document.getElementById("trainer-text-input"),
+            suggestions: document.getElementById("trainer-suggestions"),
+            select: document.getElementById("trainer-select")
+        },
+        {
+            container: document.getElementById("trainer-slot-1"),
+            label: document.getElementById("trainer-slot-label-1"),
+            input: document.getElementById("trainer-text-input-2"),
+            suggestions: document.getElementById("trainer-suggestions-2"),
+            select: document.getElementById("trainer-select-2")
+        }
+    ],
+    singleTrainerHeader: document.getElementById("single-trainer-header"),
+    trainerPanels: [
+        {
+            container: document.getElementById("trainer-panel-0"),
+            title: document.getElementById("trainer-panel-title-0"),
+            info: document.getElementById("trainer-panel-info-0"),
+            table: document.getElementById("pokemon-results"),
+            exclusions: {
+                container: document.getElementById("battle-exclusions-container"),
+                pokemonLabel: document.getElementById("excluded-pokemon-label"),
+                pokemonInput: document.getElementById("excluded-pokemon-input"),
+                pokemonTags: document.getElementById("excluded-pokemon-tags"),
+                pokemonSuggestions: document.getElementById("excluded-pokemon-suggestions"),
+                itemField: document.getElementById("excluded-item-field"),
+                itemLabel: document.getElementById("excluded-item-label"),
+                itemInput: document.getElementById("excluded-item-input"),
+                itemTags: document.getElementById("excluded-item-tags"),
+                itemSuggestions: document.getElementById("excluded-item-suggestions")
+            }
+        },
+        {
+            container: document.getElementById("trainer-panel-1"),
+            title: document.getElementById("trainer-panel-title-1"),
+            info: document.getElementById("trainer-panel-info-1"),
+            table: document.getElementById("pokemon-results-2"),
+            exclusions: {
+                container: document.getElementById("battle-exclusions-container-2"),
+                pokemonLabel: document.getElementById("excluded-pokemon-label-2"),
+                pokemonInput: document.getElementById("excluded-pokemon-input-2"),
+                pokemonTags: document.getElementById("excluded-pokemon-tags-2"),
+                pokemonSuggestions: document.getElementById("excluded-pokemon-suggestions-2"),
+                itemField: document.getElementById("excluded-item-field-2"),
+                itemLabel: document.getElementById("excluded-item-label-2"),
+                itemInput: document.getElementById("excluded-item-input-2"),
+                itemTags: document.getElementById("excluded-item-tags-2"),
+                itemSuggestions: document.getElementById("excluded-item-suggestions-2")
+            }
+        }
+    ],
 };

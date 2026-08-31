@@ -4,11 +4,6 @@
 // Trainer data access, trainer search, and series filter
 // -----------------------------------------------------------------------------
 
-let trainerSuggestionMatches = [];
-let trainerSuggestionActiveIndex = -1;
-let opponentSuggestionMatches = [];
-let opponentSuggestionActiveIndex = -1;
-
 function getTrainerList() {
   return Object.values(window.frontierTrainers);
 }
@@ -27,30 +22,52 @@ function getTrainerSearchText(trainer) {
   ].filter(Boolean).join(" "));
 }
 
-function populateTrainerSuggestions(search = "") {
-    const menu = dom.trainerSuggestions;
-    menu.replaceChildren();
+function getTrainerSlotDom(slotIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    return dom.trainerSlots[slotIndex];
+}
+
+function isTrainerSelectedInOtherSlot(trainerId, slotIndex) {
+    if (battleState.format !== "multi") {
+        return false;
+    }
+
+    return battleState.trainers.some((trainerState, otherSlotIndex) =>
+        otherSlotIndex !== slotIndex && trainerState.trainer?.id === trainerId
+    );
+}
+
+function getAvailableTrainersForSlot(slotIndex) {
+    const visibleIds = getVisibleTrainerIds();
+
+    return getTrainerList()
+        .filter((trainer) => visibleIds.has(trainer.id))
+        .filter((trainer) => !isTrainerSelectedInOtherSlot(trainer.id, slotIndex));
+}
+
+function populateTrainerSuggestions(search = "", slotIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    const trainerState = getTrainerBattleState(slotIndex);
+    const slotDom = getTrainerSlotDom(slotIndex);
+
+    slotDom.suggestions.replaceChildren();
 
     const normalizedSearch = normalizeText(search);
 
     if (normalizedSearch.length < 2) {
-        menu.hidden = true;
+        slotDom.suggestions.hidden = true;
         return;
     }
 
-    const visibleIds = getVisibleTrainerIds();
-    const matches = getTrainerList()
-        .filter((trainer) => visibleIds.has(trainer.id))
+    const matches = getAvailableTrainersForSlot(slotIndex)
         .filter((trainer) => getTrainerSearchText(trainer).includes(normalizedSearch))
         .slice(0, 12);
 
+    trainerState.suggestionMatches = matches;
+    trainerState.suggestionActiveIndex = -1;
+
     if (matches.length === 0) {
-        menu.hidden = true;
+        slotDom.suggestions.hidden = true;
         return;
     }
-
-    trainerSuggestionMatches = matches;
-    trainerSuggestionActiveIndex = -1;
 
     matches.forEach((trainer, index) => {
         const item = document.createElement("div");
@@ -60,55 +77,58 @@ function populateTrainerSuggestions(search = "") {
 
         item.addEventListener("mousedown", (event) => {
             event.preventDefault();
-            selectTrainerAndRender(trainer);
+            selectTrainerAndRender(trainer, slotIndex);
         });
 
-        menu.appendChild(item);
+        slotDom.suggestions.appendChild(item);
     });
 
-    menu.hidden = false;
+    slotDom.suggestions.hidden = false;
 }
 
-function updateTrainerSuggestionActiveItem() {
-    const items = dom.trainerSuggestions.querySelectorAll(".suggestion-item");
+function updateTrainerSuggestionActiveItem(slotIndex) {
+    const trainerState = getTrainerBattleState(slotIndex);
+    const items = getTrainerSlotDom(slotIndex).suggestions.querySelectorAll(".suggestion-item");
 
     items.forEach((item, index) => {
-        item.classList.toggle("active", index === trainerSuggestionActiveIndex);
+        item.classList.toggle("active", index === trainerState.suggestionActiveIndex);
     });
 }
 
-function selectActiveTrainerSuggestion() {
-    const trainer = trainerSuggestionMatches[trainerSuggestionActiveIndex];
+function selectActiveTrainerSuggestion(slotIndex) {
+    const trainerState = getTrainerBattleState(slotIndex);
+    const trainer = trainerState.suggestionMatches[trainerState.suggestionActiveIndex];
 
     if (trainer) {
-        selectTrainerAndRender(trainer);
+        selectTrainerAndRender(trainer, slotIndex);
     }
 }
 
-function handleTrainerSuggestionKeyboard(event) {
-    const menu = dom.trainerSuggestions;
+function handleTrainerSuggestionKeyboard(event, slotIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+    const trainerState = getTrainerBattleState(slotIndex);
+    const menu = getTrainerSlotDom(slotIndex).suggestions;
+    const matches = trainerState.suggestionMatches;
 
-    if (menu.hidden || trainerSuggestionMatches.length === 0) {
+    if (menu.hidden || matches.length === 0) {
         return;
     }
 
     if (event.key === "ArrowDown") {
         event.preventDefault();
-        trainerSuggestionActiveIndex =
-            (trainerSuggestionActiveIndex + 1) % trainerSuggestionMatches.length;
-        updateTrainerSuggestionActiveItem();
+        trainerState.suggestionActiveIndex = (trainerState.suggestionActiveIndex + 1) % matches.length;
+        updateTrainerSuggestionActiveItem(slotIndex);
     }
 
     if (event.key === "ArrowUp") {
         event.preventDefault();
-        trainerSuggestionActiveIndex =
-            (trainerSuggestionActiveIndex - 1 + trainerSuggestionMatches.length) % trainerSuggestionMatches.length;
-        updateTrainerSuggestionActiveItem();
+        trainerState.suggestionActiveIndex =
+            (trainerState.suggestionActiveIndex - 1 + matches.length) % matches.length;
+        updateTrainerSuggestionActiveItem(slotIndex);
     }
 
-    if (event.key === "Enter" && trainerSuggestionActiveIndex >= 0) {
+    if (event.key === "Enter" && trainerState.suggestionActiveIndex >= 0) {
         event.preventDefault();
-        selectActiveTrainerSuggestion();
+        selectActiveTrainerSuggestion(slotIndex);
     }
 
     if (event.key === "Escape") {
@@ -133,78 +153,75 @@ function createPlaceholderOption(label) {
 }
 
 // Fills the trainer select while preserving the source data order.
-function populateTrainerSelect(selectedTrainerId = null) {
-    const select = dom.trainerSelect;
-    const previousValue = selectedTrainerId ?? select.value;
+function populateTrainerSelect(slotIndex = PRIMARY_TRAINER_SLOT_INDEX, selectedTrainerId = null) {
+    const slotDom = getTrainerSlotDom(slotIndex);
+    const previousValue = selectedTrainerId ?? slotDom.select.value;
     const activeSeries = getActiveSeries();
 
-    select.replaceChildren();
-    select.appendChild(createPlaceholderOption(translate("ui", "trainerSelectPlaceholder")));
+    slotDom.select.replaceChildren();
+    slotDom.select.appendChild(createPlaceholderOption(translate("ui", "trainerSelectPlaceholder")));
 
-    if (activeSeries.length === 0) {
-        return;
-    }
+    for (const serie of activeSeries) {
+        const trainers = getTrainersForSeries(serie)
+            .filter((trainer) => !isTrainerSelectedInOtherSlot(trainer.id, slotIndex));
 
-    if (activeSeries.length === 1) {
-        for (const trainer of getTrainersForSeries(activeSeries[0])) {
-        select.appendChild(createTrainerOption(trainer));
+        if (trainers.length === 0) {
+            continue;
         }
-    } else {
-        for (const serie of activeSeries) {
+
+        if (activeSeries.length === 1) {
+            trainers.forEach((trainer) => slotDom.select.appendChild(createTrainerOption(trainer)));
+            continue;
+        }
+
         const optgroup = document.createElement("optgroup");
         optgroup.label = translate("series", serie.id);
 
-        for (const trainer of getTrainersForSeries(serie)) {
-            optgroup.appendChild(createTrainerOption(trainer));
-        }
-
-        select.appendChild(optgroup);
-        }
+        trainers.forEach((trainer) => optgroup.appendChild(createTrainerOption(trainer)));
+        slotDom.select.appendChild(optgroup);
     }
 
-    const visibleIds = getVisibleTrainerIds();
-
-    if (previousValue && visibleIds.has(previousValue)) {
-        select.value = previousValue;
+    if (previousValue && Array.from(slotDom.select.options).some((option) => option.value === previousValue)) {
+        slotDom.select.value = previousValue;
     }
-    populateTrainerSuggestions();
 }
 
 // Synchronizes free text input and trainer select.
-function bindTextToTrainerSelect() {
-  const input = dom.trainerTextInput;
-  const select = dom.trainerSelect;
+function bindTrainerSlotEvents(slotIndex) {
+    const slotDom = getTrainerSlotDom(slotIndex);
 
-  input.addEventListener("input", () => {
-    const search = normalizeText(input.value);
-    
-    populateTrainerSuggestions(input.value);
+    slotDom.input.addEventListener("input", () => {
+        const search = normalizeText(slotDom.input.value);
 
-    if (!search) {
-      select.value = "";
-      return;
-    }
+        populateTrainerSuggestions(slotDom.input.value, slotIndex);
 
-    const options = Array.from(select.options);
-    const matchingOption = options.find((option) => {
-        const trainer = getTrainerById(option.value);
-        return trainer && getTrainerSearchText(trainer).includes(search);
+        if (!search) {
+            slotDom.select.value = "";
+            return;
+        }
+
+        const matchingOption = Array.from(slotDom.select.options).find((option) => {
+            const trainer = getTrainerById(option.value);
+            return trainer && getTrainerSearchText(trainer).includes(search);
+        });
+
+        if (matchingOption) {
+            slotDom.select.value = matchingOption.value;
+        }
     });
 
-    if (matchingOption) {
-      select.value = matchingOption.value;
-    }
-  });
+    slotDom.input.addEventListener("keydown", (event) => {
+        handleTrainerSuggestionKeyboard(event, slotIndex);
+    });
 
-input.addEventListener("blur", () => {
-    setTimeout(() => {
-        dom.trainerSuggestions.hidden = true;
-    }, 100);
-});
+    slotDom.input.addEventListener("blur", () => {
+        setTimeout(() => {
+            slotDom.suggestions.hidden = true;
+        }, 100);
+    });
 
-    select.addEventListener("change", () => {
-        const trainer = getTrainerById(select.value);
-        selectTrainerAndRender(trainer);
+    slotDom.select.addEventListener("change", () => {
+        selectTrainerAndRender(getTrainerById(slotDom.select.value), slotIndex);
     });
 }
 
@@ -235,8 +252,11 @@ function createSeriesFilterRadio(value, labelText) {
         selectedSeriesId = value;
 
         clearTrainerDisplay();
-        populateTrainerSelect();
-        syncTrainerInputWithSelect();
+
+        for (let trainerIndex = 0; trainerIndex < getActiveTrainerCount(); trainerIndex++) {
+            populateTrainerSelect(trainerIndex);
+        }
+
         updateSeriesFilterButtonLabel();
         closeSeriesFilterMenu();
     });
@@ -262,21 +282,46 @@ function updateSeriesFilterButtonLabel() {
 }
 
 function clearTrainerDisplay() {
-    currentTrainer = null;
-    currentOpponentSpeciesId = null;
-    possibleSetIds.clear();
+    battleState.trainers.forEach((trainerState, trainerIndex) => {
+        trainerState.trainer = null;
+        trainerState.suggestionMatches = [];
+        trainerState.suggestionActiveIndex = -1;
 
-    dom.resultsContainer.hidden = true;
+        resetTrainerBattleExclusions(trainerIndex);
+
+        const slotDom = getTrainerSlotDom(trainerIndex);
+
+        slotDom.input.value = "";
+        slotDom.select.replaceChildren();
+        slotDom.suggestions.replaceChildren();
+        slotDom.suggestions.hidden = true;
+    });
+
+    resetAllOpponentBattleStates();
+
     dom.trainerTitle.textContent = "";
     dom.trainerInfo.textContent = "";
-    dom.pokemonResults.replaceChildren();
 
-    dom.opponentPokemonInput.value = "";
-    dom.opponentPokemonSelect.replaceChildren();
+    dom.trainerPanels.forEach((panelDom) => {
+        panelDom.container.hidden = true;
+        panelDom.table.replaceChildren();
+        panelDom.exclusions.container.hidden = true;
+    });
+
+    dom.opponentSlots.forEach((slotDom) => {
+        slotDom.input.value = "";
+        slotDom.select.replaceChildren();
+        slotDom.suggestions.replaceChildren();
+        slotDom.suggestions.hidden = true;
+        slotDom.details.replaceChildren();
+        slotDom.details.hidden = true;
+    });
+
+    dom.singleTrainerHeader.hidden = false;
     dom.opponentSearchContainer.hidden = true;
 
-    dom.selectedPokemonDetails.replaceChildren();
-    dom.selectedPokemonDetails.hidden = true;
+    dom.resultsContainer.hidden = true;
+    dom.resultsContainer.classList.remove("has-selected-pokemon", "is-doubles", "is-multi");
 }
 
 function getActiveSeries() {
@@ -315,14 +360,6 @@ function createTrainerOption(trainer) {
     option.textContent = mainName === secondaryName ? mainName : `${mainName} (${secondaryName})`;
 
     return option;
-}
-
-function syncTrainerInputWithSelect() {
-    const select = dom.trainerSelect;
-    const input = dom.trainerTextInput;
-    const trainer = getTrainerById(select.value);
-
-    input.value = trainer ? getName(trainer) : "";
 }
 
 function findTrainerByInputValue(value) {
