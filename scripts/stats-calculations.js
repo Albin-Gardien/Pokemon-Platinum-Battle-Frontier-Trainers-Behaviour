@@ -52,11 +52,16 @@ function calculateStats(mon, iv, level) {
 function getSelectedLevel() {
     const level = Number(dom.levelInput.value);
 
-    if (level === 50) {
+    if (isFactoryMode()) {
+        if (level === 50 || level === 100) {
+            return level;
+        }
+
+        dom.levelInput.value = 50;
         return 50;
     }
 
-    if (level >= 60 && level <= 100) {
+    if (Number.isInteger(level) && level >= 1 && level <= 100) {
         return level;
     }
 
@@ -64,10 +69,6 @@ function getSelectedLevel() {
     return 50;
 }
 
-function isMonAllowedAtLevel(mon, level) {
-    return !(level === 50 && forbiddenLevel50Species.has(mon.speciesId));
-}
-
-function getTrainerMonsForLevel(trainer, level) {
-    return getTrainerMons(trainer).filter((mon) => isMonAllowedAtLevel(mon, level));
+function getTrainerMonsForLevel(trainer) {
+    return getTrainerMons(trainer);
 }

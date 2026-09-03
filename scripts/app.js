@@ -7,6 +7,7 @@
 let currentLang = "fr";
 let selectedSeriesId = "all";
 let selectedFacilityMode = "normal";
+let selectedFactorySeriesId = "series_1";
 
 // -----------------------------------------------------------------------------
 // Text and translation helpers
@@ -40,6 +41,10 @@ function translateEntity(category, id) {
         ?? id;
 }
 
+function getFactoryPossibleSetsLabel(count) {
+    return translate("ui", count === 1 ? "factoryPossibleSet" : "factoryPossibleSets");
+}
+
 // Returns the translated entity name, falling back to English then ID.
 function getName(entity, lang = currentLang) {
     return entity.names?.[lang] ?? entity.names?.en ?? entity.id;
@@ -52,6 +57,73 @@ function getOtherLang() {
 
 function isArcadeMode() {
     return selectedFacilityMode === "arcade";
+}
+
+function isFactoryMode() {
+    return selectedFacilityMode === "factory";
+}
+
+function getFactorySeriesData() {
+    const levelKey = getFactoryPoolLevelKey();
+
+    return window.factoryPools?.[levelKey]?.series ?? {};
+}
+
+// Factory Helpers
+function populateFactorySeriesSelect() {
+    const seriesData = getFactorySeriesData();
+    const seriesIds = Object.keys(seriesData);
+
+    dom.factorySeriesSelect.replaceChildren();
+
+    if (seriesIds.length === 0) {
+        dom.factorySeriesSelect.disabled = true;
+        return;
+    }
+
+    dom.factorySeriesSelect.disabled = false;
+
+    if (!seriesData[selectedFactorySeriesId]) {
+        selectedFactorySeriesId = seriesIds[0];
+    }
+
+    for (const seriesId of seriesIds) {
+        const option = document.createElement("option");
+
+        option.value = seriesId;
+        option.textContent = translate("series", seriesId);
+
+        dom.factorySeriesSelect.appendChild(option);
+    }
+
+    dom.factorySeriesSelect.value = selectedFactorySeriesId;
+}
+
+function updateFacilitySelectionControls() {
+    const factoryMode = isFactoryMode();
+
+    dom.trainerLabel.hidden = factoryMode;
+    dom.trainerSelectorsContainer.hidden = factoryMode;
+    dom.seriesFilterDropdown.hidden = factoryMode;
+
+    dom.factorySeriesField.hidden = !factoryMode;
+}
+
+function handleFactorySeriesChange(event) {
+    selectedFactorySeriesId = event.target.value;
+    resetFactoryPlayerTeam();
+
+    resetAllOpponentBattleStates();
+    resetAllTrainerBattleExclusions();
+
+    battleState.trainers.forEach((_, sourceIndex) => {
+        clearExcludedPokemonInput(sourceIndex);
+        clearExcludedItemInput(sourceIndex);
+    });
+
+    dom.resultsContainer.classList.remove("has-selected-pokemon");
+
+    refreshCurrentBattleView();
 }
 
 // -----------------------------------------------------------------------------
@@ -81,6 +153,7 @@ function applyLanguage() {
     dom.facilityFactoryLabel.textContent = translate("ui", "facilityFactory");
     dom.facilityArcadeLabel.textContent = translate("ui", "facilityArcade");
     dom.facilityHallLabel.textContent = translate("ui", "facilityHall");
+    dom.factorySeriesLabel.textContent = translate("ui", "factorySeriesLabel");
 
     dom.battleFormatLabel.textContent = translate("ui", "battleFormatLabel");
     dom.battleFormatSinglesLabel.textContent = translate("ui", "battleFormatSingles");
@@ -92,6 +165,10 @@ function applyLanguage() {
 
     populateSeriesFilter();
     updateSeriesFilterButtonLabel();
+    populateFactorySeriesSelect();
+    updateFacilitySelectionControls();
+    applyFactoryPlayerTeamLanguage();
+    applySearchClearButtonLanguage();
 
     for (let trainerIndex = 0; trainerIndex < getActiveTrainerCount(); trainerIndex++) {
         const trainer = getTrainerBattleState(trainerIndex).trainer;
@@ -123,6 +200,17 @@ function applyTrainerSlotLanguage() {
     });
 }
 
+function applySearchClearButtonLanguage() {
+    const label = translate("ui", "clearSearch");
+
+    const searchSlots = [...dom.trainerSlots, ...dom.opponentSlots, ...dom.factoryPlayerTeam.slots];
+
+    searchSlots.forEach((slotDom) => {
+        slotDom.clearButton.title = label;
+        slotDom.clearButton.setAttribute("aria-label", label);
+    });
+}
+
 // Switches between French and English.
 function toggleLanguage() {
     currentLang = currentLang === "fr" ? "en" : "fr";
@@ -131,14 +219,13 @@ function toggleLanguage() {
 
 function refreshSelectedOpponentViews() {
     for (let slotIndex = 0; slotIndex < getActiveOpponentCount(); slotIndex++) {
-        const trainer = getTrainerForOpponentSlot(slotIndex);
         const opponentState = getOpponentBattleState(slotIndex);
 
-        if (!trainer || !opponentState.speciesId) {
+        if (!hasBattlePokemonSourceForOpponentSlot(slotIndex) || !opponentState.speciesId) {
             continue;
         }
 
-        const selectedMon = findOpponentPokemonBySpeciesId(trainer, opponentState.speciesId, slotIndex);
+        const selectedMon = findOpponentPokemonBySpeciesId(opponentState.speciesId, slotIndex);
 
         if (!selectedMon) {
             clearOpponentPokemonSelection(slotIndex, false);
@@ -150,7 +237,7 @@ function refreshSelectedOpponentViews() {
         slotDom.select.value = opponentState.speciesId;
         slotDom.input.value = getName(selectedMon);
 
-        renderSelectedPokemonDetails(trainer, opponentState.speciesId, slotIndex);
+        renderSelectedPokemonDetails(opponentState.speciesId, slotIndex);
     }
 }
 
@@ -160,7 +247,29 @@ function refreshCurrentBattleView() {
 }
 
 function handleFacilityModeChange(event) {
+    const previousFacilityMode = selectedFacilityMode;
+
     selectedFacilityMode = event.target.value;
+
+    const factoryTransition = previousFacilityMode === "factory" || selectedFacilityMode === "factory";
+
+    if (factoryTransition) {
+        resetFactoryPlayerTeam();
+        resetAllOpponentBattleStates();
+        resetAllTrainerBattleExclusions();
+
+        battleState.trainers.forEach((_, trainerIndex) => {
+            clearExcludedPokemonInput(trainerIndex);
+            clearExcludedItemInput(trainerIndex);
+        });
+
+        dom.resultsContainer.classList.remove("has-selected-pokemon");
+    }
+
+    getSelectedLevel();
+
+    updateFacilitySelectionControls();
+    populateFactorySeriesSelect();
 
     if (isArcadeMode()) {
         for (let trainerIndex = 0; trainerIndex < getActiveTrainerCount(); trainerIndex++) {
@@ -169,11 +278,20 @@ function handleFacilityModeChange(event) {
         }
     }
 
+    applyTrainerSlotLanguage();
+    applyOpponentSlotLanguage();
+
     refreshCurrentBattleView();
 }
 
 function handleBattleFormatChange(event) {
+    const previousFormat = battleState.format;
+
     battleState.format = event.target.value;
+
+    if (isFactoryMode() && previousFormat !== battleState.format) {
+        resetFactoryPlayerTeam();
+    }
 
     resetAllOpponentBattleStates();
     resetAllTrainerBattleExclusions();
@@ -225,6 +343,7 @@ function initApp() {
 
     bindBattleExclusionEvents(0);
     bindBattleExclusionEvents(1);
+    bindFactoryPlayerTeamEvents();
 
     dom.languageToggle.addEventListener("click", toggleLanguage);
 
@@ -235,6 +354,8 @@ function initApp() {
     dom.battleFormatInputs.forEach((input) => {
         input.addEventListener("change", handleBattleFormatChange);
     });
+
+    dom.factorySeriesSelect.addEventListener("change", handleFactorySeriesChange);
 
     dom.seriesFilterButton.addEventListener("click", (event) => {
         event.stopPropagation();
@@ -252,20 +373,30 @@ function initApp() {
     });
 
     dom.levelInput.addEventListener("change", () => {
-        const hasTrainer = battleState.trainers
-            .slice(0, getActiveTrainerCount())
-            .some((trainerState) => trainerState.trainer);
+        getSelectedLevel();
 
-        if (!hasTrainer) {
+        if (isFactoryMode()) {
+            resetFactoryPlayerTeam();
+            populateFactorySeriesSelect();
+        }
+
+        const sourceCount = isFactoryMode() ? 1 : getActiveTrainerCount();
+
+        const hasSource = Array.from(
+            { length: sourceCount },
+            (_, sourceIndex) => hasBattlePokemonSource(sourceIndex)
+        ).some(Boolean);
+
+        if (!hasSource) {
             return;
         }
 
         resetAllTrainerBattleExclusions();
         resetAllOpponentBattleStates();
 
-        for (let trainerIndex = 0; trainerIndex < getActiveTrainerCount(); trainerIndex++) {
-            clearExcludedPokemonInput(trainerIndex);
-            clearExcludedItemInput(trainerIndex);
+        for (let sourceIndex = 0; sourceIndex < sourceCount; sourceIndex++) {
+            clearExcludedPokemonInput(sourceIndex);
+            clearExcludedItemInput(sourceIndex);
         }
 
         renderBattleResults();

@@ -4,10 +4,8 @@
 // Opponent Pokémon selector and Pokémon detail cards
 // -----------------------------------------------------------------------------
 
-function getSelectedPokemonSets(trainer, speciesId) {
-    const level = getSelectedLevel();
-
-    return getTrainerMonsForLevel(trainer, level)
+function getSelectedPokemonSets(speciesId, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+    return getAvailableBattleMonsForOpponentSlot(slotIndex)
         .filter((mon) => mon.speciesId === speciesId);
 }
 
@@ -15,8 +13,13 @@ function getOpponentSlotDom(slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     return dom.opponentSlots[slotIndex];
 }
 
+function usesSharedOpponentTeamAcrossSlots() {
+    return battleState.format === "doubles" ||
+        (isFactoryMode() && battleState.format === "multi");
+}
+
 function isSpeciesSelectedInOtherOpponentSlot(speciesId, slotIndex) {
-    if (battleState.format !== "doubles") {
+    if (!usesSharedOpponentTeamAcrossSlots()) {
         return false;
     }
 
@@ -25,14 +28,13 @@ function isSpeciesSelectedInOtherOpponentSlot(speciesId, slotIndex) {
     );
 }
 
-function getUniqueAvailableOpponentSpecies(trainer, slotIndex) {
-    const trainerIndex = getTrainerIndexForOpponentSlot(slotIndex);
-    const level = getSelectedLevel();
-    const mons = getTrainerMonsForLevel(trainer, level);
+function getUniqueAvailableOpponentSpecies(slotIndex) {
+    const sourceIndex = getBattlePokemonSourceIndexForOpponentSlot(slotIndex);
+    const mons = getAvailableBattleMonsForOpponentSlot(slotIndex);
     const uniqueSpecies = [];
 
     for (const mon of mons) {
-        if (isMonExcluded(mon, trainerIndex) || isSpeciesSelectedInOtherOpponentSlot(mon.speciesId, slotIndex)) {
+        if (isMonExcluded(mon, sourceIndex) || isSpeciesSelectedInOtherOpponentSlot(mon.speciesId, slotIndex)) {
             continue;
         }
 
@@ -44,18 +46,18 @@ function getUniqueAvailableOpponentSpecies(trainer, slotIndex) {
     return uniqueSpecies;
 }
 
-function findOpponentPokemonByInputValue(trainer, value, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+function findOpponentPokemonByInputValue(value, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     const normalizedValue = normalizeText(value);
 
-    return getUniqueAvailableOpponentSpecies(trainer, slotIndex).find((mon) =>
+    return getUniqueAvailableOpponentSpecies(slotIndex).find((mon) =>
         normalizeText(getPokemonDisplayName(mon)) === normalizedValue ||
         normalizeText(getName(mon, "fr")) === normalizedValue ||
         normalizeText(getName(mon, "en")) === normalizedValue
     );
 }
 
-function findOpponentPokemonBySpeciesId(trainer, speciesId, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
-    return getUniqueAvailableOpponentSpecies(trainer, slotIndex).find((mon) => mon.speciesId === speciesId);
+function findOpponentPokemonBySpeciesId(speciesId, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+    return getUniqueAvailableOpponentSpecies(slotIndex).find((mon) => mon.speciesId === speciesId);
 }
 
 function getPokemonDisplayName(mon) {
@@ -66,9 +68,7 @@ function getPokemonDisplayName(mon) {
 }
 
 function selectSingleSetFromTable(mon, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
-    const trainer = getTrainerForOpponentSlot(slotIndex);
-
-    if (!trainer || !mon) {
+    if (!hasBattlePokemonSourceForOpponentSlot(slotIndex) || !mon) {
         return;
     }
 
@@ -86,10 +86,12 @@ function selectSingleSetFromTable(mon, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) 
     slotDom.input.value = getName(mon);
     slotDom.suggestions.hidden = true;
 
-    renderSelectedPokemonDetails(trainer, mon.speciesId, slotIndex);
+    renderSelectedPokemonDetails(mon.speciesId, slotIndex);
 
-    if (battleState.format === "doubles") {
-        populateOpponentPokemonSelect(trainer, slotIndex === 0 ? 1 : 0);
+    if (usesSharedOpponentTeamAcrossSlots()) {
+        const otherSlotIndex = slotIndex === 0 ? 1 : 0;
+
+        populateOpponentPokemonSelect(otherSlotIndex);
 
         if (slotIndex === 0 && !getOpponentBattleState(1).speciesId) {
             battleState.activeOpponentSlotIndex = 1;
@@ -98,9 +100,9 @@ function selectSingleSetFromTable(mon, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) 
 }
 
 function selectOpponentPokemonAndRender(mon, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
-    const trainer = getTrainerForOpponentSlot(slotIndex);
-
-    if (!trainer || !mon || isSpeciesSelectedInOtherOpponentSlot(mon.speciesId, slotIndex)) {
+    if (!hasBattlePokemonSourceForOpponentSlot(slotIndex) ||
+        !mon ||
+        isSpeciesSelectedInOtherOpponentSlot(mon.speciesId, slotIndex)) {
         return;
     }
 
@@ -115,18 +117,18 @@ function selectOpponentPokemonAndRender(mon, slotIndex = PRIMARY_OPPONENT_SLOT_I
     slotDom.input.blur();
     slotDom.select.blur();
 
-    resetPossibleSetsForPokemon(trainer, mon.speciesId, slotIndex);
-    renderSelectedPokemonDetails(trainer, mon.speciesId, slotIndex);
+    resetPossibleSetsForPokemon(mon.speciesId, slotIndex);
+    renderSelectedPokemonDetails(mon.speciesId, slotIndex);
 
-    if (battleState.format === "doubles") {
-        populateOpponentPokemonSelect(trainer, slotIndex === 0 ? 1 : 0);
+    if (usesSharedOpponentTeamAcrossSlots()) {
+        populateOpponentPokemonSelect(slotIndex === 0 ? 1 : 0);
     }
 }
 
-function populateOpponentPokemonSelect(trainer, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+function populateOpponentPokemonSelect(slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     const slotDom = getOpponentSlotDom(slotIndex);
     const opponentState = getOpponentBattleState(slotIndex);
-    const uniqueSpecies = getUniqueAvailableOpponentSpecies(trainer, slotIndex);
+    const uniqueSpecies = getUniqueAvailableOpponentSpecies(slotIndex);
 
     slotDom.select.replaceChildren();
     slotDom.select.appendChild(createPlaceholderOption(translate("ui", "opponentPokemonSelectPlaceholder")));
@@ -161,14 +163,13 @@ function refreshOpponentBattleInterface() {
     let visibleOpponentCount = 0;
 
     dom.opponentSlots.forEach((slotDom, slotIndex) => {
-        const trainer = slotIndex < opponentCount ? getTrainerForOpponentSlot(slotIndex) : null;
-        const isActive = Boolean(trainer);
+        const isActive = slotIndex < opponentCount && hasBattlePokemonSourceForOpponentSlot(slotIndex);
 
         slotDom.container.hidden = !isActive;
 
         if (isActive) {
             visibleOpponentCount++;
-            populateOpponentPokemonSelect(trainer, slotIndex);
+            populateOpponentPokemonSelect(slotIndex);
         }
     });
 
@@ -177,7 +178,6 @@ function refreshOpponentBattleInterface() {
 }
 
 function clearOpponentPokemonSelection(slotIndex, refreshOtherSlot = true) {
-    const trainer = getTrainerForOpponentSlot(slotIndex);
     const slotDom = getOpponentSlotDom(slotIndex);
 
     resetOpponentBattleState(slotIndex);
@@ -190,8 +190,8 @@ function clearOpponentPokemonSelection(slotIndex, refreshOtherSlot = true) {
 
     updateSelectedPokemonPresence();
 
-    if (refreshOtherSlot && trainer && battleState.format === "doubles") {
-        populateOpponentPokemonSelect(trainer, slotIndex === 0 ? 1 : 0);
+    if (refreshOtherSlot && usesSharedOpponentTeamAcrossSlots()) {
+        populateOpponentPokemonSelect(slotIndex === 0 ? 1 : 0);
     }
 }
 
@@ -203,7 +203,7 @@ function updateSelectedPokemonPresence() {
     dom.resultsContainer.classList.toggle("has-selected-pokemon", hasSelectedPokemon);
 }
 
-function populateOpponentPokemonSuggestions(trainer, search = "", slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+function populateOpponentPokemonSuggestions(search = "", slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     const slotDom = getOpponentSlotDom(slotIndex);
     const opponentState = getOpponentBattleState(slotIndex);
 
@@ -216,7 +216,7 @@ function populateOpponentPokemonSuggestions(trainer, search = "", slotIndex = PR
         return;
     }
 
-    const matches = getUniqueAvailableOpponentSpecies(trainer, slotIndex)
+    const matches = getUniqueAvailableOpponentSpecies(slotIndex)
         .filter((mon) =>
             normalizeText(getPokemonDisplayName(mon)).includes(normalizedSearch) ||
             normalizeText(getName(mon, "fr")).includes(normalizedSearch) ||
@@ -306,23 +306,24 @@ function bindOpponentPokemonSlotEvents(slotIndex) {
         handleOpponentSuggestionKeyboard(event, slotIndex);
     });
 
-    slotDom.select.addEventListener("change", (event) => {
-        const trainer = getTrainerForOpponentSlot(slotIndex);
+    slotDom.clearButton.addEventListener("click", () => {
+        clearOpponentPokemonSelection(slotIndex);
+        slotDom.input.focus();
+    });
 
-        if (!trainer || !event.target.value) {
+    slotDom.select.addEventListener("change", (event) => {
+        if (!hasBattlePokemonSourceForOpponentSlot(slotIndex) || !event.target.value) {
             clearOpponentPokemonSelection(slotIndex);
             return;
         }
 
-        const mon = findOpponentPokemonBySpeciesId(trainer, event.target.value, slotIndex);
+        const mon = findOpponentPokemonBySpeciesId(event.target.value, slotIndex);
         selectOpponentPokemonAndRender(mon, slotIndex);
     });
 
     slotDom.input.addEventListener("input", (event) => {
-        const trainer = getTrainerForOpponentSlot(slotIndex);
-
-        if (trainer) {
-            populateOpponentPokemonSuggestions(trainer, event.target.value, slotIndex);
+        if (hasBattlePokemonSourceForOpponentSlot(slotIndex)) {
+            populateOpponentPokemonSuggestions(event.target.value, slotIndex);
         }
     });
 
@@ -333,9 +334,7 @@ function bindOpponentPokemonSlotEvents(slotIndex) {
     });
 
     slotDom.input.addEventListener("change", (event) => {
-        const trainer = getTrainerForOpponentSlot(slotIndex);
-
-        if (!trainer) {
+        if (!hasBattlePokemonSourceForOpponentSlot(slotIndex)) {
             return;
         }
 
@@ -344,7 +343,7 @@ function bindOpponentPokemonSlotEvents(slotIndex) {
             return;
         }
 
-        const mon = findOpponentPokemonByInputValue(trainer, event.target.value, slotIndex);
+        const mon = findOpponentPokemonByInputValue(event.target.value, slotIndex);
 
         if (mon) {
             selectOpponentPokemonAndRender(mon, slotIndex);
@@ -498,10 +497,49 @@ function buildMoveAiRoutineBlock(moveId) {
     return details;
 }
 
-function renderSelectedPokemonDetails(trainer, speciesId, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+function buildFactoryDetailGroupTitle(group) {
+    const title = document.createElement("h3");
+    title.className = "factory-detail-group-title";
+
+    const label = translate("ui", getFactoryBattleGroupTranslationKey(group));
+    title.textContent = `${label} — ${group.mons.length} ${getFactoryPossibleSetsLabel(group.mons.length)}`;
+
+    return title;
+}
+
+function buildFactoryDetailIvTitle(ivGroup) {
+    const title = document.createElement("p");
+    title.className = "factory-detail-iv-title";
+    title.textContent = `${translate("columns", "iv")} : ${ivGroup.iv} — ${ivGroup.mons.length} ${getFactoryPossibleSetsLabel(ivGroup.mons.length)}`;
+
+    return title;
+}
+
+function appendFactoryPokemonDetailCards(container, visibleSets, level, slotIndex) {
+    const sourceIndex = getBattlePokemonSourceIndexForOpponentSlot(slotIndex);
+    const source = getBattlePokemonSource(sourceIndex);
+    const groups = getFactoryBattleGroups(visibleSets, source);
+
+    for (const group of groups) {
+        container.appendChild(buildFactoryDetailGroupTitle(group));
+
+        for (const ivGroup of group.ivGroups) {
+            container.appendChild(buildFactoryDetailIvTitle(ivGroup));
+
+            for (const mon of ivGroup.mons) {
+                const iv = getBattlePokemonIv(mon);
+                const stats = calculateStats(mon, iv, level);
+
+                container.appendChild(buildPokemonDetailCard(mon, stats, iv, slotIndex));
+            }
+        }
+    }
+}
+
+function renderSelectedPokemonDetails(speciesId, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     const opponentState = getOpponentBattleState(slotIndex);
     const container = getOpponentSlotDom(slotIndex).details;
-    const sets = getSelectedPokemonSets(trainer, speciesId);
+    const sets = getSelectedPokemonSets(speciesId, slotIndex);
 
     container.replaceChildren();
 
@@ -515,9 +553,15 @@ function renderSelectedPokemonDetails(trainer, speciesId, slotIndex = PRIMARY_OP
     const visibleSets = sets.filter((mon) => opponentState.possibleSetIds.has(mon.id));
     const hiddenSets = sets.filter((mon) => !opponentState.possibleSetIds.has(mon.id));
 
-    for (const mon of visibleSets) {
-        const stats = calculateStats(mon, trainer.ivTier, level);
-        container.appendChild(buildPokemonDetailCard(mon, stats, trainer.ivTier, slotIndex));
+    if (isFactoryMode()) {
+        appendFactoryPokemonDetailCards(container, visibleSets, level, slotIndex);
+    } else {
+        for (const mon of visibleSets) {
+            const iv = getBattlePokemonIv(mon);
+            const stats = calculateStats(mon, iv, level);
+
+            container.appendChild(buildPokemonDetailCard(mon, stats, iv, slotIndex));
+        }
     }
 
     if (visibleSets.length > 0) {
@@ -532,14 +576,14 @@ function renderSelectedPokemonDetails(trainer, speciesId, slotIndex = PRIMARY_OP
     updateSelectedPokemonPresence();
 }
 
-function resetPossibleSetsForPokemon(trainer, speciesId, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
-    const trainerIndex = getTrainerIndexForOpponentSlot(slotIndex);
+function resetPossibleSetsForPokemon(speciesId, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+    const sourceIndex = getBattlePokemonSourceIndexForOpponentSlot(slotIndex);
     const opponentState = getOpponentBattleState(slotIndex);
 
     opponentState.speciesId = speciesId;
     opponentState.possibleSetIds = new Set(
-        getSelectedPokemonSets(trainer, speciesId)
-            .filter((mon) => !isMonExcluded(mon, trainerIndex))
+        getSelectedPokemonSets(speciesId, slotIndex)
+            .filter((mon) => !isMonExcluded(mon, sourceIndex))
             .map((mon) => mon.id)
     );
 }
@@ -733,7 +777,6 @@ function buildStatsBlock(stats) {
 }
 
 function togglePossibleSet(monId, slotIndex) {
-    const trainer = getTrainerForOpponentSlot(slotIndex);
     const opponentState = getOpponentBattleState(slotIndex);
 
     if (opponentState.possibleSetIds.has(monId)) {
@@ -742,7 +785,7 @@ function togglePossibleSet(monId, slotIndex) {
         opponentState.possibleSetIds.add(monId);
     }
 
-    renderSelectedPokemonDetails(trainer, opponentState.speciesId, slotIndex);
+    renderSelectedPokemonDetails(opponentState.speciesId, slotIndex);
 }
 
 function buildHiddenSetsPanel(hiddenSets, slotIndex) {
@@ -769,7 +812,12 @@ function buildHiddenSetsPanel(hiddenSets, slotIndex) {
         });
 
         const text = document.createElement("span");
-        text.textContent = `${getName(mon)} ${mon.setNumber ?? ""}`;
+        if (isFactoryMode()) {
+            text.textContent =
+                `${getName(mon)} ${mon.setNumber ?? ""} — ${translate("columns", "iv")} ${getBattlePokemonIv(mon)}`;
+        } else {
+            text.textContent = `${getName(mon)} ${mon.setNumber ?? ""}`;
+        }
 
         label.append(checkbox, text);
         list.appendChild(label);
@@ -832,7 +880,7 @@ function updateMovePp(mon, moveId, moveIndex, delta, slotIndex) {
 
     opponentState.movePpState.set(key, nextPp);
 
-    renderSelectedPokemonDetails(getTrainerForOpponentSlot(slotIndex), opponentState.speciesId, slotIndex);
+    renderSelectedPokemonDetails(opponentState.speciesId, slotIndex);
 }
 
 function buildMovesBlock(mon, slotIndex) {

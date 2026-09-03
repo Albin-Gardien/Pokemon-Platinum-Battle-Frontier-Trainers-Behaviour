@@ -8,8 +8,6 @@ const spriteBaseUrl = "https://raw.githubusercontent.com/msikma/pokesprite/maste
 const pokemonSpriteBaseUrl = `${spriteBaseUrl}/pokemon-gen7x/regular`;
 const itemSpriteBaseUrl = `${spriteBaseUrl}/items`;
 
-const forbiddenLevel50Species = new Set(["tyranitar", "dragonite"]);
-
 const frontierSeries = [
     { id: "series_1", label: "Série 1", start: 1, end: 120 },
     { id: "series_2", label: "Série 2", start: 81, end: 140 },
@@ -176,9 +174,14 @@ const dom = {
 
     trainerForm: document.getElementById("trainer-form"),
     trainerLabel: document.getElementById("trainer-label"),
+    trainerSelectorsContainer: document.getElementById("trainer-selectors-container"),
     trainerTextInput: document.getElementById("trainer-text-input"),
     trainerSuggestions: document.getElementById("trainer-suggestions"),
     trainerSelect: document.getElementById("trainer-select"),
+
+    factorySeriesLabel: document.getElementById("factory-series-label"),
+    factorySeriesField: document.getElementById("factory-series-field"),
+    factorySeriesSelect: document.getElementById("factory-series-select"),
 
     levelLabel: document.getElementById("level-label"),
     levelInput: document.getElementById("level-input"),
@@ -226,6 +229,46 @@ const dom = {
 
     selectedPokemonDetails: document.getElementById("selected-pokemon-details"),
 
+    factoryPlayerTeam: {
+        container: document.getElementById("factory-player-team"),
+        title: document.getElementById("factory-player-team-title"),
+
+        slots: [
+            {
+                container: document.getElementById("factory-player-slot-0"),
+                label: document.getElementById("factory-player-label-0"),
+                input: document.getElementById("factory-player-input-0"),
+                suggestions: document.getElementById("factory-player-suggestions-0"),
+                details: document.getElementById("factory-player-details-0"),
+                clearButton: document.getElementById("factory-player-clear-button-0")
+            },
+            {
+                container: document.getElementById("factory-player-slot-1"),
+                label: document.getElementById("factory-player-label-1"),
+                input: document.getElementById("factory-player-input-1"),
+                suggestions: document.getElementById("factory-player-suggestions-1"),
+                details: document.getElementById("factory-player-details-1"),
+                clearButton: document.getElementById("factory-player-clear-button-1")
+            },
+            {
+                container: document.getElementById("factory-player-slot-2"),
+                label: document.getElementById("factory-player-label-2"),
+                input: document.getElementById("factory-player-input-2"),
+                suggestions: document.getElementById("factory-player-suggestions-2"),
+                details: document.getElementById("factory-player-details-2"),
+                clearButton: document.getElementById("factory-player-clear-button-2")
+            },
+            {
+                container: document.getElementById("factory-player-slot-3"),
+                label: document.getElementById("factory-player-label-3"),
+                input: document.getElementById("factory-player-input-3"),
+                suggestions: document.getElementById("factory-player-suggestions-3"),
+                details: document.getElementById("factory-player-details-3"),
+                clearButton: document.getElementById("factory-player-clear-button-3")
+            }
+        ]
+    },
+
     opponentSlots: [
         {
             container: document.getElementById("opponent-slot-0"),
@@ -233,7 +276,8 @@ const dom = {
             input: document.getElementById("opponent-pokemon-input"),
             suggestions: document.getElementById("opponent-pokemon-suggestions"),
             select: document.getElementById("opponent-pokemon-select"),
-            details: document.getElementById("selected-pokemon-details")
+            details: document.getElementById("selected-pokemon-details"),
+            clearButton: document.getElementById("opponent-pokemon-clear-button")
         },
         {
             container: document.getElementById("opponent-slot-1"),
@@ -241,7 +285,8 @@ const dom = {
             input: document.getElementById("opponent-pokemon-input-2"),
             suggestions: document.getElementById("opponent-pokemon-suggestions-2"),
             select: document.getElementById("opponent-pokemon-select-2"),
-            details: document.getElementById("selected-pokemon-details-2")
+            details: document.getElementById("selected-pokemon-details-2"),
+            clearButton: document.getElementById("opponent-pokemon-clear-button-2")
         }
     ],
     trainerSlots: [
@@ -250,14 +295,16 @@ const dom = {
             label: document.getElementById("trainer-slot-label-0"),
             input: document.getElementById("trainer-text-input"),
             suggestions: document.getElementById("trainer-suggestions"),
-            select: document.getElementById("trainer-select")
+            select: document.getElementById("trainer-select"),
+            clearButton: document.getElementById("trainer-clear-button")
         },
         {
             container: document.getElementById("trainer-slot-1"),
             label: document.getElementById("trainer-slot-label-1"),
             input: document.getElementById("trainer-text-input-2"),
             suggestions: document.getElementById("trainer-suggestions-2"),
-            select: document.getElementById("trainer-select-2")
+            select: document.getElementById("trainer-select-2"),
+            clearButton: document.getElementById("trainer-clear-button-2")
         }
     ],
     singleTrainerHeader: document.getElementById("single-trainer-header"),

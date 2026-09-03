@@ -10,6 +10,7 @@
     <script src="data/frontier_trainers.js"></script>
     <script src="data/trainer_teams.js"></script>
     <script src="data/frontier_mons.js"></script>
+    <script src="data/factory_pools.js"></script>
     <script src="data/translations.js"></script>
     <script src="data/moves.js"></script>
     <script src="data/moves_ai_routine.js"></script>
@@ -28,12 +29,18 @@
                 <label for="trainer-text-input" id="trainer-label" class="trainer-label"></label>
 
                 <div class="trainer-main-controls">
+                    <div id="factory-series-field" class="factory-series-field" hidden>
+                        <label id="factory-series-label" for="factory-series-select"></label>
+                        <select id="factory-series-select"></select>
+                    </div>
+
                     <div id="trainer-selectors-container" class="trainer-selectors-container">
                         <div id="trainer-slot-0" class="trainer-selector-slot">
                             <span id="trainer-slot-label-0" class="trainer-slot-label" hidden></span>
 
                             <div class="autocomplete-field">
                                 <input type="text" id="trainer-text-input" autocomplete="off" />
+                                <button type="button" id="trainer-clear-button" class="search-clear-button" aria-label="Effacer la sélection">×</button>
                                 <div id="trainer-suggestions" class="suggestions-menu" hidden></div>
                             </div>
 
@@ -45,6 +52,7 @@
 
                             <div class="autocomplete-field">
                                 <input type="text" id="trainer-text-input-2" autocomplete="off" />
+                                <button type="button" id="trainer-clear-button-2" class="search-clear-button" aria-label="Effacer la sélection">×</button>
                                 <div id="trainer-suggestions-2" class="suggestions-menu" hidden></div>
                             </div>
 
@@ -81,8 +89,8 @@
                             <span id="facility-arcade-label"></span>
                         </label>
 
-                        <label class="battle-mode-option is-future">
-                            <input type="radio" name="facility-mode" value="factory" disabled />
+                        <label class="battle-mode-option">
+                            <input type="radio" name="facility-mode" value="factory" />
                             <span id="facility-factory-label"></span>
                         </label>
 
@@ -123,6 +131,60 @@
             <p id="trainer-info" class="muted"></p>
         </div>
 
+        <section id="factory-player-team" class="factory-player-team" hidden>
+            <h2 id="factory-player-team-title" class="factory-player-team-title"></h2>
+
+            <div class="factory-player-team-grid">
+                <div id="factory-player-slot-0" class="factory-player-slot">
+                    <label id="factory-player-label-0" for="factory-player-input-0"></label>
+
+                    <div class="autocomplete-field">
+                        <input type="text" id="factory-player-input-0" autocomplete="off" />
+                        <button type="button" id="factory-player-clear-button-0" class="search-clear-button" aria-label="Effacer la sélection">×</button>
+                        <div id="factory-player-suggestions-0" class="suggestions-menu" hidden></div>
+                    </div>
+
+                    <div id="factory-player-details-0" class="factory-player-details" hidden></div>
+                </div>
+
+                <div id="factory-player-slot-1" class="factory-player-slot">
+                    <label id="factory-player-label-1" for="factory-player-input-1"></label>
+
+                    <div class="autocomplete-field">
+                        <input type="text" id="factory-player-input-1" autocomplete="off" />
+                        <button type="button" id="factory-player-clear-button-1" class="search-clear-button" aria-label="Effacer la sélection">×</button>
+                        <div id="factory-player-suggestions-1" class="suggestions-menu" hidden></div>
+                    </div>
+
+                    <div id="factory-player-details-1" class="factory-player-details" hidden></div>
+                </div>
+
+                <div id="factory-player-slot-2" class="factory-player-slot">
+                    <label id="factory-player-label-2" for="factory-player-input-2"></label>
+
+                    <div class="autocomplete-field">
+                        <input type="text" id="factory-player-input-2" autocomplete="off" />
+                        <button type="button" id="factory-player-clear-button-2" class="search-clear-button" aria-label="Effacer la sélection">×</button>
+                        <div id="factory-player-suggestions-2" class="suggestions-menu" hidden></div>
+                    </div>
+
+                    <div id="factory-player-details-2" class="factory-player-details" hidden></div>
+                </div>
+
+                <div id="factory-player-slot-3" class="factory-player-slot" hidden>
+                    <label id="factory-player-label-3" for="factory-player-input-3"></label>
+
+                    <div class="autocomplete-field">
+                        <input type="text" id="factory-player-input-3" autocomplete="off" />
+                        <button type="button" id="factory-player-clear-button-3" class="search-clear-button" aria-label="Effacer la sélection">×</button>
+                        <div id="factory-player-suggestions-3" class="suggestions-menu" hidden></div>
+                    </div>
+
+                    <div id="factory-player-details-3" class="factory-player-details" hidden></div>
+                </div>
+            </div>
+        </section>
+
         <div id="opponent-search-container" class="opponent-search-container" hidden>
             <div id="opponent-slot-0" class="opponent-slot">
                 <div class="opponent-search-row">
@@ -130,6 +192,7 @@
 
                     <div class="autocomplete-field">
                         <input type="text" id="opponent-pokemon-input" autocomplete="off"/>
+                        <button type="button" id="opponent-pokemon-clear-button" class="search-clear-button" aria-label="Effacer la sélection">×</button>
                         <div id="opponent-pokemon-suggestions" class="suggestions-menu" hidden></div>
                     </div>
 
@@ -145,6 +208,7 @@
 
                     <div class="autocomplete-field">
                         <input type="text" id="opponent-pokemon-input-2" autocomplete="off"/>
+                        <button type="button" id="opponent-pokemon-clear-button-2" class="search-clear-button" aria-label="Effacer la sélection">×</button>
                         <div id="opponent-pokemon-suggestions-2" class="suggestions-menu" hidden></div>
                     </div>
 
@@ -230,10 +294,6 @@
                 </div>
             </details>
         </div>
-
-        <div class="table-wrapper">
-            <table id="pokemon-results" class="pokemon-table"></table>
-        </div>
     </div>
 
     <script src="scripts/constants.js"></script>
@@ -242,8 +302,10 @@
     <script src="scripts/utils.js"></script>
     <script src="scripts/trainer-search.js"></script>
     <script src="scripts/stats-calculations.js"></script>
+    <script src="scripts/battle-pokemon-source.js"></script>
     <script src="scripts/battle-exclusions.js"></script>
     <script src="scripts/render-table.js"></script>
     <script src="scripts/pokemon-details.js"></script>
+    <script src="scripts/factory-player-team.js"></script>
 </body>
 </html>

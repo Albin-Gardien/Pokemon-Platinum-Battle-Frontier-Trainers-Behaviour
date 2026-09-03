@@ -186,6 +186,39 @@ function populateTrainerSelect(slotIndex = PRIMARY_TRAINER_SLOT_INDEX, selectedT
     }
 }
 
+function clearTrainerSlotSelection(slotIndex) {
+    const trainerState = getTrainerBattleState(slotIndex);
+    const slotDom = getTrainerSlotDom(slotIndex);
+
+    trainerState.trainer = null;
+    trainerState.suggestionMatches = [];
+    trainerState.suggestionActiveIndex = -1;
+
+    resetTrainerBattleExclusions(slotIndex);
+
+    for (const opponentSlotIndex of getOpponentSlotIndexesForTrainer(slotIndex)) {
+        resetOpponentBattleState(opponentSlotIndex);
+    }
+
+    slotDom.input.value = "";
+    slotDom.select.value = "";
+    slotDom.suggestions.replaceChildren();
+    slotDom.suggestions.hidden = true;
+
+    clearExcludedPokemonInput(slotIndex);
+    clearExcludedItemInput(slotIndex);
+
+    if (battleState.format === "multi") {
+        for (let trainerIndex = 0; trainerIndex < getActiveTrainerCount(); trainerIndex++) {
+            const selectedTrainerId = getTrainerBattleState(trainerIndex).trainer?.id ?? null;
+            populateTrainerSelect(trainerIndex, selectedTrainerId);
+        }
+    }
+
+    renderBattleResults();
+    updateSelectedPokemonPresence();
+}
+
 // Synchronizes free text input and trainer select.
 function bindTrainerSlotEvents(slotIndex) {
     const slotDom = getTrainerSlotDom(slotIndex);
@@ -196,7 +229,7 @@ function bindTrainerSlotEvents(slotIndex) {
         populateTrainerSuggestions(slotDom.input.value, slotIndex);
 
         if (!search) {
-            slotDom.select.value = "";
+            clearTrainerSlotSelection(slotIndex);
             return;
         }
 
@@ -212,6 +245,11 @@ function bindTrainerSlotEvents(slotIndex) {
 
     slotDom.input.addEventListener("keydown", (event) => {
         handleTrainerSuggestionKeyboard(event, slotIndex);
+    });
+
+    slotDom.clearButton.addEventListener("click", () => {
+        clearTrainerSlotSelection(slotIndex);
+        slotDom.input.focus();
     });
 
     slotDom.input.addEventListener("blur", () => {

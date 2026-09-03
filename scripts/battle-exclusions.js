@@ -1,6 +1,16 @@
 "use strict";
 
 function getBattleExclusionLimit() {
+    if (isFactoryMode()) {
+        if (battleState.format === "doubles") {
+            return 2;
+        }
+
+        if (battleState.format === "multi") {
+            return 3;
+        }
+    }
+
     return getBattleFormatConfig().exclusionLimit;
 }
 
@@ -47,10 +57,9 @@ function isMonExcluded(mon, trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
 }
 
 function refreshBattleExclusionInterface(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
-    const trainer = getTrainerBattleState(trainerIndex).trainer;
     const exclusionDom = getBattleExclusionDom(trainerIndex);
 
-    if (!trainer) {
+    if (!hasBattlePokemonSource(trainerIndex)) {
         exclusionDom.container.hidden = true;
         return;
     }
@@ -145,7 +154,7 @@ function renderMultiSelectTags({ container, values, getLabel, onRemove }) {
 }
 
 function getExcludedSpeciesLabel(speciesId, trainerIndex) {
-    const mon = getUniqueSpeciesFromTrainer(trainerIndex).find((species) => species.speciesId === speciesId);
+    const mon = getAvailableBattleMons(trainerIndex).find((candidate) => candidate.speciesId === speciesId);
 
     return mon ? getPokemonDisplayName(mon) : speciesId;
 }
@@ -235,7 +244,7 @@ function populateExcludedPokemonSuggestions(search, trainerIndex = PRIMARY_TRAIN
         return;
     }
 
-    const matches = getUniqueSpeciesFromTrainer(trainerIndex)
+    const matches = getUniqueSpeciesFromOpponentSource(trainerIndex)
         .filter((mon) => !battleExclusions.speciesIds.has(mon.speciesId))
         .filter((mon) =>
             normalizeText(getPokemonDisplayName(mon)).includes(normalizedSearch) ||
@@ -277,7 +286,7 @@ function populateExcludedItemSuggestions(search, trainerIndex = PRIMARY_TRAINER_
         return;
     }
 
-    const matches = getUniqueItemsFromTrainer(trainerIndex)
+    const matches = getUniqueItemsFromOpponentSource(trainerIndex)
         .filter((itemId) => !battleExclusions.itemIds.has(itemId))
         .filter((itemId) => normalizeText(translateEntity("items", itemId)).includes(normalizedSearch))
         .slice(0, 12);
@@ -407,20 +416,10 @@ function handleExcludedSuggestionKeyboard({
     return false;
 }
 
-function getTrainerAvailableMons(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
-    const trainer = getTrainerBattleState(trainerIndex).trainer;
-
-    if (!trainer) {
-        return [];
-    }
-
-    return getTrainerMonsForLevel(trainer, getSelectedLevel());
-}
-
-function getUniqueSpeciesFromTrainer(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+function getUniqueSpeciesFromOpponentSource(sourceIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const uniqueSpecies = [];
 
-    for (const mon of getTrainerAvailableMons(trainerIndex)) {
+    for (const mon of getAvailableOpponentBattleMons(sourceIndex)) {
         if (!uniqueSpecies.some((existing) => existing.speciesId === mon.speciesId)) {
             uniqueSpecies.push(mon);
         }
@@ -429,10 +428,10 @@ function getUniqueSpeciesFromTrainer(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) 
     return uniqueSpecies;
 }
 
-function getUniqueItemsFromTrainer(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
+function getUniqueItemsFromOpponentSource(sourceIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const uniqueItems = new Set();
 
-    for (const mon of getTrainerAvailableMons(trainerIndex)) {
+    for (const mon of getAvailableOpponentBattleMons(sourceIndex)) {
         if (mon.item) {
             uniqueItems.add(mon.item);
         }
@@ -441,33 +440,41 @@ function getUniqueItemsFromTrainer(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     return [...uniqueItems];
 }
 
-function refreshAfterBattleExclusionChange(trainerIndex) {
-    const trainer = getTrainerBattleState(trainerIndex).trainer;
+function getOpponentSlotIndexesForBattleExclusionSource(sourceIndex) {
+    if (isFactoryMode()) {
+        return Array.from(
+            { length: getActiveOpponentCount() },
+            (_, slotIndex) => slotIndex
+        );
+    }
 
-    if (!trainer) {
+    return getOpponentSlotIndexesForTrainer(sourceIndex);
+}
+
+function refreshAfterBattleExclusionChange(sourceIndex) {
+    if (!hasBattlePokemonSource(sourceIndex)) {
         return;
     }
 
-    renderTrainerPanel(trainerIndex);
+    renderBattlePokemonSource(sourceIndex);
     refreshOpponentBattleInterface();
 
-    for (const opponentSlotIndex of getOpponentSlotIndexesForTrainer(trainerIndex)) {
+    for (const opponentSlotIndex of getOpponentSlotIndexesForBattleExclusionSource(sourceIndex)) {
         refreshSelectedPokemonDetailsAfterExclusionChange(opponentSlotIndex);
     }
 }
 
 function refreshSelectedPokemonDetailsAfterExclusionChange(slotIndex) {
-    const trainer = getTrainerForOpponentSlot(slotIndex);
-    const trainerIndex = getTrainerIndexForOpponentSlot(slotIndex);
+    const sourceIndex = getBattlePokemonSourceIndexForOpponentSlot(slotIndex);
     const opponentState = getOpponentBattleState(slotIndex);
     const slotDom = getOpponentSlotDom(slotIndex);
 
-    if (!trainer || !opponentState.speciesId) {
+    if (!hasBattlePokemonSourceForOpponentSlot(slotIndex) || !opponentState.speciesId) {
         return;
     }
 
-    const availableSets = getSelectedPokemonSets(trainer, opponentState.speciesId)
-        .filter((mon) => !isMonExcluded(mon, trainerIndex));
+    const availableSets = getSelectedPokemonSets(opponentState.speciesId, slotIndex)
+        .filter((mon) => !isMonExcluded(mon, sourceIndex));
 
     if (availableSets.length === 0) {
         clearOpponentPokemonSelection(slotIndex);
@@ -483,7 +490,7 @@ function refreshSelectedPokemonDetailsAfterExclusionChange(slotIndex) {
     }
 
     slotDom.select.value = opponentState.speciesId;
-    renderSelectedPokemonDetails(trainer, opponentState.speciesId, slotIndex);
+    renderSelectedPokemonDetails(opponentState.speciesId, slotIndex);
 }
 
 function bindBattleExclusionEvents(trainerIndex) {
