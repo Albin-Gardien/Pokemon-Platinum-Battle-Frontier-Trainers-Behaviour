@@ -1,18 +1,20 @@
 "use strict";
 
 // -----------------------------------------------------------------------------
-// Opponent Pokémon selector and Pokémon detail cards
+// Opponent Pokémon source
 // -----------------------------------------------------------------------------
-
+// Returns selected pokemon sets
 function getSelectedPokemonSets(speciesId, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     return getAvailableBattleMonsForOpponentSlot(slotIndex)
         .filter((mon) => mon.speciesId === speciesId);
 }
 
+// Returns opponent slot DOM
 function getOpponentSlotDom(slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     return dom.opponentSlots[slotIndex];
 }
 
+// Returns whether shared opponent team across slots
 function usesSharedOpponentTeamAcrossSlots() {
     if (isHallMode()) {
         return false;
@@ -21,6 +23,7 @@ function usesSharedOpponentTeamAcrossSlots() {
     return battleState.format === "doubles" || (isFactoryMode() && battleState.format === "multi");
 }
 
+// Returns whether species selected in other opponent slot
 function isSpeciesSelectedInOtherOpponentSlot(speciesId, slotIndex) {
     if (!usesSharedOpponentTeamAcrossSlots()) {
         return false;
@@ -31,6 +34,7 @@ function isSpeciesSelectedInOtherOpponentSlot(speciesId, slotIndex) {
     );
 }
 
+// Returns unique available opponent species
 function getUniqueAvailableOpponentSpecies(slotIndex) {
     const sourceIndex = getBattlePokemonSourceIndexForOpponentSlot(slotIndex);
     const mons = getAvailableBattleMonsForOpponentSlot(slotIndex);
@@ -49,6 +53,7 @@ function getUniqueAvailableOpponentSpecies(slotIndex) {
     return uniqueSpecies;
 }
 
+// Finds opponent pokemon by input value
 function findOpponentPokemonByInputValue(value, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     const normalizedValue = normalizeText(value);
 
@@ -59,10 +64,12 @@ function findOpponentPokemonByInputValue(value, slotIndex = PRIMARY_OPPONENT_SLO
     );
 }
 
+// Finds opponent pokemon by species ID
 function findOpponentPokemonBySpeciesId(speciesId, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     return getUniqueAvailableOpponentSpecies(slotIndex).find((mon) => mon.speciesId === speciesId);
 }
 
+// Returns the localized Pokémon display name used by opponent selectors
 function getPokemonDisplayName(mon) {
     const mainName = getName(mon, currentLang);
     const secondaryName = getName(mon, getOtherLang());
@@ -70,6 +77,10 @@ function getPokemonDisplayName(mon) {
     return mainName === secondaryName ? mainName : `${mainName} (${secondaryName})`;
 }
 
+// -----------------------------------------------------------------------------
+// Opponent Pokémon selection
+// -----------------------------------------------------------------------------
+// Selects a Hall opponent across active slots and renders its details
 function selectHallOpponentPokemonAndRender(mon, activeSlotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     if (!mon || !hasBattlePokemonSourceForOpponentSlot(PRIMARY_OPPONENT_SLOT_INDEX)) {
         return;
@@ -98,6 +109,7 @@ function selectHallOpponentPokemonAndRender(mon, activeSlotIndex = PRIMARY_OPPON
     updateSelectedPokemonPresence();
 }
 
+// Selects single set from table
 function selectSingleSetFromTable(mon, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     if (!hasBattlePokemonSourceForOpponentSlot(slotIndex) || !mon) {
         return;
@@ -135,6 +147,7 @@ function selectSingleSetFromTable(mon, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) 
     }
 }
 
+// Selects an opponent Pokémon and renders its available sets
 function selectOpponentPokemonAndRender(mon, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     if (!hasBattlePokemonSourceForOpponentSlot(slotIndex) || !mon) {
         return;
@@ -168,6 +181,7 @@ function selectOpponentPokemonAndRender(mon, slotIndex = PRIMARY_OPPONENT_SLOT_I
     }
 }
 
+// Populates opponent pokemon select
 function populateOpponentPokemonSelect(slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     const slotDom = getOpponentSlotDom(slotIndex);
     const opponentState = getOpponentBattleState(slotIndex);
@@ -201,6 +215,7 @@ function populateOpponentPokemonSelect(slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) 
     slotDom.details.hidden = true;
 }
 
+// Refreshes opponent battle interface
 function refreshOpponentBattleInterface() {
     const opponentCount = getActiveOpponentCount();
     let visibleOpponentCount = 0;
@@ -220,6 +235,7 @@ function refreshOpponentBattleInterface() {
     dom.opponentSearchContainer.hidden = visibleOpponentCount === 0;
 }
 
+// Clears hall opponent pokemon selection
 function clearHallOpponentPokemonSelection() {
     const opponentCount = getActiveOpponentCount();
 
@@ -238,6 +254,7 @@ function clearHallOpponentPokemonSelection() {
     updateSelectedPokemonPresence();
 }
 
+// Clears opponent pokemon selection
 function clearOpponentPokemonSelection(slotIndex, refreshOtherSlot = true) {
     if (isHallMode()) {
         clearHallOpponentPokemonSelection();
@@ -261,6 +278,7 @@ function clearOpponentPokemonSelection(slotIndex, refreshOtherSlot = true) {
     }
 }
 
+// Updates selected pokemon presence
 function updateSelectedPokemonPresence() {
     const hasSelectedPokemon = battleState.opponents
         .slice(0, getActiveOpponentCount())
@@ -269,6 +287,10 @@ function updateSelectedPokemonPresence() {
     dom.resultsContainer.classList.toggle("has-selected-pokemon", hasSelectedPokemon);
 }
 
+// -----------------------------------------------------------------------------
+// Opponent Pokémon autocomplete and events
+// -----------------------------------------------------------------------------
+// Populates opponent pokemon suggestions
 function populateOpponentPokemonSuggestions(search = "", slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     const slotDom = getOpponentSlotDom(slotIndex);
     const opponentState = getOpponentBattleState(slotIndex);
@@ -315,6 +337,7 @@ function populateOpponentPokemonSuggestions(search = "", slotIndex = PRIMARY_OPP
     slotDom.suggestions.hidden = false;
 }
 
+// Updates opponent suggestion active item
 function updateOpponentSuggestionActiveItem(slotIndex) {
     const slotDom = getOpponentSlotDom(slotIndex);
     const opponentState = getOpponentBattleState(slotIndex);
@@ -325,6 +348,7 @@ function updateOpponentSuggestionActiveItem(slotIndex) {
     });
 }
 
+// Handles opponent suggestion keyboard
 function handleOpponentSuggestionKeyboard(event, slotIndex) {
     const slotDom = getOpponentSlotDom(slotIndex);
     const opponentState = getOpponentBattleState(slotIndex);
@@ -357,6 +381,7 @@ function handleOpponentSuggestionKeyboard(event, slotIndex) {
     }
 }
 
+// Binds opponent pokemon slot events
 function bindOpponentPokemonSlotEvents(slotIndex) {
     const slotDom = getOpponentSlotDom(slotIndex);
 
@@ -417,6 +442,10 @@ function bindOpponentPokemonSlotEvents(slotIndex) {
     });
 }
 
+// -----------------------------------------------------------------------------
+// AI routine rendering
+// -----------------------------------------------------------------------------
+// Returns unique visible move ids
 function getUniqueVisibleMoveIds(visibleSets) {
     const moveIds = new Set();
 
@@ -431,6 +460,7 @@ function getUniqueVisibleMoveIds(visibleSets) {
     return [...moveIds];
 }
 
+// Returns move AI routine texts
 function getMoveAiRoutineTexts(moveId, mode) {
     const modeData = window.moveAiRoutines?.[moveId]?.routine?.[mode];
 
@@ -439,6 +469,7 @@ function getMoveAiRoutineTexts(moveId, mode) {
         ?? [];
 }
 
+// Builds AI routine list
 function buildAiRoutineList(routineTexts) {
     const list = document.createElement("div");
     list.className = "ai-routine-list";
@@ -454,6 +485,7 @@ function buildAiRoutineList(routineTexts) {
     return list;
 }
 
+// Builds doubles AI section
 function buildDoublesAiSection(titleKey, routineTexts) {
     if (routineTexts.length === 0) {
         return null;
@@ -471,6 +503,7 @@ function buildDoublesAiSection(titleKey, routineTexts) {
     return section;
 }
 
+// Builds doubles AI routine block
 function buildDoublesAiRoutineBlock(moveId) {
     if (!usesDoublesAi()) {
         return null;
@@ -507,12 +540,14 @@ function buildDoublesAiRoutineBlock(moveId) {
     return block;
 }
 
+// Returns factory series number
 function getFactorySeriesNumber() {
     const match = selectedFactorySeriesId.match(/\d+/);
 
     return match ? Number(match[0]) : 1;
 }
 
+// Returns hall AI display profile
 function getHallAiDisplayProfile() {
     const rank = getEffectiveHallRank();
 
@@ -533,6 +568,7 @@ function getHallAiDisplayProfile() {
     return { showSinglesRoutine: true, messageKey: null };
 }
 
+// Returns factory AI display profile
 function getFactoryAiDisplayProfile() {
     const seriesNumber = getFactorySeriesNumber();
 
@@ -551,6 +587,7 @@ function getFactoryAiDisplayProfile() {
     return { showSinglesRoutine: true, messageKey: null };
 }
 
+// Returns battle AI display profile
 function getBattleAiDisplayProfile() {
     if (isHallMode()) {
         return getHallAiDisplayProfile();
@@ -563,6 +600,7 @@ function getBattleAiDisplayProfile() {
     return { showSinglesRoutine: true, messageKey: null };
 }
 
+// Builds AI mode notice
 function buildAiModeNotice(messageKey) {
     const notice = document.createElement("p");
 
@@ -572,6 +610,7 @@ function buildAiModeNotice(messageKey) {
     return notice;
 }
 
+// Builds AI routine accordion
 function buildAiRoutineAccordion(visibleSets) {
     const profile = getBattleAiDisplayProfile();
     const wrapper = document.createElement("div");
@@ -610,6 +649,7 @@ function buildAiRoutineAccordion(visibleSets) {
     return wrapper;
 }
 
+// Builds move AI routine block
 function buildMoveAiRoutineBlock(moveId, showSinglesRoutine = true) {
     const details = document.createElement("details");
     details.className = "ai-routine-move";
@@ -650,6 +690,10 @@ function buildMoveAiRoutineBlock(moveId, showSinglesRoutine = true) {
     return hasContent ? details : null;
 }
 
+// -----------------------------------------------------------------------------
+// Selected Pokémon detail rendering
+// -----------------------------------------------------------------------------
+// Builds factory detail group title
 function buildFactoryDetailGroupTitle(group) {
     const title = document.createElement("h3");
     title.className = "factory-detail-group-title";
@@ -660,6 +704,7 @@ function buildFactoryDetailGroupTitle(group) {
     return title;
 }
 
+// Builds factory detail IV title
 function buildFactoryDetailIvTitle(ivGroup) {
     const title = document.createElement("p");
     title.className = "factory-detail-iv-title";
@@ -668,6 +713,7 @@ function buildFactoryDetailIvTitle(ivGroup) {
     return title;
 }
 
+// Appends grouped Factory Pokémon detail cards
 function appendFactoryPokemonDetailCards(container, visibleSets, level, slotIndex) {
     const sourceIndex = getBattlePokemonSourceIndexForOpponentSlot(slotIndex);
     const source = getBattlePokemonSource(sourceIndex);
@@ -689,6 +735,7 @@ function appendFactoryPokemonDetailCards(container, visibleSets, level, slotInde
     }
 }
 
+// Renders selected pokemon details
 function renderSelectedPokemonDetails(speciesId, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     const opponentState = getOpponentBattleState(slotIndex);
     const container = getOpponentSlotDom(slotIndex).details;
@@ -735,6 +782,7 @@ function renderSelectedPokemonDetails(speciesId, slotIndex = PRIMARY_OPPONENT_SL
     updateSelectedPokemonPresence();
 }
 
+// Resets possible sets for pokemon
 function resetPossibleSetsForPokemon(speciesId, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     const sourceIndex = getBattlePokemonSourceIndexForOpponentSlot(slotIndex);
     const opponentState = getOpponentBattleState(slotIndex);
@@ -747,79 +795,10 @@ function resetPossibleSetsForPokemon(speciesId, slotIndex = PRIMARY_OPPONENT_SLO
     );
 }
 
-// ---------------------------------------------------------------------
-// Initialization and events
-// ---------------------------------------------------------------------
-
-function buildPokemonDetailCard(mon, stats, ivTier, slotIndex) {
-    const card = document.createElement("article");
-    card.className = "pokemon-detail-card";
-
-    const title = document.createElement("h3");
-    title.className = "pokemon-detail-title";
-
-    const opponentState = getOpponentBattleState(slotIndex);
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = opponentState.possibleSetIds.has(mon.id);
-
-    checkbox.addEventListener("change", () => {
-        togglePossibleSet(mon.id, slotIndex);
-    });
-
-    const label = document.createElement("span");
-    label.textContent = `${getName(mon)} ${mon.setNumber ?? ""}`;
-
-    title.append(checkbox, label);
-
-    title.addEventListener("click", (event) => {
-        if (event.target === checkbox) {
-            return;
-        }
-        togglePossibleSet(mon.id, slotIndex);
-    });
-
-    const content = document.createElement("div");
-    content.className = "pokemon-detail-content";
-
-    const sprite = document.createElement("img");
-    sprite.className = "pokemon-detail-sprite";
-    sprite.src = getPokemonFrontSpriteUrl(mon);
-    sprite.alt = getName(mon);
-    sprite.loading = "lazy";
-
-    const info = document.createElement("div");
-    info.className = "pokemon-detail-info";
-
-    const infoLines = [ buildTypeInfoLine(mon.types), buildAbilitiesInfoLine(mon.abilities), buildNatureInfoLine(mon.nature) ];
-    if (!isArcadeMode()) {
-        infoLines.push(buildItemInfoLine(mon.item, getItemSpriteUrl(mon.item)));
-    }
-    if (isHallMode()) {
-        infoLines.push(buildSimpleInfoLine(translate("ui", "levelLabel"), getBattlePokemonLevel(mon, getSelectedLevel()) ?? "—"));
-
-        const abilityPairNote = buildHallAbilityPairNote(mon, slotIndex);
-
-        if (abilityPairNote) {
-            infoLines.push(abilityPairNote);
-        }
-    }
-    infoLines.push(buildSimpleInfoLine(translate("columns", "iv"), ivTier ?? "—"));
-
-    info.append(...infoLines);
-
-    const movesBlock = buildMovesBlock(mon, slotIndex);
-    content.append(sprite, info);
-
-    if (stats) {
-        content.appendChild(buildStatsBlock(stats));
-    }
-
-    card.append(title, content, movesBlock);
-
-    return card;
-}
-
+// -----------------------------------------------------------------------------
+// Pokémon information blocks
+// -----------------------------------------------------------------------------
+// Builds hall ability pair note
 function buildHallAbilityPairNote(mon, slotIndex) {
     if (!isHallMode() || getActiveOpponentCount() !== 2 || mon.abilities.length < 2 || slotIndex !== PRIMARY_OPPONENT_SLOT_INDEX) {
         return null;
@@ -832,6 +811,7 @@ function buildHallAbilityPairNote(mon, slotIndex) {
     return note;
 }
 
+// Builds simple info line
 function buildSimpleInfoLine(label, value) {
     const line = document.createElement("p");
 
@@ -845,6 +825,7 @@ function buildSimpleInfoLine(label, value) {
     return line;
 }
 
+// Builds type info line
 function buildTypeInfoLine(types) {
     const line = document.createElement("p");
 
@@ -869,6 +850,7 @@ function buildTypeInfoLine(types) {
     return line;
 }
 
+// Builds abilities info line
 function buildAbilitiesInfoLine(abilities) {
     return buildSimpleInfoLine(
         translate("columns", "ability1").replace(" 1", "s"),
@@ -876,6 +858,7 @@ function buildAbilitiesInfoLine(abilities) {
     );
 }
 
+// Builds nature info line
 function buildNatureInfoLine(natureId) {
     const line = document.createElement("p");
 
@@ -892,6 +875,7 @@ function buildNatureInfoLine(natureId) {
     return line;
 }
 
+// Builds item info line
 function buildItemInfoLine(itemId, itemSpriteUrl) {
     const line = document.createElement("p");
     line.className = "pokemon-detail-item";
@@ -917,6 +901,7 @@ function buildItemInfoLine(itemId, itemSpriteUrl) {
     return line;
 }
 
+// Builds stats block
 function buildStatsBlock(stats) {
     const statMax = Math.max(stats.hp, stats.atk, stats.def, stats.spa, stats.spd, stats.spe);
 
@@ -955,6 +940,10 @@ function buildStatsBlock(stats) {
     return statsBlock;
 }
 
+// -----------------------------------------------------------------------------
+// Hidden set handling
+// -----------------------------------------------------------------------------
+// Toggles possible set
 function togglePossibleSet(monId, slotIndex) {
     const opponentState = getOpponentBattleState(slotIndex);
 
@@ -967,6 +956,7 @@ function togglePossibleSet(monId, slotIndex) {
     renderSelectedPokemonDetails(opponentState.speciesId, slotIndex);
 }
 
+// Builds hidden sets panel
 function buildHiddenSetsPanel(hiddenSets, slotIndex) {
     const panel = document.createElement("div");
     panel.className = "hidden-sets-panel";
@@ -1007,10 +997,15 @@ function buildHiddenSetsPanel(hiddenSets, slotIndex) {
     return panel;
 }
 
+// -----------------------------------------------------------------------------
+// Stat and move helpers
+// -----------------------------------------------------------------------------
+// Clamps a numeric value between the provided minimum and maximum
 function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
 }
 
+// Returns stat bar color
 function getStatBarColor(statValue) {
     const cappedStat = clamp(statValue, 0, 255);
 
@@ -1020,6 +1015,7 @@ function getStatBarColor(statValue) {
     return `rgb(${red}, ${green}, 0)`;
 }
 
+// Returns move name
 function getMoveName(moveId) {
     const move = window.moves?.[moveId];
 
@@ -1030,14 +1026,17 @@ function getMoveName(moveId) {
         ?? moveId;
 }
 
+// Returns move power points
 function getMovePowerPoints(moveId) {
     return window.moves?.[moveId]?.power_points ?? "";
 }
 
+// Returns move PP state key
 function getMovePpStateKey(mon, moveId, moveIndex) {
     return `${mon.id}:${moveIndex}:${moveId}`;
 }
 
+// Returns current move PP
 function getCurrentMovePp(mon, moveId, moveIndex, slotIndex) {
     const movePpState = getOpponentBattleState(slotIndex).movePpState;
     const maxPp = getMovePowerPoints(moveId);
@@ -1050,6 +1049,7 @@ function getCurrentMovePp(mon, moveId, moveIndex, slotIndex) {
     return movePpState.get(key);
 }
 
+// Updates move PP
 function updateMovePp(mon, moveId, moveIndex, delta, slotIndex) {
     const opponentState = getOpponentBattleState(slotIndex);
     const maxPp = getMovePowerPoints(moveId);
@@ -1062,6 +1062,10 @@ function updateMovePp(mon, moveId, moveIndex, delta, slotIndex) {
     renderSelectedPokemonDetails(opponentState.speciesId, slotIndex);
 }
 
+// -----------------------------------------------------------------------------
+// Move rendering
+// -----------------------------------------------------------------------------
+// Builds moves block
 function buildMovesBlock(mon, slotIndex) {
     const movesBlock = document.createElement("div");
     movesBlock.className = "pokemon-detail-moves";
@@ -1138,4 +1142,77 @@ function buildMovesBlock(mon, slotIndex) {
     movesBlock.append(title, grid);
 
     return movesBlock;
+}
+
+// -----------------------------------------------------------------------------
+// Pokémon detail card
+// -----------------------------------------------------------------------------
+// Builds pokemon detail card
+function buildPokemonDetailCard(mon, stats, ivTier, slotIndex) {
+    const card = document.createElement("article");
+    card.className = "pokemon-detail-card";
+
+    const title = document.createElement("h3");
+    title.className = "pokemon-detail-title";
+
+    const opponentState = getOpponentBattleState(slotIndex);
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = opponentState.possibleSetIds.has(mon.id);
+
+    checkbox.addEventListener("change", () => {
+        togglePossibleSet(mon.id, slotIndex);
+    });
+
+    const label = document.createElement("span");
+    label.textContent = `${getName(mon)} ${mon.setNumber ?? ""}`;
+
+    title.append(checkbox, label);
+
+    title.addEventListener("click", (event) => {
+        if (event.target === checkbox) {
+            return;
+        }
+        togglePossibleSet(mon.id, slotIndex);
+    });
+
+    const content = document.createElement("div");
+    content.className = "pokemon-detail-content";
+
+    const sprite = document.createElement("img");
+    sprite.className = "pokemon-detail-sprite";
+    sprite.src = getPokemonFrontSpriteUrl(mon);
+    sprite.alt = getName(mon);
+    sprite.loading = "lazy";
+
+    const info = document.createElement("div");
+    info.className = "pokemon-detail-info";
+
+    const infoLines = [ buildTypeInfoLine(mon.types), buildAbilitiesInfoLine(mon.abilities), buildNatureInfoLine(mon.nature) ];
+    if (!isArcadeMode()) {
+        infoLines.push(buildItemInfoLine(mon.item, getItemSpriteUrl(mon.item)));
+    }
+    if (isHallMode()) {
+        infoLines.push(buildSimpleInfoLine(translate("ui", "levelLabel"), getBattlePokemonLevel(mon, getSelectedLevel()) ?? "—"));
+
+        const abilityPairNote = buildHallAbilityPairNote(mon, slotIndex);
+
+        if (abilityPairNote) {
+            infoLines.push(abilityPairNote);
+        }
+    }
+    infoLines.push(buildSimpleInfoLine(translate("columns", "iv"), ivTier ?? "—"));
+
+    info.append(...infoLines);
+
+    const movesBlock = buildMovesBlock(mon, slotIndex);
+    content.append(sprite, info);
+
+    if (stats) {
+        content.appendChild(buildStatsBlock(stats));
+    }
+
+    card.append(title, content, movesBlock);
+
+    return card;
 }

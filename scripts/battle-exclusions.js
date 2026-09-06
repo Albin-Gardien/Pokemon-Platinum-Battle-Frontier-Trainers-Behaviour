@@ -1,5 +1,10 @@
 "use strict";
 
+// -----------------------------------------------------------------------------
+// Battle exclusion state and limits
+// -----------------------------------------------------------------------------
+
+// Returns battle exclusion limit
 function getBattleExclusionLimit() {
     if (isFactoryMode()) {
         if (battleState.format === "doubles") {
@@ -14,14 +19,17 @@ function getBattleExclusionLimit() {
     return getBattleFormatConfig().exclusionLimit;
 }
 
+// Returns battle exclusions
 function getBattleExclusions(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     return getTrainerBattleExclusions(trainerIndex);
 }
 
+// Returns battle exclusion DOM
 function getBattleExclusionDom(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     return dom.trainerPanels[trainerIndex].exclusions;
 }
 
+// Creates excluded suggestion state.
 function createExcludedSuggestionState() {
     return {
         pokemonMatches: [],
@@ -33,10 +41,12 @@ function createExcludedSuggestionState() {
 
 const excludedSuggestionStates = battleState.trainers.map(() => createExcludedSuggestionState());
 
+// Returns excluded suggestion state
 function getExcludedSuggestionState(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     return excludedSuggestionStates[trainerIndex];
 }
 
+// Resets battle exclusions
 function resetBattleExclusions(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const battleExclusions = getBattleExclusions(trainerIndex);
     const suggestionState = getExcludedSuggestionState(trainerIndex);
@@ -50,12 +60,18 @@ function resetBattleExclusions(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     suggestionState.itemActiveIndex = -1;
 }
 
+// Returns whether mon excluded
 function isMonExcluded(mon, trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const battleExclusions = getBattleExclusions(trainerIndex);
 
     return battleExclusions.speciesIds.has(mon.speciesId) || battleExclusions.itemIds.has(mon.item);
 }
 
+// -----------------------------------------------------------------------------
+// Exclusion interface rendering
+// -----------------------------------------------------------------------------
+
+// Refreshes battle exclusion interface
 function refreshBattleExclusionInterface(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const exclusionDom = getBattleExclusionDom(trainerIndex);
 
@@ -74,6 +90,7 @@ function refreshBattleExclusionInterface(trainerIndex = PRIMARY_TRAINER_SLOT_IND
     exclusionDom.container.hidden = false;
 }
 
+// Updates battle exclusion inputs state
 function updateBattleExclusionInputsState(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const battleExclusions = getBattleExclusions(trainerIndex);
     const exclusionDom = getBattleExclusionDom(trainerIndex);
@@ -96,6 +113,7 @@ function updateBattleExclusionInputsState(trainerIndex = PRIMARY_TRAINER_SLOT_IN
     });
 }
 
+// Updates battle exclusion input state
 function updateBattleExclusionInputState({ input, suggestions, limitReached, placeholder }) {
     const field = input.closest(".multi-select-field");
 
@@ -111,6 +129,7 @@ function updateBattleExclusionInputState({ input, suggestions, limitReached, pla
     }
 }
 
+// Renders battle exclusion tags
 function renderBattleExclusionTags(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const battleExclusions = getBattleExclusions(trainerIndex);
     const exclusionDom = getBattleExclusionDom(trainerIndex);
@@ -130,6 +149,7 @@ function renderBattleExclusionTags(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     });
 }
 
+// Renders multi select tags
 function renderMultiSelectTags({ container, values, getLabel, onRemove }) {
     container.replaceChildren();
 
@@ -153,12 +173,18 @@ function renderMultiSelectTags({ container, values, getLabel, onRemove }) {
     }
 }
 
+// Returns excluded species label
 function getExcludedSpeciesLabel(speciesId, trainerIndex) {
     const mon = getAvailableBattleMons(trainerIndex).find((candidate) => candidate.speciesId === speciesId);
 
     return mon ? getPokemonDisplayName(mon) : speciesId;
 }
 
+// -----------------------------------------------------------------------------
+// Exclusion mutations
+// -----------------------------------------------------------------------------
+
+// Adds excluded species
 function addExcludedSpecies(speciesId, trainerIndex) {
     const battleExclusions = getBattleExclusions(trainerIndex);
 
@@ -176,6 +202,7 @@ function addExcludedSpecies(speciesId, trainerIndex) {
     refreshAfterBattleExclusionChange(trainerIndex);
 }
 
+// Removes excluded species
 function removeExcludedSpecies(speciesId, trainerIndex) {
     const battleExclusions = getBattleExclusions(trainerIndex);
 
@@ -183,6 +210,7 @@ function removeExcludedSpecies(speciesId, trainerIndex) {
     refreshAfterBattleExclusionChange(trainerIndex);
 }
 
+// Adds excluded item
 function addExcludedItem(itemId, trainerIndex) {
     const battleExclusions = getBattleExclusions(trainerIndex);
 
@@ -200,6 +228,7 @@ function addExcludedItem(itemId, trainerIndex) {
     refreshAfterBattleExclusionChange(trainerIndex);
 }
 
+// Removes excluded item
 function removeExcludedItem(itemId, trainerIndex) {
     const battleExclusions = getBattleExclusions(trainerIndex);
 
@@ -207,6 +236,7 @@ function removeExcludedItem(itemId, trainerIndex) {
     refreshAfterBattleExclusionChange(trainerIndex);
 }
 
+// Clears excluded pokemon input
 function clearExcludedPokemonInput(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const exclusionDom = getBattleExclusionDom(trainerIndex);
 
@@ -214,6 +244,7 @@ function clearExcludedPokemonInput(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     exclusionDom.pokemonSuggestions.hidden = true;
 }
 
+// Clears excluded item input
 function clearExcludedItemInput(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const exclusionDom = getBattleExclusionDom(trainerIndex);
 
@@ -221,6 +252,11 @@ function clearExcludedItemInput(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     exclusionDom.itemSuggestions.hidden = true;
 }
 
+// -----------------------------------------------------------------------------
+// Exclusion autocomplete
+// -----------------------------------------------------------------------------
+
+// Populates excluded pokemon suggestions
 function populateExcludedPokemonSuggestions(search, trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const battleExclusions = getBattleExclusions(trainerIndex);
     const exclusionDom = getBattleExclusionDom(trainerIndex);
@@ -263,6 +299,7 @@ function populateExcludedPokemonSuggestions(search, trainerIndex = PRIMARY_TRAIN
     });
 }
 
+// Populates excluded item suggestions
 function populateExcludedItemSuggestions(search, trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const battleExclusions = getBattleExclusions(trainerIndex);
     const exclusionDom = getBattleExclusionDom(trainerIndex);
@@ -301,6 +338,7 @@ function populateExcludedItemSuggestions(search, trainerIndex = PRIMARY_TRAINER_
     });
 }
 
+// Builds suggestion menu
 function buildSuggestionMenu({ menu, matches, getLabel, onSelect }) {
     if (matches.length === 0) {
         menu.hidden = true;
@@ -323,6 +361,7 @@ function buildSuggestionMenu({ menu, matches, getLabel, onSelect }) {
     menu.hidden = false;
 }
 
+// Updates excluded suggestion active item
 function updateExcludedSuggestionActiveItem(menu, activeIndex) {
     const items = menu.querySelectorAll(".suggestion-item");
 
@@ -331,6 +370,7 @@ function updateExcludedSuggestionActiveItem(menu, activeIndex) {
     });
 }
 
+// Handles excluded pokemon suggestion keyboard
 function handleExcludedPokemonSuggestionKeyboard(event, trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const exclusionDom = getBattleExclusionDom(trainerIndex);
     const suggestionState = getExcludedSuggestionState(trainerIndex);
@@ -355,6 +395,7 @@ function handleExcludedPokemonSuggestionKeyboard(event, trainerIndex = PRIMARY_T
     }
 }
 
+// Handles excluded item suggestion keyboard
 function handleExcludedItemSuggestionKeyboard(event, trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const exclusionDom = getBattleExclusionDom(trainerIndex);
     const suggestionState = getExcludedSuggestionState(trainerIndex);
@@ -379,6 +420,7 @@ function handleExcludedItemSuggestionKeyboard(event, trainerIndex = PRIMARY_TRAI
     }
 }
 
+// Handles excluded suggestion keyboard
 function handleExcludedSuggestionKeyboard({
     event,
     menu,
@@ -416,6 +458,11 @@ function handleExcludedSuggestionKeyboard({
     return false;
 }
 
+// -----------------------------------------------------------------------------
+// Exclusion source helpers
+// -----------------------------------------------------------------------------
+
+// Returns unique species from opponent source
 function getUniqueSpeciesFromOpponentSource(sourceIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const uniqueSpecies = [];
 
@@ -428,6 +475,7 @@ function getUniqueSpeciesFromOpponentSource(sourceIndex = PRIMARY_TRAINER_SLOT_I
     return uniqueSpecies;
 }
 
+// Returns unique items from opponent source
 function getUniqueItemsFromOpponentSource(sourceIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const uniqueItems = new Set();
 
@@ -440,6 +488,7 @@ function getUniqueItemsFromOpponentSource(sourceIndex = PRIMARY_TRAINER_SLOT_IND
     return [...uniqueItems];
 }
 
+// Returns opponent slot indexes for battle exclusion source
 function getOpponentSlotIndexesForBattleExclusionSource(sourceIndex) {
     if (isFactoryMode()) {
         return Array.from(
@@ -451,6 +500,11 @@ function getOpponentSlotIndexesForBattleExclusionSource(sourceIndex) {
     return getOpponentSlotIndexesForTrainer(sourceIndex);
 }
 
+// -----------------------------------------------------------------------------
+// Exclusion refresh
+// -----------------------------------------------------------------------------
+
+// Refreshes after battle exclusion change
 function refreshAfterBattleExclusionChange(sourceIndex) {
     if (!hasBattlePokemonSource(sourceIndex)) {
         return;
@@ -464,6 +518,7 @@ function refreshAfterBattleExclusionChange(sourceIndex) {
     }
 }
 
+// Refreshes selected pokemon details after exclusion change
 function refreshSelectedPokemonDetailsAfterExclusionChange(slotIndex) {
     const sourceIndex = getBattlePokemonSourceIndexForOpponentSlot(slotIndex);
     const opponentState = getOpponentBattleState(slotIndex);
@@ -493,6 +548,11 @@ function refreshSelectedPokemonDetailsAfterExclusionChange(slotIndex) {
     renderSelectedPokemonDetails(opponentState.speciesId, slotIndex);
 }
 
+// -----------------------------------------------------------------------------
+// Exclusion events
+// -----------------------------------------------------------------------------
+
+// Binds battle exclusion events
 function bindBattleExclusionEvents(trainerIndex) {
     const exclusionDom = getBattleExclusionDom(trainerIndex);
 

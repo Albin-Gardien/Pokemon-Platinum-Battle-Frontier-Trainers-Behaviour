@@ -1,32 +1,26 @@
 "use strict";
 
 // -----------------------------------------------------------------------------
-// Table rendering and sprite helpers
+// Sprite cell rendering
 // -----------------------------------------------------------------------------
-
+// Sets sprite text cell
 function setSpriteTextCell(td, imageUrl, text, altText, spriteKind = "item") {
     const wrapper = document.createElement("span");
     wrapper.className = "sprite-text-cell";
 
     if (imageUrl) {
         const wrapperImg = document.createElement("span");
-        wrapperImg.className =
-        spriteKind === "pokemon"
-            ? "pokemon-sprite-wrapper"
-            : "item-sprite-wrapper";
+        wrapperImg.className = spriteKind === "pokemon" ? "pokemon-sprite-wrapper" : "item-sprite-wrapper";
 
         const img = document.createElement("img");
-        img.className =
-        spriteKind === "pokemon"
-            ? "pokemon-cell-sprite"
-            : "item-cell-sprite";
+        img.className =  spriteKind === "pokemon" ? "pokemon-cell-sprite" : "item-cell-sprite";
 
         img.src = imageUrl;
         img.alt = altText ?? "";
         img.loading = "lazy";
 
         img.addEventListener("error", () => {
-        wrapperImg.remove();
+            wrapperImg.remove();
         });
 
         wrapperImg.appendChild(img);
@@ -40,12 +34,10 @@ function setSpriteTextCell(td, imageUrl, text, altText, spriteKind = "item") {
     td.replaceChildren(wrapper);
 }
 
-
-// ---------------------------------------------------------------------
-// Table rendering helpers
-// ---------------------------------------------------------------------
-
-// Creates the translated table header.
+// -----------------------------------------------------------------------------
+// Generic Pokémon table helpers
+// -----------------------------------------------------------------------------
+// Creates the translated table header
 function createPokemonTableHead(showIv = false) {
     const thead = document.createElement("thead");
     const ivHeader = showIv ? `<th>${translate("columns", "iv")}</th>` : "";
@@ -77,7 +69,7 @@ function createPokemonTableHead(showIv = false) {
     return thead;
 }
 
-// Returns the data used to create one Pokémon table row.
+// Returns the data used to create one Pokémon table row
 function getPokemonRowCells(mon, stats, showIv = false) {
     const getStatValue = (statKey) => stats?.[statKey] ?? "—";
     const getMoveLabel = (moveId) => moveId ? translateEntity("moves", moveId) : "—";
@@ -117,33 +109,35 @@ function getPokemonRowCells(mon, stats, showIv = false) {
     return cells;
 }
 
+// Returns nature boosted stat
 function getNatureBoostedStat(natureId) {
     return natureModifiers[natureId]?.up ?? "";
 }
 
+// Returns ev class
 function getEvClass(ev) {
-  if (ev >= 255) {
-    return "ev-max";
-  }
+    if (ev >= 255) {
+        return "ev-max";
+    }
 
-  if (ev >= 170) {
-    return "ev-mid";
-  }
+    if (ev >= 170) {
+        return "ev-mid";
+    }
 
-  return "";
+    return "";
 }
 
-// Applies extra classes and type colors to one row cell.
+// Applies extra classes and type colors to one row cell
 function applyCellPresentation(td, cellData, index, mon) {
     if (cellData !== null && typeof cellData === "object") {
         td.textContent = cellData.value ?? "";
 
         if (cellData.className) {
-        td.classList.add(cellData.className);
+            td.classList.add(cellData.className);
         }
 
         if (cellData.statKey) {
-        td.classList.add(cellData.statKey);
+            td.classList.add(cellData.statKey);
         }
     } else {
         td.textContent = cellData ?? "";
@@ -174,6 +168,7 @@ function applyCellPresentation(td, cellData, index, mon) {
     }
 }
 
+// Returns opponent slot index for pokemon table
 function getOpponentSlotIndexForPokemonTable(sourceIndex) {
     if (isFactoryMode() &&
         (battleState.format === "doubles" || battleState.format === "multi")) {
@@ -183,7 +178,7 @@ function getOpponentSlotIndexForPokemonTable(sourceIndex) {
     return getOpponentSlotIndexForTrainerTable(sourceIndex);
 }
 
-// Creates one table row for one Pokémon set.
+// Creates one table row for one Pokémon set
 function createPokemonTableRow(mon, level, sourceIndex, showIv = false) {
     const iv = getBattlePokemonIv(mon);
     const battleLevel = getBattlePokemonLevel(mon, level);
@@ -212,12 +207,7 @@ function createPokemonTableRow(mon, level, sourceIndex, showIv = false) {
     return row;
 }
 
-
-// ---------------------------------------------------------------------
-// Main trainer team rendering
-// ---------------------------------------------------------------------
-
-// Renders all possible Pokémon sets for the selected trainer or serie
+// Renders all possible Pokémon sets for the selected trainer or series
 function renderPokemonTable(table, mons, level, sourceIndex, { showIv = false } = {}) {
     table.replaceChildren();
     table.classList.remove("factory-table", "hall-table");
@@ -231,6 +221,11 @@ function renderPokemonTable(table, mons, level, sourceIndex, { showIv = false } 
 
     table.append(createPokemonTableHead(showIv), tbody);
 }
+
+// -----------------------------------------------------------------------------
+// Standard trainer rendering
+// -----------------------------------------------------------------------------
+// Renders trainer panel
 function renderTrainerPanel(trainerIndex) {
     const trainerState = getTrainerBattleState(trainerIndex);
     const trainer = trainerState.trainer;
@@ -250,6 +245,9 @@ function renderTrainerPanel(trainerIndex) {
     const team = window.frontierTrainerTeams[trainer.poolId];
 
     if (!team) {
+        panelDom.table.replaceChildren();
+        panelDom.exclusions.container.hidden = true;
+
         const row = panelDom.table.insertRow();
         const cell = row.insertCell();
         cell.textContent = translate("ui", "noTeamFound");
@@ -263,10 +261,15 @@ function renderTrainerPanel(trainerIndex) {
     refreshBattleExclusionInterface(trainerIndex);
 }
 
+// -----------------------------------------------------------------------------
+// Battle Factory rendering
+// -----------------------------------------------------------------------------
+// Returns pokemon table column count
 function getPokemonTableColumnCount(showIv = false) {
     return 18 + (showIv ? 1 : 0);
 }
 
+// Creates factory group header row
 function createFactoryGroupHeaderRow(group, columnCount) {
     const row = document.createElement("tr");
     row.className = "factory-pool-group-row";
@@ -282,6 +285,7 @@ function createFactoryGroupHeaderRow(group, columnCount) {
     return row;
 }
 
+// Creates factory IV header row
 function createFactoryIvHeaderRow(ivGroup, columnCount) {
     const row = document.createElement("tr");
     row.className = "factory-pool-iv-row";
@@ -295,76 +299,7 @@ function createFactoryIvHeaderRow(ivGroup, columnCount) {
     return row;
 }
 
-function createHallGroupHeaderRow(group, columnCount, source) {
-    const row = document.createElement("tr");
-    row.className = "hall-pool-group-row";
-
-    const cell = document.createElement("th");
-    cell.colSpan = columnCount;
-
-    if (source.boss) {
-        cell.textContent =
-            `${translate("ui", "hallGroupLabel")} ${group.id} — ` +
-            `${group.mons.length} ${translate("ui", "hallPokemonCountLabel")}`;
-    } else {
-        cell.textContent =
-            `${translate("ui", "hallGroupLabel")} ${group.id} — ` +
-            `${translate("ui", "hallRanksLabel")} ${group.minRank} ` +
-            `${translate("ui", "hallRankRangeSeparator")} ${group.maxRank} — ` +
-            `${group.mons.length} ${translate("ui", "hallPokemonCountLabel")}`;
-    }
-
-    row.appendChild(cell);
-
-    return row;
-}
-
-function renderHallPokemonTable(table, source, level, sourceIndex) {
-    const showIv = true;
-    const columnCount = getPokemonTableColumnCount(showIv);
-    const groups = getHallBattleGroups(source.mons);
-
-    table.replaceChildren();
-    table.classList.remove("factory-table", "arcade-mode");
-    table.classList.add("hall-table");
-    table.appendChild(createPokemonTableHead(showIv));
-
-    for (const group of groups) {
-        const tbody = document.createElement("tbody");
-
-        tbody.appendChild(createHallGroupHeaderRow(group, columnCount, source));
-
-        for (const mon of group.mons) {
-            tbody.appendChild(createPokemonTableRow(mon, level, sourceIndex, showIv));
-        }
-
-        table.appendChild(tbody);
-    }
-}
-
-function renderFactoryPanel() {
-    const sourceIndex = PRIMARY_TRAINER_SLOT_INDEX;
-    const source = getBattlePokemonSource(sourceIndex);
-    const panelDom = dom.trainerPanels[sourceIndex];
-
-    if (!source) {
-        panelDom.container.hidden = true;
-        panelDom.table.replaceChildren();
-        return;
-    }
-
-    panelDom.container.hidden = false;
-    panelDom.container.open = true;
-    panelDom.title.textContent = translate("ui", "facilityFactory");
-    panelDom.info.textContent = translate("series", selectedFactorySeriesId);
-
-    const opponentSource = { ...source, mons: getAvailableOpponentBattleMons(sourceIndex)};
-
-    renderFactoryPokemonTable(panelDom.table, opponentSource, getSelectedLevel(), sourceIndex);
-
-    refreshBattleExclusionInterface(sourceIndex);
-}
-
+// Renders factory pokemon table
 function renderFactoryPokemonTable(table, source, level, sourceIndex) {
     table.classList.remove("hall-table");
     const showIv = true;
@@ -393,6 +328,83 @@ function renderFactoryPokemonTable(table, source, level, sourceIndex) {
     }
 }
 
+// Renders factory panel
+function renderFactoryPanel() {
+    const sourceIndex = PRIMARY_TRAINER_SLOT_INDEX;
+    const source = getBattlePokemonSource(sourceIndex);
+    const panelDom = dom.trainerPanels[sourceIndex];
+
+    if (!source) {
+        panelDom.container.hidden = true;
+        panelDom.table.replaceChildren();
+        return;
+    }
+
+    panelDom.container.hidden = false;
+    panelDom.container.open = true;
+    panelDom.title.textContent = translate("ui", "facilityFactory");
+    panelDom.info.textContent = translate("series", selectedFactorySeriesId);
+
+    const opponentSource = { ...source, mons: getAvailableOpponentBattleMons(sourceIndex)};
+
+    renderFactoryPokemonTable(panelDom.table, opponentSource, getSelectedLevel(), sourceIndex);
+
+    refreshBattleExclusionInterface(sourceIndex);
+}
+
+// -----------------------------------------------------------------------------
+// Battle Hall rendering
+// -----------------------------------------------------------------------------
+// Creates hall group header row
+function createHallGroupHeaderRow(group, columnCount, source) {
+    const row = document.createElement("tr");
+    row.className = "hall-pool-group-row";
+
+    const cell = document.createElement("th");
+    cell.colSpan = columnCount;
+
+    if (source.boss) {
+        cell.textContent =
+            `${translate("ui", "hallGroupLabel")} ${group.id} — ` +
+            `${group.mons.length} ${translate("ui", "hallPokemonCountLabel")}`;
+    } else {
+        cell.textContent =
+            `${translate("ui", "hallGroupLabel")} ${group.id} — ` +
+            `${translate("ui", "hallRanksLabel")} ${group.minRank} ` +
+            `${translate("ui", "hallRankRangeSeparator")} ${group.maxRank} — ` +
+            `${group.mons.length} ${translate("ui", "hallPokemonCountLabel")}`;
+    }
+
+    row.appendChild(cell);
+
+    return row;
+}
+
+// Renders hall pokemon table
+function renderHallPokemonTable(table, source, level, sourceIndex) {
+    const showIv = true;
+    const columnCount = getPokemonTableColumnCount(showIv);
+    const groups = getHallBattleGroups(source.mons);
+
+    table.replaceChildren();
+    table.classList.remove("factory-table", "arcade-mode");
+    table.classList.add("hall-table");
+    table.appendChild(createPokemonTableHead(showIv));
+
+    for (const group of groups) {
+        const tbody = document.createElement("tbody");
+
+        tbody.appendChild(createHallGroupHeaderRow(group, columnCount, source));
+
+        for (const mon of group.mons) {
+            tbody.appendChild(createPokemonTableRow(mon, level, sourceIndex, showIv));
+        }
+
+        table.appendChild(tbody);
+    }
+}
+
+// Renders hall panel
 function renderHallPanel() {
     const sourceIndex = PRIMARY_TRAINER_SLOT_INDEX;
     const source = getBattlePokemonSource(sourceIndex);
@@ -422,6 +434,10 @@ function renderHallPanel() {
     renderHallPokemonTable(panelDom.table, source, getSelectedLevel(), sourceIndex);
 }
 
+// -----------------------------------------------------------------------------
+// Main battle result rendering
+// -----------------------------------------------------------------------------
+// Renders battle pokemon source
 function renderBattlePokemonSource(sourceIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     if (isFactoryMode()) {
         renderFactoryPanel();
@@ -436,6 +452,7 @@ function renderBattlePokemonSource(sourceIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     renderTrainerPanel(sourceIndex);
 }
 
+// Renders battle results
 function renderBattleResults() {
     const isFactory = isFactoryMode();
     const isHall = isHallMode();
@@ -579,6 +596,10 @@ function renderBattleResults() {
     refreshOpponentBattleInterface();
 }
 
+// -----------------------------------------------------------------------------
+// Trainer selection rendering
+// -----------------------------------------------------------------------------
+// Selects a trainer and refreshes the battle results
 function selectTrainerAndRender(trainer, trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     if (!trainer) {
         return;

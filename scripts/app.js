@@ -8,12 +8,13 @@ let currentLang = "fr";
 let selectedSeriesId = "all";
 let selectedFacilityMode = "normal";
 let selectedFactorySeriesId = "series_1";
+let pokemonSpeciesNamesById = null;
 
 // -----------------------------------------------------------------------------
 // Text and translation helpers
 // -----------------------------------------------------------------------------
 
-// Normalizes user input to make search accent-insensitive and case-insensitive.
+// Normalizes user input to make search accent-insensitive and case-insensitive
 function normalizeText(value) {
     return value
         .toString()
@@ -23,14 +24,14 @@ function normalizeText(value) {
         .replace(/[^a-z0-9]/g, "");
 }
 
-// Translates UI labels by section/key.
+// Translates UI labels by section/key
 function translate(section, key) {
     return window.appTranslations[section]?.[key]?.[currentLang]
         ?? window.appTranslations[section]?.[key]?.en
         ?? key;
 }
 
-// Translates data values such as types, abilities, natures, items or moves.
+// Translates data values such as types, abilities, natures, items or moves
 function translateEntity(category, id) {
     if (category === "moves") {
         return getMoveName(id);
@@ -41,39 +42,88 @@ function translateEntity(category, id) {
         ?? id;
 }
 
+// Returns the localized singular/plural label for Factory possible sets
 function getFactoryPossibleSetsLabel(count) {
     return translate("ui", count === 1 ? "factoryPossibleSet" : "factoryPossibleSets");
 }
 
-// Returns the translated entity name, falling back to English then ID.
-function getName(entity, lang = currentLang) {
-    return entity.names?.[lang] ?? entity.names?.en ?? entity.id;
+// Returns the canonical localized names known for one Pokémon species
+function getPokemonSpeciesNames(speciesId) {
+    if (!speciesId) {
+        return null;
+    }
+
+    if (!pokemonSpeciesNamesById) {
+        pokemonSpeciesNamesById = new Map();
+
+        for (const mon of Object.values(window.frontierMons ?? {})) {
+            if (!mon?.speciesId || !mon.names) {
+                continue;
+            }
+
+            const existingNames = pokemonSpeciesNamesById.get(mon.speciesId) ?? {};
+
+            pokemonSpeciesNamesById.set(mon.speciesId, {
+                ...existingNames,
+                ...mon.names
+            });
+        }
+    }
+
+    return pokemonSpeciesNamesById.get(speciesId) ?? null;
 }
 
-// Returns the language not currently displayed.
+// Returns the localized entity name, with a canonical species fallback for Pokémon data
+function getName(entity, lang = currentLang) {
+    const speciesNames = entity?.speciesId
+        ? getPokemonSpeciesNames(entity.speciesId)
+        : null;
+
+    return entity?.names?.[lang]
+        ?? speciesNames?.[lang]
+        ?? entity?.names?.en
+        ?? speciesNames?.en
+        ?? entity?.speciesId
+        ?? entity?.id
+        ?? "";
+}
+
+// Returns the language not currently displayed
 function getOtherLang() {
     return currentLang === "fr" ? "en" : "fr";
 }
 
+// -----------------------------------------------------------------------------
+// Facility mode helpers
+// -----------------------------------------------------------------------------
+
+// Returns whether Battle Arcade mode is selected
 function isArcadeMode() {
     return selectedFacilityMode === "arcade";
 }
 
+// Returns whether Battle Factory mode is selected
 function isFactoryMode() {
     return selectedFacilityMode === "factory";
 }
 
+// Returns whether Battle Hall mode is selected
 function isHallMode() {
     return selectedFacilityMode === "hall";
 }
 
+// -----------------------------------------------------------------------------
+// Factory series controls
+// -----------------------------------------------------------------------------
+
+// Returns factory series data
 function getFactorySeriesData() {
     const levelKey = getFactoryPoolLevelKey();
 
     return window.factoryPools?.[levelKey]?.series ?? {};
 }
 
-// Factory Helpers
+// Populates factory series select
 function populateFactorySeriesSelect() {
     const seriesData = getFactorySeriesData();
     const seriesIds = Object.keys(seriesData);
@@ -103,6 +153,7 @@ function populateFactorySeriesSelect() {
     dom.factorySeriesSelect.value = selectedFactorySeriesId;
 }
 
+// Updates facility selection controls
 function updateFacilitySelectionControls() {
     const factoryMode = isFactoryMode();
     const hallMode = isHallMode();
@@ -116,6 +167,7 @@ function updateFacilitySelectionControls() {
     dom.hallControls.container.hidden = !hallMode;
 }
 
+// Handles factory series change
 function handleFactorySeriesChange(event) {
     selectedFactorySeriesId = event.target.value;
     resetFactoryPlayerTeam();
@@ -137,7 +189,7 @@ function handleFactorySeriesChange(event) {
 // Language handling
 // -----------------------------------------------------------------------------
 
-// Applies the current language to static UI and refreshes visible dynamic content.
+// Applies translated labels and placeholders to opponent Pokémon slots
 function applyOpponentSlotLanguage() {
     dom.opponentSlots.forEach((slotDom, slotIndex) => {
         const labelKey = getActiveOpponentCount() === 2 ? `opponentPokemonLabel${slotIndex + 1}` : "opponentPokemonLabel";
@@ -147,10 +199,12 @@ function applyOpponentSlotLanguage() {
     });
 }
 
+// Applies the translated level label for the active facility.
 function applyLevelInputLanguage() {
     dom.levelLabel.textContent = translate("ui", isHallMode() ? "playerLevelLabel" : "levelLabel");
 }
 
+// Applies the current language to static UI and visible dynamic content
 function applyLanguage() {
     document.documentElement.lang = currentLang;
 
@@ -199,6 +253,7 @@ function applyLanguage() {
     }
 }
 
+// Applies translated labels and placeholders to trainer slots.
 function applyTrainerSlotLanguage() {
     const isMulti = battleState.format === "multi";
 
@@ -212,6 +267,7 @@ function applyTrainerSlotLanguage() {
     });
 }
 
+// Applies the translated accessible label to every search clear button
 function applySearchClearButtonLanguage() {
     const label = translate("ui", "clearSearch");
 
@@ -226,12 +282,17 @@ function applySearchClearButtonLanguage() {
     dom.hallControls.playerPokemonClearButton.setAttribute("aria-label", label);
 }
 
-// Switches between French and English.
+// Switches between French and English
 function toggleLanguage() {
     currentLang = currentLang === "fr" ? "en" : "fr";
     applyLanguage();
 }
 
+// -----------------------------------------------------------------------------
+// Battle view refresh and mode changes
+// -----------------------------------------------------------------------------
+
+// Refreshes selected opponent views
 function refreshSelectedOpponentViews() {
     for (let slotIndex = 0; slotIndex < getActiveOpponentCount(); slotIndex++) {
         const opponentState = getOpponentBattleState(slotIndex);
@@ -256,11 +317,13 @@ function refreshSelectedOpponentViews() {
     }
 }
 
+// Refreshes current battle view
 function refreshCurrentBattleView() {
     renderBattleResults();
     refreshSelectedOpponentViews();
 }
 
+// Handles facility mode change
 function handleFacilityModeChange(event) {
     const previousFacilityMode = selectedFacilityMode;
 
@@ -305,6 +368,7 @@ function handleFacilityModeChange(event) {
     refreshCurrentBattleView();
 }
 
+// Handles battle format change
 function handleBattleFormatChange(event) {
     const previousFormat = battleState.format;
 
@@ -355,6 +419,7 @@ function handleBattleFormatChange(event) {
 // App initialization
 // -----------------------------------------------------------------------------
 
+// Initializes app
 function initApp() {
     applyLanguage();
     updateLevelInputConstraints();

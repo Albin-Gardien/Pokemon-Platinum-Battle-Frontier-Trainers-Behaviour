@@ -1,10 +1,10 @@
 "use strict";
 
 // -----------------------------------------------------------------------------
-// Battle/stat calculation helpers
+// Generation IV stat calculations
 // -----------------------------------------------------------------------------
 
-// Returns the nature multiplier for one stat.
+// Returns the nature multiplier for one stat
 function getNatureMultiplier(natureId, statKey) {
     const modifier = natureModifiers[natureId];
 
@@ -23,7 +23,7 @@ function getNatureMultiplier(natureId, statKey) {
     return 1;
 }
 
-// Calculates the HP stat using Gen 4 stat formula.
+// Calculates the HP stat using Gen 4 stat formula
 function calculateHpStat(base, iv, ev, level) {
     return Math.floor(((2 * base + iv + Math.floor(ev / 4)) * level) / 100) + level + 10;
 }
@@ -34,7 +34,7 @@ function calculateOtherStat(base, iv, ev, level, natureId, statKey) {
     return Math.floor(rawStat * getNatureMultiplier(natureId, statKey));
 }
 
-// Calculates all displayed stats for one Pokémon set.
+// Calculates all displayed stats for one Pokémon set
 function calculateStats(mon, iv, level) {
     const hp =
         mon.speciesId === "shedinja" ? 1 : calculateHpStat(mon.baseStats.hp, iv, mon.evs.hp ?? 0, level);
@@ -49,6 +49,10 @@ function calculateStats(mon, iv, level) {
     };
 }
 
+// -----------------------------------------------------------------------------
+// Battle level handling
+// -----------------------------------------------------------------------------
+// Returns selected level
 function getSelectedLevel() {
     const level = Number(dom.levelInput.value);
 
@@ -78,6 +82,7 @@ function getSelectedLevel() {
     return 50;
 }
 
+// Updates level input constraints
 function updateLevelInputConstraints() {
     if (isFactoryMode()) {
         dom.levelInput.min = "50";
@@ -96,6 +101,10 @@ function updateLevelInputConstraints() {
     getSelectedLevel();
 }
 
+// -----------------------------------------------------------------------------
+// Trainer set compatibility
+// -----------------------------------------------------------------------------
+// Returns trainer mons for level.
 function getTrainerMonsForLevel(trainer) {
     return getTrainerMons(trainer);
 }

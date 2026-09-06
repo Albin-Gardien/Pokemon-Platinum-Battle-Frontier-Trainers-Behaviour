@@ -1,17 +1,25 @@
 "use strict";
 
+// -----------------------------------------------------------------------------
+// Sprite and asset helpers
+// -----------------------------------------------------------------------------
+
+// Returns pokemon sprite slug
 function getPokemonSpriteSlug(mon) {
     return pokemonSpriteSlugOverrides[mon.speciesId] ?? mon.speciesId.replaceAll("_", "-");
 }
 
+// Returns pokemon sprite url
 function getPokemonSpriteUrl(mon) {
     return `${pokemonSpriteBaseUrl}/${getPokemonSpriteSlug(mon)}.png`;
 }
 
+// Returns pokemon front sprite url
 function getPokemonFrontSpriteUrl(mon) {
     return `https://img.pokemondb.net/sprites/platinum/normal/${getPokemonSpriteSlug(mon)}.png`;
 }
 
+// Returns item sprite url
 function getItemSpriteUrl(itemId) {
     const path = itemSpriteMap[itemId];
     if (!path) {
@@ -20,6 +28,11 @@ function getItemSpriteUrl(itemId) {
     return `${itemSpriteBaseUrl}/${path}.png`;
 }
 
+// -----------------------------------------------------------------------------
+// Presentation helpers
+// -----------------------------------------------------------------------------
+
+// Applies type color
 function applyTypeColor(element, typeId, variant = "default") {
     if (!typeId) {
         return;
@@ -35,6 +48,7 @@ function applyTypeColor(element, typeId, variant = "default") {
     }
 }
 
+// Applies nature color
 function applyNatureColor(element, natureId) {
     const boostedStat = getNatureBoostedStat(natureId);
     if (!boostedStat) {
@@ -43,7 +57,11 @@ function applyNatureColor(element, natureId) {
     element.classList.add(`nature-badge-${boostedStat}`);
 }
 
-// Returns the type of a move from moves.js.
+// -----------------------------------------------------------------------------
+// Move helpers
+// -----------------------------------------------------------------------------
+
+// Returns the type of a move from moves.js
 function getMoveType(moveId) {
     return window.moves?.[moveId]?.type ?? null;
 }

@@ -38,14 +38,21 @@ let selectedHallType = "all";
 let selectedHallRank = "all";
 let selectedHallAdvancedTypeCount = 0;
 
+// -----------------------------------------------------------------------------
+// Hall selection accessors
+// -----------------------------------------------------------------------------
+
+// Returns selected hall type
 function getSelectedHallType() {
     return selectedHallType;
 }
 
+// Returns selected hall rank
 function getSelectedHallRank() {
     return selectedHallRank === "all" ? null : Number(selectedHallRank);
 }
 
+// Returns effective hall rank
 function getEffectiveHallRank() {
     if (isHallArgentaGold()) {
         return 10;
@@ -58,26 +65,36 @@ function getEffectiveHallRank() {
     return getSelectedHallRank();
 }
 
+// Returns selected hall advanced type count
 function getSelectedHallAdvancedTypeCount() {
     return selectedHallAdvancedTypeCount;
 }
 
+// Returns selected hall encounter type
 function getSelectedHallEncounterType() {
     return selectedHallEncounterType;
 }
 
+// Returns whether hall argenta silver
 function isHallArgentaSilver() {
     return selectedHallEncounterType === HALL_ENCOUNTER_ARGENTA_SILVER;
 }
 
+// Returns whether hall argenta gold
 function isHallArgentaGold() {
     return selectedHallEncounterType === HALL_ENCOUNTER_ARGENTA_GOLD;
 }
 
+// Returns whether hall argenta battle
 function isHallArgentaBattle() {
     return isHallArgentaSilver() || isHallArgentaGold();
 }
 
+// -----------------------------------------------------------------------------
+// Hall player Pokémon and group calculation
+// -----------------------------------------------------------------------------
+
+// Returns hall player pokemon candidates
 function getHallPlayerPokemonCandidates() {
     const speciesById = new Map();
 
@@ -94,6 +111,7 @@ function getHallPlayerPokemonCandidates() {
         );
 }
 
+// Returns hall base stat total
 function getHallBaseStatTotal(mon) {
     if (!mon?.baseStats) {
         return null;
@@ -102,6 +120,7 @@ function getHallBaseStatTotal(mon) {
     return (mon.baseStats.hp + mon.baseStats.atk + mon.baseStats.def + mon.baseStats.spa + mon.baseStats.spd + mon.baseStats.spe);
 }
 
+// Returns hall group from base stat total
 function getHallGroupFromBaseStatTotal(baseStatTotal) {
     if (baseStatTotal < 340) {
         return 1;
@@ -118,6 +137,7 @@ function getHallGroupFromBaseStatTotal(baseStatTotal) {
     return 4;
 }
 
+// Returns selected hall player pokemon
 function getSelectedHallPlayerPokemon() {
     if (!selectedHallPlayerSpeciesId) {
         return null;
@@ -127,10 +147,12 @@ function getSelectedHallPlayerPokemon() {
         .find((mon) => mon.speciesId === selectedHallPlayerSpeciesId) ?? null;
 }
 
+// Returns hall player pokemon display name
 function getHallPlayerPokemonDisplayName(mon) {
     return getName(mon);
 }
 
+// Populates hall player pokemon suggestions
 function populateHallPlayerPokemonSuggestions(search) {
     const suggestions = dom.hallControls.playerPokemonSuggestions;
 
@@ -175,6 +197,7 @@ function populateHallPlayerPokemonSuggestions(search) {
     suggestions.hidden = false;
 }
 
+// Selects hall player pokemon
 function selectHallPlayerPokemon(mon) {
     selectedHallPlayerSpeciesId = mon.speciesId;
 
@@ -184,6 +207,7 @@ function selectHallPlayerPokemon(mon) {
     refreshAfterHallControlChange();
 }
 
+// Clears hall player pokemon selection
 function clearHallPlayerPokemonSelection(refresh = true) {
     selectedHallPlayerSpeciesId = null;
     hallPlayerSuggestionMatches = [];
@@ -198,6 +222,7 @@ function clearHallPlayerPokemonSelection(refresh = true) {
     }
 }
 
+// Returns selected hall player group
 function getSelectedHallPlayerGroup() {
     const mon = getSelectedHallPlayerPokemon();
     const baseStatTotal = getHallBaseStatTotal(mon);
@@ -205,6 +230,11 @@ function getSelectedHallPlayerGroup() {
     return baseStatTotal === null ? null : getHallGroupFromBaseStatTotal(baseStatTotal);
 }
 
+// -----------------------------------------------------------------------------
+// Hall battle level and IV calculation
+// -----------------------------------------------------------------------------
+
+// Returns hall battle IV
 function getHallBattleIv(rank = getEffectiveHallRank()) {
     if (isHallArgentaBattle()) {
         return 31;
@@ -217,6 +247,7 @@ function getHallBattleIv(rank = getEffectiveHallRank()) {
     return 6 + (rank * 2);
 }
 
+// Returns hall opponent level
 function getHallOpponentLevel(rank = getEffectiveHallRank()) {
     const playerLevel = getSelectedLevel();
 
@@ -239,6 +270,11 @@ function getHallOpponentLevel(rank = getEffectiveHallRank()) {
     return Math.min(playerLevel,Math.ceil(baseLevel + (getSelectedHallAdvancedTypeCount() / 2) + ((rank - 1) * increment)));
 }
 
+// -----------------------------------------------------------------------------
+// Hall control visibility
+// -----------------------------------------------------------------------------
+
+// Updates hall controls for battle format
 function updateHallControlsForBattleFormat() {
     if (!isHallMode()) {
         return;
@@ -268,9 +304,10 @@ function updateHallControlsForBattleFormat() {
 }
 
 // -----------------------------------------------------------------------------
-// Hall selectors
+// Hall selectors and language
 // -----------------------------------------------------------------------------
 
+// Populates hall encounter select
 function populateHallEncounterSelect() {
     const select = dom.hallControls.encounterSelect;
 
@@ -310,6 +347,7 @@ function populateHallEncounterSelect() {
     select.value = selectedHallEncounterType;
 }
 
+// Handles hall encounter change
 function handleHallEncounterChange(event) {
     selectedHallEncounterType = event.target.value;
 
@@ -321,6 +359,7 @@ function handleHallEncounterChange(event) {
     refreshAfterHallControlChange();
 }
 
+// Populates hall type select
 function populateHallTypeSelect() {
     dom.hallControls.typeSelect.replaceChildren();
 
@@ -342,6 +381,7 @@ function populateHallTypeSelect() {
     dom.hallControls.typeSelect.value = selectedHallType;
 }
 
+// Populates hall rank select
 function populateHallRankSelect() {
     dom.hallControls.rankSelect.replaceChildren();
 
@@ -363,6 +403,7 @@ function populateHallRankSelect() {
     dom.hallControls.rankSelect.value = String(getEffectiveHallRank() ?? "all");
 }
 
+// Applies hall controls language
 function applyHallControlsLanguage() {
     dom.hallControls.encounterLabel.textContent = translate("ui", "hallEncounterLabel");
     dom.hallControls.playerPokemonLabel.textContent = translate("ui", "hallPlayerPokemonLabel");
@@ -387,6 +428,7 @@ function applyHallControlsLanguage() {
 // Hall selection changes
 // -----------------------------------------------------------------------------
 
+// Refreshes after hall control change
 function refreshAfterHallControlChange() {
     resetAllOpponentBattleStates();
     resetAllTrainerBattleExclusions();
@@ -401,16 +443,19 @@ function refreshAfterHallControlChange() {
     refreshCurrentBattleView();
 }
 
+// Handles hall type change
 function handleHallTypeChange(event) {
     selectedHallType = event.target.value;
     refreshAfterHallControlChange();
 }
 
+// Handles hall rank change
 function handleHallRankChange(event) {
     selectedHallRank = event.target.value;
     refreshAfterHallControlChange();
 }
 
+// Handles hall advanced type count change
 function handleHallAdvancedTypeCountChange(event) {
     const value = Number(event.target.value);
 
@@ -421,6 +466,11 @@ function handleHallAdvancedTypeCountChange(event) {
     refreshCurrentBattleView();
 }
 
+// -----------------------------------------------------------------------------
+// Hall control events
+// -----------------------------------------------------------------------------
+
+// Binds hall control events
 function bindHallControlEvents() {
     dom.hallControls.encounterSelect.addEventListener("change", handleHallEncounterChange);
     dom.hallControls.typeSelect.addEventListener("change", handleHallTypeChange);

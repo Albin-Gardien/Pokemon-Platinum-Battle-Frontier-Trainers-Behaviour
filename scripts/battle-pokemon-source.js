@@ -1,5 +1,10 @@
 "use strict";
 
+// -----------------------------------------------------------------------------
+// Trainer Pokémon source
+// -----------------------------------------------------------------------------
+
+// Returns trainer mons
 function getTrainerMons(trainer) {
     const team = window.frontierTrainerTeams[trainer.poolId];
 
@@ -12,6 +17,7 @@ function getTrainerMons(trainer) {
         .filter(Boolean);
 }
 
+// Creates trainer battle mon
 function createTrainerBattleMon(mon, trainer) {
     return {
         ...mon,
@@ -20,6 +26,7 @@ function createTrainerBattleMon(mon, trainer) {
     };
 }
 
+// Returns trainer battle pokemon source
 function getTrainerBattlePokemonSource(sourceIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const trainer = getTrainerBattleState(sourceIndex).trainer;
 
@@ -36,6 +43,11 @@ function getTrainerBattlePokemonSource(sourceIndex = PRIMARY_TRAINER_SLOT_INDEX)
     };
 }
 
+// -----------------------------------------------------------------------------
+// Battle Factory Pokémon source
+// -----------------------------------------------------------------------------
+
+// Creates factory battle mon
 function createFactoryBattleMon(entry) {
     const mon = window.frontierMons[entry.setId];
 
@@ -53,10 +65,12 @@ function createFactoryBattleMon(entry) {
     };
 }
 
+// Returns factory pool level key
 function getFactoryPoolLevelKey() {
     return getSelectedLevel() === 100 ? "level100" : "level50";
 }
 
+// Returns factory battle 7 phase
 function getFactoryBattle7Phase(series) {
     if (battleState.format === "singles") {
         return series.battle7 ?? null;
@@ -69,6 +83,7 @@ function getFactoryBattle7Phase(series) {
     return null;
 }
 
+// Merges factory phase entries
 function mergeFactoryPhaseEntries(battles1To6, battle7) {
     const mergedEntries = new Map();
 
@@ -98,6 +113,7 @@ function mergeFactoryPhaseEntries(battles1To6, battle7) {
     return [...mergedEntries.values()];
 }
 
+// Returns factory battle pokemon source
 function getFactoryBattlePokemonSource() {
     const levelKey = getFactoryPoolLevelKey();
     const series = window.factoryPools?.[levelKey]?.series?.[selectedFactorySeriesId];
@@ -128,6 +144,7 @@ function getFactoryBattlePokemonSource() {
     };
 }
 
+// Returns factory mon battle group ID
 function getFactoryMonBattleGroupId(mon) {
     const availability = mon.factoryAvailability ?? [];
     const isAvailableDuringBattles1To6 = availability.includes("battles1To6");
@@ -144,6 +161,7 @@ function getFactoryMonBattleGroupId(mon) {
     return "battles1To6";
 }
 
+// Returns factory battle group translation key
 function getFactoryBattleGroupTranslationKey(group) {
     if (group.id === "battles1To7") {
         return "factoryBattles1To7";
@@ -156,6 +174,7 @@ function getFactoryBattleGroupTranslationKey(group) {
     return "factoryBattles1To6";
 }
 
+// Groups factory mons by IV
 function groupFactoryMonsByIv(mons) {
     const groupsByIv = new Map();
 
@@ -175,6 +194,7 @@ function groupFactoryMonsByIv(mons) {
     }));
 }
 
+// Returns factory battle groups
 function getFactoryBattleGroups(mons, source = getFactoryBattlePokemonSource()) {
     const monsByGroup = {
         battles1To6: [],
@@ -212,18 +232,26 @@ function getFactoryBattleGroups(mons, source = getFactoryBattlePokemonSource()) 
         }));
 }
 
+// -----------------------------------------------------------------------------
+// Battle Hall Pokémon source
+// -----------------------------------------------------------------------------
+
+// Creates hall battle mon
 function createHallBattleMon(mon, battleIv, battleLevel) {
     return { ...mon, sourceSetId: mon.id, battleIv, battleLevel };
 }
 
+// Returns whether hall mon available for type
 function isHallMonAvailableForType(mon, typeId) {
     return typeId === "all" || mon.types.includes(typeId);
 }
 
+// Returns whether hall mon available for rank
 function isHallMonAvailableForRank(mon, rank) {
     return rank === null || (rank >= mon.minRank && rank <= mon.maxRank);
 }
 
+// Returns hall battle pokemon source
 function getHallBattlePokemonSource() {
     const hallData = window.hallMons;
 
@@ -273,6 +301,7 @@ function getHallBattlePokemonSource() {
     };
 }
 
+// Returns hall battle groups
 function getHallBattleGroups(mons) {
     const groupsById = new Map();
 
@@ -301,6 +330,11 @@ function getHallBattleGroups(mons) {
         });
 }
 
+// -----------------------------------------------------------------------------
+// Unified battle Pokémon source
+// -----------------------------------------------------------------------------
+
+// Returns battle pokemon source
 function getBattlePokemonSource(sourceIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     if (isFactoryMode()) {
         return sourceIndex === PRIMARY_TRAINER_SLOT_INDEX
@@ -317,14 +351,17 @@ function getBattlePokemonSource(sourceIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     return getTrainerBattlePokemonSource(sourceIndex);
 }
 
+// Returns whether battle pokemon source
 function hasBattlePokemonSource(sourceIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     return getBattlePokemonSource(sourceIndex) !== null;
 }
 
+// Returns available battle mons
 function getAvailableBattleMons(sourceIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     return getBattlePokemonSource(sourceIndex)?.mons ?? [];
 }
 
+// Returns available opponent battle mons
 function getAvailableOpponentBattleMons(sourceIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const mons = getAvailableBattleMons(sourceIndex);
 
@@ -335,6 +372,11 @@ function getAvailableOpponentBattleMons(sourceIndex = PRIMARY_TRAINER_SLOT_INDEX
     return mons.filter((mon) => !isMonExcludedByFactoryPlayerTeam(mon));
 }
 
+// -----------------------------------------------------------------------------
+// Battle Pokémon metadata
+// -----------------------------------------------------------------------------
+
+// Returns battle pokemon IV
 function getBattlePokemonIv(mon) {
     if (Object.prototype.hasOwnProperty.call(mon, "battleIv")) {
         return mon.battleIv;
@@ -343,6 +385,7 @@ function getBattlePokemonIv(mon) {
     return 0;
 }
 
+// Returns battle pokemon level
 function getBattlePokemonLevel(mon, fallbackLevel = getSelectedLevel()) {
     if (Object.prototype.hasOwnProperty.call(mon, "battleLevel")) {
         return mon.battleLevel;
@@ -351,6 +394,7 @@ function getBattlePokemonLevel(mon, fallbackLevel = getSelectedLevel()) {
     return fallbackLevel;
 }
 
+// Returns battle pokemon source index for opponent slot
 function getBattlePokemonSourceIndexForOpponentSlot(slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     if (isFactoryMode() || isHallMode()) {
         return PRIMARY_TRAINER_SLOT_INDEX;
@@ -359,10 +403,12 @@ function getBattlePokemonSourceIndexForOpponentSlot(slotIndex = PRIMARY_OPPONENT
     return getTrainerIndexForOpponentSlot(slotIndex);
 }
 
+// Returns whether battle pokemon source for opponent slot
 function hasBattlePokemonSourceForOpponentSlot(slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     return hasBattlePokemonSource(getBattlePokemonSourceIndexForOpponentSlot(slotIndex));
 }
 
+// Returns available battle mons for opponent slot
 function getAvailableBattleMonsForOpponentSlot(slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     return getAvailableOpponentBattleMons(
         getBattlePokemonSourceIndexForOpponentSlot(slotIndex)

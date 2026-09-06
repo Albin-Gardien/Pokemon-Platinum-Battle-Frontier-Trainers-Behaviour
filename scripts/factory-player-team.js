@@ -6,10 +6,12 @@
 
 const FACTORY_PLAYER_TEAM_MAX_SIZE = 4;
 
+// Returns factory player team size
 function getFactoryPlayerTeamSize() {
     return battleState.format === "multi" ? 4 : 3;
 }
 
+// Creates factory player slot state
 function createFactoryPlayerSlotState() {
     return {
         monId: null,
@@ -25,10 +27,12 @@ const factoryPlayerTeamState = {
     )
 };
 
+// Returns factory player slot state
 function getFactoryPlayerSlotState(slotIndex) {
     return factoryPlayerTeamState.slots[slotIndex];
 }
 
+// Returns factory player slot DOM
 function getFactoryPlayerSlotDom(slotIndex) {
     return dom.factoryPlayerTeam.slots[slotIndex];
 }
@@ -37,6 +41,7 @@ function getFactoryPlayerSlotDom(slotIndex) {
 // Factory player team source
 // -----------------------------------------------------------------------------
 
+// Returns factory player team candidate mons
 function getFactoryPlayerTeamCandidateMons() {
     if (!isFactoryMode()) {
         return [];
@@ -45,6 +50,7 @@ function getFactoryPlayerTeamCandidateMons() {
     return getFactoryBattlePokemonSource()?.mons ?? [];
 }
 
+// Returns factory player team mon
 function getFactoryPlayerTeamMon(slotIndex) {
     const monId = getFactoryPlayerSlotState(slotIndex).monId;
 
@@ -56,6 +62,7 @@ function getFactoryPlayerTeamMon(slotIndex) {
         .find((mon) => mon.id === monId) ?? null;
 }
 
+// Returns selected factory player team mons
 function getSelectedFactoryPlayerTeamMons() {
     return factoryPlayerTeamState.slots
         .slice(0, getFactoryPlayerTeamSize())
@@ -63,10 +70,12 @@ function getSelectedFactoryPlayerTeamMons() {
         .filter(Boolean);
 }
 
+// Returns factory player mon display name
 function getFactoryPlayerMonDisplayName(mon) {
     return `${getName(mon)} ${mon.setNumber ?? ""} — ${translate("columns", "iv")} ${getBattlePokemonIv(mon)}`;
 }
 
+// Returns whether mon excluded by factory player team
 function isMonExcludedByFactoryPlayerTeam(mon) {
     if (!isFactoryMode()) {
         return false;
@@ -82,6 +91,7 @@ function isMonExcludedByFactoryPlayerTeam(mon) {
 // Factory player team suggestions
 // -----------------------------------------------------------------------------
 
+// Populates factory player suggestions
 function populateFactoryPlayerSuggestions(search, slotIndex) {
     const slotState = getFactoryPlayerSlotState(slotIndex);
     const slotDom = getFactoryPlayerSlotDom(slotIndex);
@@ -140,6 +150,7 @@ function populateFactoryPlayerSuggestions(search, slotIndex) {
     slotDom.suggestions.hidden = false;
 }
 
+// Updates factory player suggestion active item
 function updateFactoryPlayerSuggestionActiveItem(slotIndex) {
     const slotState = getFactoryPlayerSlotState(slotIndex);
     const slotDom = getFactoryPlayerSlotDom(slotIndex);
@@ -150,6 +161,7 @@ function updateFactoryPlayerSuggestionActiveItem(slotIndex) {
     });
 }
 
+// Handles factory player suggestion keyboard
 function handleFactoryPlayerSuggestionKeyboard(event, slotIndex) {
     const slotState = getFactoryPlayerSlotState(slotIndex);
     const slotDom = getFactoryPlayerSlotDom(slotIndex);
@@ -192,6 +204,7 @@ function handleFactoryPlayerSuggestionKeyboard(event, slotIndex) {
 // Factory player team selection
 // -----------------------------------------------------------------------------
 
+// Selects factory player mon
 function selectFactoryPlayerMon(mon, slotIndex) {
     const slotState = getFactoryPlayerSlotState(slotIndex);
     const slotDom = getFactoryPlayerSlotDom(slotIndex);
@@ -208,6 +221,7 @@ function selectFactoryPlayerMon(mon, slotIndex) {
     refreshFactoryOpponentPoolAfterPlayerTeamChange();
 }
 
+// Clears factory player team slot
 function clearFactoryPlayerTeamSlot(slotIndex, refreshOpponentPool = true) {
     const slotState = getFactoryPlayerSlotState(slotIndex);
     const slotDom = getFactoryPlayerSlotDom(slotIndex);
@@ -227,6 +241,7 @@ function clearFactoryPlayerTeamSlot(slotIndex, refreshOpponentPool = true) {
     }
 }
 
+// Resets factory player team
 function resetFactoryPlayerTeam() {
     factoryPlayerTeamState.slots.forEach((_, slotIndex) => {
         clearFactoryPlayerTeamSlot(slotIndex, false);
@@ -237,6 +252,7 @@ function resetFactoryPlayerTeam() {
 // Factory player team rendering
 // -----------------------------------------------------------------------------
 
+// Builds factory player moves block
 function buildFactoryPlayerMovesBlock(mon) {
     const movesBlock = document.createElement("div");
     movesBlock.className = "pokemon-detail-moves factory-player-moves";
@@ -267,6 +283,7 @@ function buildFactoryPlayerMovesBlock(mon) {
     return movesBlock;
 }
 
+// Builds factory player pokemon card
 function buildFactoryPlayerPokemonCard(mon) {
     const iv = getBattlePokemonIv(mon);
     const stats = calculateStats(mon, iv, getSelectedLevel());
@@ -307,6 +324,7 @@ function buildFactoryPlayerPokemonCard(mon) {
     return card;
 }
 
+// Renders factory player team slot
 function renderFactoryPlayerTeamSlot(slotIndex) {
     const slotDom = getFactoryPlayerSlotDom(slotIndex);
     const mon = getFactoryPlayerTeamMon(slotIndex);
@@ -323,6 +341,7 @@ function renderFactoryPlayerTeamSlot(slotIndex) {
     slotDom.details.hidden = false;
 }
 
+// Renders factory player team
 function renderFactoryPlayerTeam() {
     dom.factoryPlayerTeam.container.hidden = !isFactoryMode();
 
@@ -347,6 +366,7 @@ function renderFactoryPlayerTeam() {
     });
 }
 
+// Applies factory player team language
 function applyFactoryPlayerTeamLanguage() {
     dom.factoryPlayerTeam.title.textContent = translate("ui", "factoryPlayerTeamTitle");
 
@@ -366,6 +386,7 @@ function applyFactoryPlayerTeamLanguage() {
 // Factory opponent refresh
 // -----------------------------------------------------------------------------
 
+// Refreshes factory opponent pool after player team change
 function refreshFactoryOpponentPoolAfterPlayerTeamChange() {
     if (!isFactoryMode()) {
         return;
@@ -384,6 +405,7 @@ function refreshFactoryOpponentPoolAfterPlayerTeamChange() {
 // Factory player team events
 // -----------------------------------------------------------------------------
 
+// Binds factory player team events
 function bindFactoryPlayerTeamEvents() {
     dom.factoryPlayerTeam.slots.forEach((slotDom, slotIndex) => {
         slotDom.input.addEventListener("input", (event) => {

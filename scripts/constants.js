@@ -1,12 +1,16 @@
 "use strict";
 
 // -----------------------------------------------------------------------------
-// App constants and cached DOM references
+// Sprite asset URLs
 // -----------------------------------------------------------------------------
 
 const spriteBaseUrl = "https://raw.githubusercontent.com/msikma/pokesprite/master";
 const pokemonSpriteBaseUrl = `${spriteBaseUrl}/pokemon-gen7x/regular`;
 const itemSpriteBaseUrl = `${spriteBaseUrl}/items`;
+
+// -----------------------------------------------------------------------------
+// Frontier series configuration
+// -----------------------------------------------------------------------------
 
 const frontierSeries = [
     { id: "series_1", label: "Série 1", start: 1, end: 120 },
@@ -18,6 +22,10 @@ const frontierSeries = [
     { id: "series_7", label: "Série 7", start: 181, end: 240 },
     { id: "series_8_plus", label: "Série 8+", start: 201, end: 300 }
 ];
+
+// -----------------------------------------------------------------------------
+// Battle presentation metadata
+// -----------------------------------------------------------------------------
 
 const natureModifiers = {
     hardy: {},
@@ -71,6 +79,10 @@ const typeColors = {
     dark: { bg: "#715949" },
     steel: { bg: "#babad3" }
 };
+
+// -----------------------------------------------------------------------------
+// Sprite slug and item mappings
+// -----------------------------------------------------------------------------
 
 const pokemonSpriteSlugOverrides = {
     mr_mime: "mr-mime",
@@ -173,6 +185,10 @@ const itemSpriteMap = {
     yache_berry: "berry/yache",
     zoom_lens: "hold-item/zoom-lens"
 };
+
+// -----------------------------------------------------------------------------
+// Cached DOM references
+// -----------------------------------------------------------------------------
 
 const dom = {
     pageTitle: document.getElementById("page-title"),
