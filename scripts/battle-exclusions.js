@@ -59,7 +59,7 @@ function isMonExcluded(mon, trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
 function refreshBattleExclusionInterface(trainerIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     const exclusionDom = getBattleExclusionDom(trainerIndex);
 
-    if (!hasBattlePokemonSource(trainerIndex)) {
+    if (isHallMode() || !hasBattlePokemonSource(trainerIndex)) {
         exclusionDom.container.hidden = true;
         return;
     }

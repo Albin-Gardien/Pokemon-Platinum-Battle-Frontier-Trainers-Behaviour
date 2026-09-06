@@ -266,7 +266,7 @@ label:focus-visible {
     gap: 10px;
 }
 
-.trainer-slot-label {
+.trainer-slot-label, #level-label, #opponent-pokemon-label, #opponent-pokemon-label-2 {
     color: #30354d;
     font-weight: 700;
     white-space: nowrap;
@@ -328,6 +328,67 @@ label:focus-visible {
 
 .factory-series-field select {
     width: 260px;
+}
+
+.hall-controls {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+}
+
+.hall-controls[hidden] {
+    display: none;
+}
+
+.hall-control-field {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 8px;
+    color: #30354d;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.hall-control-field select {
+    min-width: 130px;
+}
+
+#hall-type-select {
+    min-width: 160px;
+}
+
+#hall-rank-select {
+    min-width: 90px;
+}
+
+#hall-advanced-types-input {
+    width: 90px;
+}
+
+#hall-encounter-select {
+    min-width: 210px;
+}
+
+.hall-player-pokemon-autocomplete {
+    width: 230px;
+}
+
+#hall-player-pokemon-input {
+    width: 100%;
+}
+
+.hall-ability-note {
+    margin: 8px 0;
+    padding: 7px 9px;
+    color: #505775;
+    font-size: 0.9rem;
+    font-style: italic;
+    background: #eef1f8;
+    border-left: 3px solid var(--platinum-violet);
+    border-radius: 3px;
 }
 
 .battle-mode-selector {
@@ -398,15 +459,6 @@ label:focus-visible {
     height: 18px;
     margin: 0;
     flex: 0 0 18px;
-}
-
-.battle-mode-option.is-future {
-    opacity: 0.48;
-    cursor: not-allowed;
-}
-
-.battle-mode-option.is-future input[type="radio"] {
-    cursor: not-allowed;
 }
 
 .level-input {
@@ -623,6 +675,10 @@ label:focus-visible {
     z-index: 4;
 }
 
+.pokemon-table.hall-table .hall-pool-group-row th {
+    position: static;
+}
+
 .pokemon-table th,
 .pokemon-table td {
     overflow: hidden;
@@ -703,7 +759,9 @@ label:focus-visible {
 .pokemon-table th:nth-child(n+9):nth-child(-n+14),
 .pokemon-table td:nth-child(n+9):nth-child(-n+14),
 .pokemon-table.factory-table th:nth-child(19),
-.pokemon-table.factory-table td:nth-child(19) {
+.pokemon-table.factory-table td:nth-child(19),
+.pokemon-table.hall-table th:nth-child(19),
+.pokemon-table.hall-table td:nth-child(19) {
     min-width: 70px;
     max-width: 85px;
     text-align: center;
@@ -805,7 +863,8 @@ label:focus-visible {
     background: #d578ba;
 }
 
-.factory-pool-group-row th {
+.factory-pool-group-row th,
+.hall-pool-group-row th {
     padding: 10px 12px;
     color: #ffffff;
     background: linear-gradient(180deg, #5963a6 0%, #454e8d 100%);
@@ -1412,9 +1471,15 @@ label:focus-visible {
 
 .pokemon-detail-content {
     display: grid;
-    grid-template-columns: 140px minmax(220px, 230px) minmax(350px, 500px);
+    grid-template-columns: 140px minmax(220px, 230px) minmax(0, 500px);
     gap: 18px;
     align-items: start;
+    min-width: 0;
+}
+
+.pokemon-detail-info {
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .pokemon-detail-sprite {
@@ -1473,7 +1538,8 @@ label:focus-visible {
 
 .pokemon-detail-stats {
     display: flex;
-    min-width: 350px;
+    width: 100%;
+    min-width: 0;
     max-width: 500px;
     padding: 9px;
     justify-self: end;
@@ -1518,6 +1584,58 @@ label:focus-visible {
     border: 1px solid #757c96;
     border-radius: 2px;
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.48);
+}
+
+@container (max-width: 780px) {
+    .pokemon-detail-content {
+        grid-template-columns: 120px minmax(0, 1fr);
+        gap: 14px 16px;
+    }
+
+    .pokemon-detail-sprite {
+        width: 120px;
+        height: 120px;
+    }
+
+    .pokemon-detail-stats {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        justify-self: stretch;
+    }
+}
+
+@container (max-width: 520px) {
+    .pokemon-detail-content {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .pokemon-detail-sprite {
+        justify-self: center;
+    }
+
+    .pokemon-detail-info {
+        width: 100%;
+    }
+
+    .pokemon-detail-stats {
+        grid-column: 1;
+    }
+
+    .stat-bar-row {
+        grid-template-columns: 64px minmax(0, 1fr) 36px;
+        gap: 6px;
+        font-size: 0.9rem;
+    }
+
+    .moves-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .move-detail-with-pp {
+        grid-template-columns: minmax(0, 1fr) auto auto;
+    }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1776,6 +1894,22 @@ label:focus-visible {
     background: #edf0f6;
 }
 
+.ai-routine-wrapper {
+    display: grid;
+    grid-column: 1 / -1;
+    gap: 10px;
+}
+
+.ai-mode-notice {
+    margin: 0;
+    padding: 9px 12px;
+    color: #353b61;
+    font-weight: 700;
+    background: linear-gradient(180deg, #f1f3fa 0%, #e1e5f1 100%);
+    border-left: 4px solid var(--platinum-violet);
+    border-radius: 4px;
+}
+
 /* -------------------------------------------------------------------------- */
 /* Hidden sets                                                                 */
 /* -------------------------------------------------------------------------- */
@@ -1978,6 +2112,11 @@ label:focus-visible {
 
     .trainer-selectors-container {
         max-width: 680px;
+    }
+
+    .hall-controls {
+        flex-wrap: wrap;
+        gap: 14px 24px;
     }
 }
 

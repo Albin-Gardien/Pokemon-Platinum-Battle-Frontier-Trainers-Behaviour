@@ -212,10 +212,105 @@ function getFactoryBattleGroups(mons, source = getFactoryBattlePokemonSource()) 
         }));
 }
 
+function createHallBattleMon(mon, battleIv, battleLevel) {
+    return { ...mon, sourceSetId: mon.id, battleIv, battleLevel };
+}
+
+function isHallMonAvailableForType(mon, typeId) {
+    return typeId === "all" || mon.types.includes(typeId);
+}
+
+function isHallMonAvailableForRank(mon, rank) {
+    return rank === null || (rank >= mon.minRank && rank <= mon.maxRank);
+}
+
+function getHallBattlePokemonSource() {
+    const hallData = window.hallMons;
+
+    if (!Array.isArray(hallData?.mons)) {
+        return null;
+    }
+
+    const encounterType = getSelectedHallEncounterType();
+    const rank = getEffectiveHallRank();
+    const playerLevel = getSelectedLevel();
+    const battleIv = getHallBattleIv(rank);
+    const battleLevel = getHallOpponentLevel(rank);
+
+    let typeId = getSelectedHallType();
+    let poolGroup = null;
+    let boss = null;
+    let sourceMons = hallData.mons;
+
+    if (isHallArgentaSilver()) {
+        const playerPokemon = getSelectedHallPlayerPokemon();
+        const playerGroup = getSelectedHallPlayerGroup();
+
+        typeId = null;
+        boss = { id: "argenta", print: "silver", battleNumber: 50 };
+
+        if (!playerPokemon || playerGroup === null) {
+            return { type: "hall", encounterType, boss, typeId, rank, poolGroup: null, playerLevel, battleLevel, battleIv,
+                advancedTypeCount: getSelectedHallAdvancedTypeCount(), playerPokemon: null, requiresPlayerPokemon: true, mons: []
+            };
+        }
+
+        poolGroup = playerGroup;
+        sourceMons = sourceMons.filter((mon) => mon.group === playerGroup);
+    } else if (isHallArgentaGold()) {
+        poolGroup = 4;
+        sourceMons = sourceMons.filter((mon) => mon.group === 4);
+        typeId = null;
+        boss = { id: "argenta", print: "gold", battleNumber: 170 };
+    } else {
+        sourceMons = sourceMons.filter((mon) => isHallMonAvailableForType(mon, typeId)).filter((mon) => isHallMonAvailableForRank(mon, rank));
+    }
+
+    const mons = sourceMons.map((mon) => createHallBattleMon(mon, battleIv, battleLevel));
+
+    return { type: "hall", encounterType, boss, typeId, rank, poolGroup, playerLevel, battleLevel, battleIv,
+        advancedTypeCount: getSelectedHallAdvancedTypeCount(), playerPokemon: getSelectedHallPlayerPokemon(), requiresPlayerPokemon: false, mons
+    };
+}
+
+function getHallBattleGroups(mons) {
+    const groupsById = new Map();
+
+    for (const mon of mons) {
+        if (!groupsById.has(mon.group)) {
+            groupsById.set(mon.group, []);
+        }
+
+        groupsById.get(mon.group).push(mon);
+    }
+
+    return [...groupsById.entries()]
+        .sort(([groupA], [groupB]) => groupA - groupB)
+        .map(([groupId, groupedMons]) => {
+            const groupMeta =
+                window.hallMons?.meta?.groups?.[`group_${groupId}`] ?? {};
+
+            return {
+                id: groupId,
+                minRank: groupMeta.minRank ?? groupedMons[0]?.minRank,
+                maxRank: groupMeta.maxRank ?? groupedMons[0]?.maxRank,
+                mons: groupedMons.sort((monA, monB) =>
+                    monA.hallNumber - monB.hallNumber
+                )
+            };
+        });
+}
+
 function getBattlePokemonSource(sourceIndex = PRIMARY_TRAINER_SLOT_INDEX) {
     if (isFactoryMode()) {
         return sourceIndex === PRIMARY_TRAINER_SLOT_INDEX
             ? getFactoryBattlePokemonSource()
+            : null;
+    }
+
+    if (isHallMode()) {
+        return sourceIndex === PRIMARY_TRAINER_SLOT_INDEX
+            ? getHallBattlePokemonSource()
             : null;
     }
 
@@ -241,11 +336,23 @@ function getAvailableOpponentBattleMons(sourceIndex = PRIMARY_TRAINER_SLOT_INDEX
 }
 
 function getBattlePokemonIv(mon) {
-    return mon.battleIv ?? 0;
+    if (Object.prototype.hasOwnProperty.call(mon, "battleIv")) {
+        return mon.battleIv;
+    }
+
+    return 0;
+}
+
+function getBattlePokemonLevel(mon, fallbackLevel = getSelectedLevel()) {
+    if (Object.prototype.hasOwnProperty.call(mon, "battleLevel")) {
+        return mon.battleLevel;
+    }
+
+    return fallbackLevel;
 }
 
 function getBattlePokemonSourceIndexForOpponentSlot(slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
-    if (isFactoryMode()) {
+    if (isFactoryMode() || isHallMode()) {
         return PRIMARY_TRAINER_SLOT_INDEX;
     }
 

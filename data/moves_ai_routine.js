@@ -85,7 +85,7 @@ window.moveAiRoutines = {
         fr: [
           "Si le talent du lanceur est Simple et que l'une de ses statistiques est augmentée à +3 ou plus :\n\tScore -10 et arrêt\n\nSi l'une des statistiques du lanceur est augmentée à +6 :\n\tScore -10 et arrêt",
           "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
-          "Si les PV du lanceur sont inférieurs à 51 % :\n\tScore -1 et arrêt\n\nSi le PV du lanceur est supérieur à 90 % :\n\t75 % (192/256) de chances d’avoir un score +1 et arrêt\n\nSinon :\n\t37,5 % (96/256) de chances d’avoir un score +1 et arrêt"
+          "Si les PV du lanceur sont inférieurs à 51 % :\n\tScore -1 et arrêt\n\nSi les PV du lanceur est supérieur à 90 % :\n\t75 % (192/256) de chances d’avoir un score +1 et arrêt\n\nSinon :\n\t37,5 % (96/256) de chances d’avoir un score +1 et arrêt"
         ]
       },
       doublesEnemy: {
@@ -99,7 +99,7 @@ window.moveAiRoutines = {
           "If the target's ability is not Simple, and the target's current attack, defense, speed, special attack, special defense, evasion, or accuracy is boosted to +6:\n\tScore -30 and terminate\n\nIf the target's ability is Simple, and the target's current attack, defense, speed, special attack, special defense, evasion, or accuracy is boosted to +3 or more:\n\tScore -10 and terminate\n\nIf the target's HP is under 51%:\n\tScore -1 and terminate\n\nIf the target's HP is over 90%:\n\t68.8% (176/256) chance of score +2 and terminate\n\nOtherwise:\n\t34.4% (88/256) chance of score +1 and terminate"
         ],
         fr: [
-          "Si le talent de la cible n'est pas Simple et que l'attaque, la défense, la vitesse, l'attaque spéciale, la défense spéciale, l'Esquive ou la précision actuelles de la cible sont augmentées à +6 :\n\tScore -30 et arrêt\n\nSi le talent de la cible est Simple et que l'attaque, la défense, la vitesse, l'attaque spéciale, la défense spéciale, l'Esquive ou la précision actuelles de la cible sont augmentées à +3 ou plus :\n\tScore -10 et arrêt\n\nSi les PV de la cible sont inférieurs à 51 % :\n\tScore -1 et arrêt\n\nSi le PV de la cible est supérieur à 90 % :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt\n\nSinon :\n\t34,4 % (88/256) de chances d’avoir un score +1 et arrêt"
+          "Si le talent de la cible n'est pas Simple et que l'attaque, la défense, la vitesse, l'attaque spéciale, la défense spéciale, l'Esquive ou la précision actuelles de la cible sont augmentées à +6 :\n\tScore -30 et arrêt\n\nSi le talent de la cible est Simple et que l'attaque, la défense, la vitesse, l'attaque spéciale, la défense spéciale, l'Esquive ou la précision actuelles de la cible sont augmentées à +3 ou plus :\n\tScore -10 et arrêt\n\nSi les PV de la cible sont inférieurs à 51 % :\n\tScore -1 et arrêt\n\nSi les PV de la cible est supérieur à 90 % :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt\n\nSinon :\n\t34,4 % (88/256) de chances d’avoir un score +1 et arrêt"
         ]
       }
     }
@@ -384,7 +384,7 @@ window.moveAiRoutines = {
           "If the target's ability is Water Absorb or Dry Skin:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -401,7 +401,7 @@ window.moveAiRoutines = {
         fr: [
           "Si le lanceur est déjà sous l’effet d’Anneau Hydro :\n\tScore -10 et arrêt",
           "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
-          "Si le PV du lanceur est supérieur à 29 % :\n\t50 % (128/256) de chances d’avoir un score +1 et arrêt"
+          "Si les PV du lanceur est supérieur à 29 % :\n\t50 % (128/256) de chances d’avoir un score +1 et arrêt"
         ]
       },
       doublesEnemy: {
@@ -460,7 +460,7 @@ window.moveAiRoutines = {
           "If the target's ability is Water Absorb or Dry Skin:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -1341,6 +1341,51 @@ window.moveAiRoutines = {
       }
     }
   },
+  bonemerang: {
+    id: "bonemerang",
+    routine: {
+      singles: {
+        en: [
+          "If the effectiveness of the move is 0x:\n\tScore -10 and terminate",
+          "If the target's ability is Levitate, and the user's ability is not Mold Breaker:\n\tScore -12 and terminate",
+          "If the target's ability is Wonder Guard, and the effectiveness of the move is not 2x or 4x, and the user's ability is not Mold Breaker:\n\tScore -12 and terminate",
+          "If the move can KO the target:\n\tScore +4 and terminate",
+          "If the move cannot KO the target, and a different move the user knows would do more damage to the target:\n\tScore -1 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate"
+        ],
+        fr: [
+          "Si l’efficacité de la capacité est de 0× :\n\tScore -10 et arrêt",
+          "Si le talent de la cible est Lévitation et que le talent du lanceur n'est pas Brise Moule :\n\tScore -12 et arrêt",
+          "Si le talent de la cible est Garde Mystik, que l’efficacité de la capacité n’est ni 2× ni 4× et que le talent du lanceur n’est pas Brise Moule :\n\tScore -12 et arrêt",
+          "Si la capacité peut mettre K.O. la cible :\n\tScore +4 et arrêt",
+          "Si la capacité ne peut pas mettre K.O. la cible et qu’une autre capacité connue par le lanceur infligerait plus de dégâts à la cible :\n\tScore -1 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt"
+        ]
+      },
+      doublesEnemy: {
+        en: [
+          "If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):\n\tIf the effectiveness of the move is 1/2x:\n\t\t75% (192/256) chance of score -1 and continue\n\t\n\tIf the effectiveness of the move is 1/4x:\n\t\t75% (192/256) chance of score -2 and continue",
+          "If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):\n\t50% (128/256) chance of score +1 and continue",
+          "If the move did not receive a score +1 in the previous check:\n\tIf the effectiveness of the move is 2x:\n\t\t60.9% (156/256) chance of score +1 and continue\n\t\n\tIf the effectiveness of the move is 4x:\n\t\t75% (192/256) chance of score +1 and continue",
+          "If the user's ally knows the move Helping Hand:\n\tScore +1 and terminate"
+        ],
+        fr: [
+          "Si la capacité ne peut pas mettre K.O. la cible et que les PV de l’allié du lanceur sont supérieurs à 0 % (après arrondi) :\n\tSi l’efficacité de la capacité est de 1/2× :\n\t\t75 % (192/256) de chances d’avoir un score -1 et continuation\n\n\tSi l’efficacité de la capacité est de 1/4× :\n\t\t75 % (192/256) de chances d’avoir un score -2 et continuation",
+          "Si la capacité inflige le plus de dégâts à la cible en tenant également compte de toutes les capacités de l’allié du lanceur (qu’il soit encore en vie ou non) :\n\t50 % (128/256) de chances d’avoir un score +1 et continuation",
+          "Si la capacité n’a pas reçu +1 au score lors de la vérification précédente :\n\tSi l’efficacité de la capacité est de 2× :\n\t\t60,9 % (156/256) de chances d’avoir un score +1 et continuation\n\n\tSi l’efficacité de la capacité est de 4× :\n\t\t75 % (192/256) de chances d’avoir un score +1 et continuation",
+          "Si l’allié du lanceur connaît la capacité Coup d’Main :\n\tScore +1 et arrêt"
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
   bounce: {
     id: "bounce",
     routine: {
@@ -1522,7 +1567,7 @@ window.moveAiRoutines = {
           "If the target's ability is Water Absorb or Dry Skin:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -1567,7 +1612,7 @@ window.moveAiRoutines = {
           "If the target's ability is Water Absorb or Dry Skin:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -1824,7 +1869,7 @@ window.moveAiRoutines = {
         fr: [
           "Si le talent de la cible est Benêt, Corps Sain ou Écran Fumée et que le talent du lanceur n'est pas Brise Moule :\n\tScore -10 et arrêt\n\nSi la cible n’est pas du sexe opposé au lanceur :\n\tScore -10 et arrêt\n\nSi l’Attaque Spéciale de la cible est réduite à -6 :\n\tScore -10 et arrêt",
           "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
-          "Si le niveau d’Attaque Spéciale de la cible n’est pas à +0 :\n\tScore -1 et continuation\n\n\tSi le PV du lanceur est inférieur à 91 % :\n\t\tScore -1 et continuation\n\n\tSi l’Attaque Spéciale de la cible est réduite à -3 ou moins :\n\t\t80,5 % (206/256) de chances d’avoir un score -2 et continuation\n\nSi les PV de la cible sont inférieurs à 71 % :\n\tScore -2 et continuation\n\nSi la dernière capacité utilisée par la cible était physique, ou si la cible n’a encore utilisé aucune capacité :\n\t75 % (192/256) de chances d’avoir un score -1 et arrêt"
+          "Si le niveau d’Attaque Spéciale de la cible n’est pas à +0 :\n\tScore -1 et continuation\n\n\tSi les PV du lanceur est inférieur à 91 % :\n\t\tScore -1 et continuation\n\n\tSi l’Attaque Spéciale de la cible est réduite à -3 ou moins :\n\t\t80,5 % (206/256) de chances d’avoir un score -2 et continuation\n\nSi les PV de la cible sont inférieurs à 71 % :\n\tScore -2 et continuation\n\nSi la dernière capacité utilisée par la cible était physique, ou si la cible n’a encore utilisé aucune capacité :\n\t75 % (192/256) de chances d’avoir un score -1 et arrêt"
         ]
       },
       doublesEnemy: {
@@ -1910,7 +1955,7 @@ window.moveAiRoutines = {
           "If the target's ability is Motor Drive, and the target's current speed is not boosted to +6:\n\t37.5% (96/256) chance of score +3 and terminate\n\nIf the target's ability is Volt Absorb:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -1989,6 +2034,53 @@ window.moveAiRoutines = {
         ],
         fr: [
           "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
+  clamp: {
+    id: "clamp",
+    routine: {
+      singles: {
+        en: [
+          "If the effectiveness of the move is 0x:\n\tScore -10 and terminate",
+          "If the target's ability is Water Absorb:\n\tScore -12 and terminate",
+          "If the target's ability is Wonder Guard, and the effectiveness of the move is not 2x:\n\tScore -10 and terminate",
+          "If the move can KO the target:\n\tScore +4 and terminate",
+          "If the move cannot KO the target, and a different move the user knows would do more damage to the target:\n\tScore -1 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate",
+          "If the target is badly poisoned, or infatuated, or under the effect or Curse, or Perish Song:\n\t50% (128/256) chance of score +1 and terminate"
+        ],
+        fr: [
+          "Si l’efficacité de la capacité est de 0× :\n\tScore -10 et arrêt",
+          "Si le talent de la cible est Absorb Eau :\n\tScore -12 et arrêt",
+          "Si le talent de la cible est Garde Mystik et que l’efficacité de la capacité n’est pas de 2× :\n\tScore -10 et arrêt",
+          "Si la capacité peut mettre K.O. la cible :\n\tScore +4 et arrêt",
+          "Si la capacité ne peut pas mettre K.O. la cible et qu’une autre capacité connue par le lanceur infligerait plus de dégâts à la cible :\n\tScore -1 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
+          "Si la cible est gravement empoisonnée, sous l’effet d’Attraction, de Malédiction ou de Requiem :\n\t50 % (128/256) de chances d’avoir un score +1 et arrêt"
+        ]
+      },
+      doublesEnemy: {
+        en: [
+          "If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):\n\tIf the effectiveness of the move is 1/2x:\n\t\t75% (192/256) chance of score -1 and continue\n\t\n\tIf the effectiveness of the move is 1/4x:\n\t\t75% (192/256) chance of score -2 and continue",
+          "If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):\n\t50% (128/256) chance of score +1 and continue",
+          "If the move did not receive a score +1 in the previous check:\n\tIf the effectiveness of the move is 2x:\n\t\t60.9% (156/256) chance of score +1 and continue\n\t\n\tIf the effectiveness of the move is 4x:\n\t\t75% (192/256) chance of score +1 and continue",
+          "If the target's ally's ability is certainly Storm Drain:\n\tScore -1 and continue\n\nIf the user's ally's ability is Storm Drain:\n\tScore -10 and terminate"
+        ],
+        fr: [
+          "Si la capacité ne peut pas mettre K.O. la cible et que les PV de l’allié du lanceur sont supérieurs à 0 % (après arrondi) :\n\tSi l’efficacité de la capacité est de 1/2× :\n\t\t75 % (192/256) de chances d’avoir un score -1 et continuation\n\n\tSi l’efficacité de la capacité est de 1/4× :\n\t\t75 % (192/256) de chances d’avoir un score -2 et continuation",
+          "Si la capacité inflige le plus de dégâts à la cible en tenant également compte de toutes les capacités de l’allié du lanceur (qu’il soit encore en vie ou non) :\n\t50 % (128/256) de chances d’avoir un score +1 et continuation",
+          "Si la capacité n’a pas reçu +1 au score lors de la vérification précédente :\n\tSi l’efficacité de la capacité est de 2× :\n\t\t60,9 % (156/256) de chances d’avoir un score +1 et continuation\n\n\tSi l’efficacité de la capacité est de 4× :\n\t\t75 % (192/256) de chances d’avoir un score +1 et continuation",
+          "Si le talent de l'allié de la cible est certainement Lavabo :\n\tScore -1 et continuation\n\nSi le talent de l'allié du lanceur est Lavabo :\n\tScore -10 et arrêt"
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "If the target's ability is Water Absorb or Dry Skin:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -2364,7 +2456,7 @@ window.moveAiRoutines = {
           "If the target's ability is Water Absorb or Dry Skin:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -2559,7 +2651,7 @@ window.moveAiRoutines = {
           "Si l’efficacité de la capacité est de 0× :\n\tScore -10 et arrêt",
           "Si le talent de la cible est Garde Mystik, que l’efficacité de la capacité n’est ni 2× ni 4× et que le talent du lanceur n’est pas Brise Moule :\n\tScore -12 et arrêt",
           "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
-          "Si l'efficacité de la capacité est de 1/2×, 1/4× ou 0×, ou si le PV de la cible est inférieur à 50 % :\n\tScore -1 et arrêt\n\nSi la cible a tous ses PV :\n\tScore +1 et continuation\n\nSi la cible a tous ses PV et que le lanceur agira avant elle :\n\tScore +1 et continuation\n\nSi le PV de la cible est supérieur à 85 % :\n\t90,2 % (231/256) de chances d’avoir un score +1 et arrêt"
+          "Si l'efficacité de la capacité est de 1/2×, 1/4× ou 0×, ou si les PV de la cible est inférieur à 50 % :\n\tScore -1 et arrêt\n\nSi la cible a tous ses PV :\n\tScore +1 et continuation\n\nSi la cible a tous ses PV et que le lanceur agira avant elle :\n\tScore +1 et continuation\n\nSi les PV de la cible est supérieur à 85 % :\n\t90,2 % (231/256) de chances d’avoir un score +1 et arrêt"
         ]
       },
       doublesEnemy: {
@@ -2890,7 +2982,7 @@ window.moveAiRoutines = {
           "If the target's ability is Motor Drive, and the target's current speed is not boosted to +6:\n\t37.5% (96/256) chance of score +3 and terminate\n\nIf the target's ability is Volt Absorb:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -2939,7 +3031,7 @@ window.moveAiRoutines = {
           "If the target's ability is Water Absorb or Dry Skin:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -4980,7 +5072,50 @@ window.moveAiRoutines = {
           "If the user's HP is under 31%:\n\t75% (192/256) chance of score -5 and terminate\n\nIf the user's HP is over 90%:\n\tIf the user's ally's HP is over 90%:\n\t\t75% (192/256) chance of score -1 and terminate\n\t\n\tIf the user's ally's HP is over 50%:\n\t\t75% (192/256) chance of score +1 and terminate\n\t\n\tIf the user's ally's HP is over 30%:\n\t\t75% (192/256) chance of score +2 and terminate\n\t\n\tIf the user's ally's HP is under 31%:\n\t\t75% (192/256) chance of score +3 and terminate\n\nIf the user's HP is over 50%:\n\tIf the user's ally's HP is over 90%:\n\t\t75% (192/256) chance of score -2 and terminate\n\t\n\tIf the user's ally's HP is over 50%:\n\t\t75% (192/256) chance of score -1 and terminate\n\t\n\tIf the user's ally's HP is over 30%:\n\t\t75% (192/256) chance of score +1 and terminate\n\t\n\tIf the user's ally's HP is under 31%:\n\t\t75% (192/256) chance of score +2 and terminate\n\nIf the user's HP is over 30%:\n\tIf the user's ally's HP is over 90%:\n\t\t75% (192/256) chance of score -2 and terminate\n\t\n\tIf the user's ally's HP is over 50%:\n\t\t75% (192/256) chance of score -2 and terminate\n\t\n\tIf the user's ally's HP is over 30%:\n\t\t75% (192/256) chance of score +1 and terminate\n\t\n\tIf the user's ally's HP is under 31%:\n\t\t75% (192/256) chance of score +2 and terminate"
         ],
         fr: [
-          "Si les PV du lanceur sont inférieurs à 31 % :\n\t75 % (192/256) de chances d’avoir un score -5 et arrêt\n\nSi le PV du lanceur est supérieur à 90 % :\n\tSi le PV de l'allié du lanceur est supérieur à 90 % :\n\t\t75 % (192/256) de chances d’avoir un score -1 et arrêt\n\n\tSi le PV de l'allié du lanceur est supérieur à 50 % :\n\t\t75 % (192/256) de chances d’avoir un score +1 et arrêt\n\n\tSi le PV de l'allié du lanceur est supérieur à 30 % :\n\t\t75 % (192/256) de chances d’avoir un score +2 et arrêt\n\n\tSi le PV de l'allié du lanceur est inférieur à 31 % :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSi le PV du lanceur est supérieur à 50 % :\n\tSi le PV de l'allié du lanceur est supérieur à 90 % :\n\t\t75 % (192/256) de chances d’avoir un score -2 et arrêt\n\n\tSi le PV de l'allié du lanceur est supérieur à 50 % :\n\t\t75 % (192/256) de chances d’avoir un score -1 et arrêt\n\n\tSi le PV de l'allié du lanceur est supérieur à 30 % :\n\t\t75 % (192/256) de chances d’avoir un score +1 et arrêt\n\n\tSi le PV de l'allié du lanceur est inférieur à 31 % :\n\t\t75 % (192/256) de chances d’avoir un score +2 et arrêt\n\nSi le PV du lanceur est supérieur à 30 % :\n\tSi le PV de l'allié du lanceur est supérieur à 90 % :\n\t\t75 % (192/256) de chances d’avoir un score -2 et arrêt\n\n\tSi le PV de l'allié du lanceur est supérieur à 50 % :\n\t\t75 % (192/256) de chances d’avoir un score -2 et arrêt\n\n\tSi le PV de l'allié du lanceur est supérieur à 30 % :\n\t\t75 % (192/256) de chances d’avoir un score +1 et arrêt\n\n\tSi le PV de l'allié du lanceur est inférieur à 31 % :\n\t\t75 % (192/256) de chances d’avoir un score +2 et arrêt"
+          "Si les PV du lanceur sont inférieurs à 31 % :\n\t75 % (192/256) de chances d’avoir un score -5 et arrêt\n\nSi les PV du lanceur est supérieur à 90 % :\n\tSi les PV de l'allié du lanceur est supérieur à 90 % :\n\t\t75 % (192/256) de chances d’avoir un score -1 et arrêt\n\n\tSi les PV de l'allié du lanceur est supérieur à 50 % :\n\t\t75 % (192/256) de chances d’avoir un score +1 et arrêt\n\n\tSi les PV de l'allié du lanceur est supérieur à 30 % :\n\t\t75 % (192/256) de chances d’avoir un score +2 et arrêt\n\n\tSi les PV de l'allié du lanceur est inférieur à 31 % :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSi les PV du lanceur est supérieur à 50 % :\n\tSi les PV de l'allié du lanceur est supérieur à 90 % :\n\t\t75 % (192/256) de chances d’avoir un score -2 et arrêt\n\n\tSi les PV de l'allié du lanceur est supérieur à 50 % :\n\t\t75 % (192/256) de chances d’avoir un score -1 et arrêt\n\n\tSi les PV de l'allié du lanceur est supérieur à 30 % :\n\t\t75 % (192/256) de chances d’avoir un score +1 et arrêt\n\n\tSi les PV de l'allié du lanceur est inférieur à 31 % :\n\t\t75 % (192/256) de chances d’avoir un score +2 et arrêt\n\nSi les PV du lanceur est supérieur à 30 % :\n\tSi les PV de l'allié du lanceur est supérieur à 90 % :\n\t\t75 % (192/256) de chances d’avoir un score -2 et arrêt\n\n\tSi les PV de l'allié du lanceur est supérieur à 50 % :\n\t\t75 % (192/256) de chances d’avoir un score -2 et arrêt\n\n\tSi les PV de l'allié du lanceur est supérieur à 30 % :\n\t\t75 % (192/256) de chances d’avoir un score +1 et arrêt\n\n\tSi les PV de l'allié du lanceur est inférieur à 31 % :\n\t\t75 % (192/256) de chances d’avoir un score +2 et arrêt"
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
+  force_palm: {
+    id: "force_palm",
+    routine: {
+      singles: {
+        en: [
+          "If the effectiveness of the move is 0x:\n\tScore -10 and terminate",
+          "If the target's ability is Wonder Guard, and the effectiveness of the move is not 2x or 4x, and the user's ability is not Mold Breaker:\n\tScore -12 and terminate",
+          "If the move can KO the target:\n\tScore +4 and terminate",
+          "If the move cannot KO the target, and a different move the user knows would do more damage to the target:\n\tScore -1 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate"
+        ],
+        fr: [
+          "Si l’efficacité de la capacité est de 0× :\n\tScore -10 et arrêt",
+          "Si le talent de la cible est Garde Mystik, que l’efficacité de la capacité n’est ni 2× ni 4× et que le talent du lanceur n’est pas Brise Moule :\n\tScore -12 et arrêt",
+          "Si la capacité peut mettre K.O. la cible :\n\tScore +4 et arrêt",
+          "Si la capacité ne peut pas mettre K.O. la cible et qu’une autre capacité connue par le lanceur infligerait plus de dégâts à la cible :\n\tScore -1 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt"
+        ]
+      },
+      doublesEnemy: {
+        en: [
+          "If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):\n\tIf the effectiveness of the move is 1/2x:\n\t\t75% (192/256) chance of score -1 and continue\n\t\n\tIf the effectiveness of the move is 1/4x:\n\t\t75% (192/256) chance of score -2 and continue",
+          "If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):\n\t50% (128/256) chance of score +1 and continue",
+          "If the move did not receive a score +1 in the previous check:\n\tIf the effectiveness of the move is 2x:\n\t\t60.9% (156/256) chance of score +1 and continue\n\t\n\tIf the effectiveness of the move is 4x:\n\t\t75% (192/256) chance of score +1 and continue",
+          "If the user's ally knows the move Helping Hand:\n\tScore +1 and terminate"
+        ],
+        fr: [
+          "Si la capacité ne peut pas mettre K.O. la cible et que les PV de l’allié du lanceur sont supérieurs à 0 % (après arrondi) :\n\tSi l’efficacité de la capacité est de 1/2× :\n\t\t75 % (192/256) de chances d’avoir un score -1 et continuation\n\n\tSi l’efficacité de la capacité est de 1/4× :\n\t\t75 % (192/256) de chances d’avoir un score -2 et continuation",
+          "Si la capacité inflige le plus de dégâts à la cible en tenant également compte de toutes les capacités de l’allié du lanceur (qu’il soit encore en vie ou non) :\n\t50 % (128/256) de chances d’avoir un score +1 et continuation",
+          "Si la capacité n’a pas reçu +1 au score lors de la vérification précédente :\n\tSi l’efficacité de la capacité est de 2× :\n\t\t60,9 % (156/256) de chances d’avoir un score +1 et continuation\n\n\tSi l’efficacité de la capacité est de 4× :\n\t\t75 % (192/256) de chances d’avoir un score +1 et continuation",
+          "Si l’allié du lanceur connaît la capacité Coup d’Main :\n\tScore +1 et arrêt"
         ]
       },
       doublesAlly: {
@@ -6121,6 +6256,51 @@ window.moveAiRoutines = {
       }
     }
   },
+  hidden_power: {
+    id: "hidden_power",
+    routine: {
+      singles: {
+        en: [
+          "If the effectiveness of the move is 0x:\n\tScore -10 and terminate",
+          "If the target is immune to the move's damage due to Volt Absorb, Motor Drive, Water Absorb, or Flash Fire, and the user's ability is not Mold Breaker:\n\tScore -12 and terminate",
+          "If the target's ability is Wonder Guard, and the effectiveness of the move is not 2x or 4x, and the user's ability is not Mold Breaker:\n\tScore -12 and terminate",
+          "If the move can KO the target:\n\tScore +4 and terminate",
+          "If the move cannot KO the target, and a different move the user knows would do more damage to the target:\n\tScore -1 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate"
+        ],
+        fr: [
+          "Si l’efficacité de la capacité est de 0× :\n\tScore -10 et arrêt",
+          "Si la cible est immunisée contre les dégâts de la capacité grâce à Absorb Volt, Motorisé, Absorb Eau ou Torche, et que le talent du lanceur n’est pas Brise Moule :\n\tScore -12 et arrêt",
+          "Si le talent de la cible est Garde Mystik, que l’efficacité de la capacité n’est ni 2× ni 4× et que le talent du lanceur n’est pas Brise Moule :\n\tScore -12 et arrêt",
+          "Si la capacité peut mettre K.O. la cible :\n\tScore +4 et arrêt",
+          "Si la capacité ne peut pas mettre K.O. la cible et qu’une autre capacité connue par le lanceur infligerait plus de dégâts à la cible :\n\tScore -1 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt"
+        ]
+      },
+      doublesEnemy: {
+        en: [
+          "If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):\n\tIf the effectiveness of the move is 1/2x:\n\t\t75% (192/256) chance of score -1 and continue\n\t\n\tIf the effectiveness of the move is 1/4x:\n\t\t75% (192/256) chance of score -2 and continue",
+          "If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):\n\t50% (128/256) chance of score +1 and continue",
+          "If the move did not receive a score +1 in the previous check:\n\tIf the effectiveness of the move is 2x:\n\t\t60.9% (156/256) chance of score +1 and continue\n\t\n\tIf the effectiveness of the move is 4x:\n\t\t75% (192/256) chance of score +1 and continue",
+          "If the user's ally knows the move Helping Hand:\n\tScore +1 and terminate"
+        ],
+        fr: [
+          "Si la capacité ne peut pas mettre K.O. la cible et que les PV de l’allié du lanceur sont supérieurs à 0 % (après arrondi) :\n\tSi l’efficacité de la capacité est de 1/2× :\n\t\t75 % (192/256) de chances d’avoir un score -1 et continuation\n\n\tSi l’efficacité de la capacité est de 1/4× :\n\t\t75 % (192/256) de chances d’avoir un score -2 et continuation",
+          "Si la capacité inflige le plus de dégâts à la cible en tenant également compte de toutes les capacités de l’allié du lanceur (qu’il soit encore en vie ou non) :\n\t50 % (128/256) de chances d’avoir un score +1 et continuation",
+          "Si la capacité n’a pas reçu +1 au score lors de la vérification précédente :\n\tSi l’efficacité de la capacité est de 2× :\n\t\t60,9 % (156/256) de chances d’avoir un score +1 et continuation\n\n\tSi l’efficacité de la capacité est de 4× :\n\t\t75 % (192/256) de chances d’avoir un score +1 et continuation",
+          "Si l’allié du lanceur connaît la capacité Coup d’Main :\n\tScore +1 et arrêt"
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
   horn_drill: {
     id: "horn_drill",
     routine: {
@@ -6264,7 +6444,7 @@ window.moveAiRoutines = {
           "If the target's ability is Water Absorb or Dry Skin:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -8670,7 +8850,7 @@ window.moveAiRoutines = {
           "If the target's ability is Water Absorb or Dry Skin:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -8900,7 +9080,7 @@ window.moveAiRoutines = {
           "If the target's ability is Water Absorb or Dry Skin:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -9188,6 +9368,49 @@ window.moveAiRoutines = {
       }
     }
   },
+  petal_dance: {
+    id: "petal_dance",
+    routine: {
+      singles: {
+        en: [
+          "If the effectiveness of the move is 0x:\n\tScore -10 and terminate",
+          "If the target's ability is Wonder Guard, and the effectiveness of the move is not 2x:\n\tScore -10 and terminate",
+          "If the move can KO the target:\n\tScore +4 and terminate",
+          "If the move cannot KO the target, and a different move the user knows would do more damage to the target:\n\tScore -1 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate"
+        ],
+        fr: [
+          "Si l’efficacité de la capacité est de 0× :\n\tScore -10 et arrêt",
+          "Si le talent de la cible est Garde Mystik et que l’efficacité de la capacité n’est pas de 2× :\n\tScore -10 et arrêt",
+          "Si la capacité peut mettre K.O. la cible :\n\tScore +4 et arrêt",
+          "Si la capacité ne peut pas mettre K.O. la cible et qu’une autre capacité connue par le lanceur infligerait plus de dégâts à la cible :\n\tScore -1 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt"
+          ]
+      },
+      doublesEnemy: {
+        en: [
+          "If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):\n\tIf the effectiveness of the move is 1/2x:\n\t\t75% (192/256) chance of score -1 and continue\n\t\n\tIf the effectiveness of the move is 1/4x:\n\t\t75% (192/256) chance of score -2 and continue",
+          "If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):\n\t50% (128/256) chance of score +1 and continue",
+          "If the move did not receive a score +1 in the previous check:\n\tIf the effectiveness of the move is 2x:\n\t\t60.9% (156/256) chance of score +1 and continue\n\t\n\tIf the effectiveness of the move is 4x:\n\t\t75% (192/256) chance of score +1 and continue",
+          "If the user's ally knows the move Helping Hand:\n\tScore +1 and terminate"
+        ],
+        fr: [
+          "Si la capacité ne peut pas mettre K.O. la cible et que les PV de l’allié du lanceur sont supérieurs à 0 % (après arrondi) :\n\tSi l’efficacité de la capacité est de 1/2× :\n\t\t75 % (192/256) de chances d’avoir un score -1 et continuation\n\n\tSi l’efficacité de la capacité est de 1/4× :\n\t\t75 % (192/256) de chances d’avoir un score -2 et continuation",
+          "Si la capacité inflige le plus de dégâts à la cible en tenant également compte de toutes les capacités de l’allié du lanceur (qu’il soit encore en vie ou non) :\n\t50 % (128/256) de chances d’avoir un score +1 et continuation",
+          "Si la capacité n’a pas reçu +1 au score lors de la vérification précédente :\n\tSi l’efficacité de la capacité est de 2× :\n\t\t60,9 % (156/256) de chances d’avoir un score +1 et continuation\n\n\tSi l’efficacité de la capacité est de 4× :\n\t\t75 % (192/256) de chances d’avoir un score +1 et continuation",
+          "Si l’allié du lanceur connaît la capacité Coup d’Main :\n\tScore +1 et arrêt"
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
   pin_missile: {
     id: "pin_missile",
     routine: {
@@ -9296,6 +9519,49 @@ window.moveAiRoutines = {
           "Si la capacité ne peut pas mettre K.O. la cible et qu’une autre capacité connue par le lanceur infligerait plus de dégâts à la cible :\n\tScore -1 et arrêt",
           "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt"
         ]
+      },
+      doublesEnemy: {
+        en: [
+          "If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):\n\tIf the effectiveness of the move is 1/2x:\n\t\t75% (192/256) chance of score -1 and continue\n\t\n\tIf the effectiveness of the move is 1/4x:\n\t\t75% (192/256) chance of score -2 and continue",
+          "If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):\n\t50% (128/256) chance of score +1 and continue",
+          "If the move did not receive a score +1 in the previous check:\n\tIf the effectiveness of the move is 2x:\n\t\t60.9% (156/256) chance of score +1 and continue\n\t\n\tIf the effectiveness of the move is 4x:\n\t\t75% (192/256) chance of score +1 and continue",
+          "If the user's ally knows the move Helping Hand:\n\tScore +1 and terminate"
+        ],
+        fr: [
+          "Si la capacité ne peut pas mettre K.O. la cible et que les PV de l’allié du lanceur sont supérieurs à 0 % (après arrondi) :\n\tSi l’efficacité de la capacité est de 1/2× :\n\t\t75 % (192/256) de chances d’avoir un score -1 et continuation\n\n\tSi l’efficacité de la capacité est de 1/4× :\n\t\t75 % (192/256) de chances d’avoir un score -2 et continuation",
+          "Si la capacité inflige le plus de dégâts à la cible en tenant également compte de toutes les capacités de l’allié du lanceur (qu’il soit encore en vie ou non) :\n\t50 % (128/256) de chances d’avoir un score +1 et continuation",
+          "Si la capacité n’a pas reçu +1 au score lors de la vérification précédente :\n\tSi l’efficacité de la capacité est de 2× :\n\t\t60,9 % (156/256) de chances d’avoir un score +1 et continuation\n\n\tSi l’efficacité de la capacité est de 4× :\n\t\t75 % (192/256) de chances d’avoir un score +1 et continuation",
+          "Si l’allié du lanceur connaît la capacité Coup d’Main :\n\tScore +1 et arrêt"
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
+  poison_sting: {
+    id: "poison_sting",
+    routine: {
+      singles: {
+        en: [
+          "If the effectiveness of the move is 0x:\n\tScore -10 and terminate",
+          "If the target's ability is Wonder Guard, and the effectiveness of the move is not 2x:\n\tScore -10 and terminate",
+          "If the move can KO the target:\n\tScore +4 and terminate",
+          "If the move cannot KO the target, and a different move the user knows would do more damage to the target:\n\tScore -1 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate"
+        ],
+        fr: [
+          "Si l’efficacité de la capacité est de 0× :\n\tScore -10 et arrêt",
+          "Si le talent de la cible est Garde Mystik et que l’efficacité de la capacité n’est pas de 2× :\n\tScore -10 et arrêt",
+          "Si la capacité peut mettre K.O. la cible :\n\tScore +4 et arrêt",
+          "Si la capacité ne peut pas mettre K.O. la cible et qu’une autre capacité connue par le lanceur infligerait plus de dégâts à la cible :\n\tScore -1 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt"
+          ]
       },
       doublesEnemy: {
         en: [
@@ -9487,6 +9753,39 @@ window.moveAiRoutines = {
       }
     }
   },
+  power_swap: {
+    id: "power_swap",
+    routine: {
+      singles: {
+        en: [
+          "If the user's attack boosts and special attack boosts are both equal to or greater than the target's:\n\tScore -10 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate",
+          "If the user's attack or special attack is boosted to a higher level than the target's:\n\tNo score change and terminate\n\nIf the target's attack is boosted to a higher level than the user's, and the target's special attack level is exactly +1 higher than the user's:\n\tNo score change and terminate",
+          "For the following checks, sum together the number of stages the target's attack and special attack are higher than the user's, with each stat being limited to a maximum of +4.\n\nIf the sum is equal to 8:\n\tWith a 50% (128/256) chance:\n\t\tScore +5 and terminate\n\nIf the sum is greater than or equal to 6:\n\tWith a 50% (128/256) chance:\n\t\tScore +4 and terminate\n\nIf the sum is greater than or equal to 4:\n\tWith a 50% (128/256) chance:\n\t\tScore +3 and terminate\n\nIf the sum is greater than or equal to 2:\n\tWith a 50% (128/256) chance:\n\t\tScore +2 and terminate\n\nIf the sum is equal to 1:\n\tWith a 50% (128/256) chance:\n\t\tScore +1 and terminate\n\n"
+        ],
+        fr: [
+          "Si l'augmentation d'attaque et d'attaque spéciale du lanceur sont tous deux égaux ou supérieurs à ceux de la cible :\n\tScore -10 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
+          "Si l'attaque ou l'attaque spéciale du lanceur est augmentée à un niveau supérieur à celui de la cible :\n\tAucune modification du score et arrêt\n\nSi l'attaque de la cible est augmentée à un niveau supérieur à celui du lanceur, et que le niveau d'attaque spéciale de la cible est exactement supérieur de +1 à celui de l'utilisateur :\n\tAucune modification du score et arrêt",
+          "Pour les vérifications suivantes, additionnez le nombre de niveaux dont l'attaque et l'attaque spéciale de la cible dépassent celles de l'utilisateur, chaque statistique étant limitée à un maximum de +4.\n\nSi la somme est égale à 8 :\n\tAvec une probabilité de 50 % (128/256) :\n\t\tScore +5 et arrêt\n\nSi la somme est supérieure ou égale à 6 :\n\tAvec une probabilité de 50 % (128/256) :\n\t\tScore +4 et arrêt\n\nSi la somme est supérieure ou égale à 4 :\n\tAvec une probabilité de 50 % (128/256) :\n\t\tScore +3 et arrêt\n\nSi la somme est supérieure ou égale à 2 :\n\tAvec une probabilité de 50 % (128/256) :\n\t\tScore +2 et arrêt\n\nSi la somme est égale à 1 :\n\tAvec une probabilité de 50 % (128/256) :\n\t\tScore +1 et arrêt\n\n"
+        ]
+      },
+      doublesEnemy: {
+        en: [
+        ],
+        fr: [
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
   power_trick: {
     id: "power_trick",
     routine: {
@@ -9499,7 +9798,7 @@ window.moveAiRoutines = {
         fr: [
           "Si le lanceur est déjà sous l’effet d’Astuce Force :\n\tScore -10 et arrêt",
           "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
-          "Si le PV du lanceur est supérieur à 90 % :\n\t62,5 % (160/256) de chances d’avoir un score +1 et arrêt\n\nSi le PV du lanceur est supérieur à 60 % :\n\t50 % (128/256) de chances d’avoir un score +1 et arrêt\n\nSi le PV du lanceur est supérieur à 30 % :\n\t35,9 % (92/256) de chances d’avoir un score +1 et arrêt\n\nSinon :\n\tScore -2 et arrêt"
+          "Si les PV du lanceur est supérieur à 90 % :\n\t62,5 % (160/256) de chances d’avoir un score +1 et arrêt\n\nSi les PV du lanceur est supérieur à 60 % :\n\t50 % (128/256) de chances d’avoir un score +1 et arrêt\n\nSi les PV du lanceur est supérieur à 30 % :\n\t35,9 % (92/256) de chances d’avoir un score +1 et arrêt\n\nSinon :\n\tScore -2 et arrêt"
         ]
       },
       doublesEnemy: {
@@ -9771,6 +10070,47 @@ window.moveAiRoutines = {
           "Si la capacité inflige le plus de dégâts à la cible en tenant également compte de toutes les capacités de l’allié du lanceur (qu’il soit encore en vie ou non) :\n\t50 % (128/256) de chances d’avoir un score +1 et continuation",
           "Si la capacité n’a pas reçu +1 au score lors de la vérification précédente :\n\tSi l’efficacité de la capacité est de 2× :\n\t\t60,9 % (156/256) de chances d’avoir un score +1 et continuation\n\n\tSi l’efficacité de la capacité est de 4× :\n\t\t75 % (192/256) de chances d’avoir un score +1 et continuation",
           "Si l’allié du lanceur connaît la capacité Coup d’Main :\n\tScore +1 et arrêt"
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
+  psycho_shift: {
+    id: "psycho_shift",
+    routine: {
+      singles: {
+        en: [
+          "If the user is not statused:\n\tScore -10 and terminate",
+          "If the target is protected by Safeguard, or is already statused:\n\tScore -10 and terminate",
+          "If the user is poisoned:\n\tIf the user's ability is Poison Heal:\n\t\tScore -10 and terminate\n\tIf the target is Poison or Steel type, or has the ability Immunity, Poison Heal, or Magic Guard:\n\t\tScore -10 and terminate",
+          "If the user is burned:\n\tIf the target is Fire type, or has the ability Water Veil or Magic Guard:\n\t\tScore -10 and terminate",
+          "If the user is paralyzed:\n\tIf the target's ability is Limber:\n\t\tScore -10 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate",
+          "If the user is not statused:\n\tScore -10 and terminate",
+          "If the target's HP is over 29%:\n\t50% (128/256) chance of score +1 and terminate"
+        ],
+        fr: [
+          "Si le lanceur n'est pas affecté par un statut :\n\tScore -10 et arrêt",
+          "Si la cible est protégée par Rune Protect, déjà affectée par un problème de statut :\n\tScore -10 et arrêt",
+          "Si le lanceur est empoisonné :\n\tSi le talent du lanceur est Soin Poison :\n\t\tScore -10 et arrêt\n\tSi la cible est de type Poison ou Acier, ou possède le talent Vaccin, Soin Poison ou Garde Magik :\n\t\tScore -10 et arrêt",
+          "Si le lanceur est brûlé :\n\tSi la cible est de type Feu, ou possède le talent Ignifu-Voile ou Garde Magik :\n\t\tScore -10 et arrêt",
+          "Si le lanceur est paralysé :\n\tSi le talent de la cible est Échauffement :\n\t\tScore -10 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
+          "Si le lanceur n'est pas affecté par un statut :\n\tScore -10 et arrêt",
+          "Si les PV du lanceur sont supérieurs à 29 % :\n\t50 % (128/256) de chances d’avoir un score +1 et arrêt"
+        ]
+      },
+      doublesEnemy: {
+        en: [
+        ],
+        fr: [
         ]
       },
       doublesAlly: {
@@ -10400,6 +10740,82 @@ window.moveAiRoutines = {
           "Si la capacité inflige le plus de dégâts à la cible en tenant également compte de toutes les capacités de l’allié du lanceur (qu’il soit encore en vie ou non) :\n\t50 % (128/256) de chances d’avoir un score +1 et continuation",
           "Si la capacité n’a pas reçu +1 au score lors de la vérification précédente :\n\tSi l’efficacité de la capacité est de 2× :\n\t\t60,9 % (156/256) de chances d’avoir un score +1 et continuation\n\n\tSi l’efficacité de la capacité est de 4× :\n\t\t75 % (192/256) de chances d’avoir un score +1 et continuation",
           "Si l’allié du lanceur connaît la capacité Coup d’Main :\n\tScore +1 et arrêt"
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
+  rock_climb: {
+    id: "rock_climb",
+    routine: {
+      singles: {
+        en: [
+          "If the effectiveness of the move is 0x:\n\tScore -10 and terminate",
+          "If the target's ability is Wonder Guard, and the effectiveness of the move is not 2x or 4x, and the user's ability is not Mold Breaker:\n\tScore -12 and terminate",
+          "If the move can KO the target:\n\tScore +4 and terminate",
+          "If the move cannot KO the target, and a different move the user knows would do more damage to the target:\n\tScore -1 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate"
+        ],
+        fr: [
+          "Si l’efficacité de la capacité est de 0× :\n\tScore -10 et arrêt",
+          "Si le talent de la cible est Garde Mystik, que l’efficacité de la capacité n’est ni 2× ni 4× et que le talent du lanceur n’est pas Brise Moule :\n\tScore -12 et arrêt",
+          "Si la capacité peut mettre K.O. la cible :\n\tScore +4 et arrêt",
+          "Si la capacité ne peut pas mettre K.O. la cible et qu’une autre capacité connue par le lanceur infligerait plus de dégâts à la cible :\n\tScore -1 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt"
+        ]
+      },
+      doublesEnemy: {
+        en: [
+          "If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):\n\tIf the effectiveness of the move is 1/2x:\n\t\t75% (192/256) chance of score -1 and continue\n\t\n\tIf the effectiveness of the move is 1/4x:\n\t\t75% (192/256) chance of score -2 and continue",
+          "If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):\n\t50% (128/256) chance of score +1 and continue",
+          "If the move did not receive a score +1 in the previous check:\n\tIf the effectiveness of the move is 2x:\n\t\t60.9% (156/256) chance of score +1 and continue\n\t\n\tIf the effectiveness of the move is 4x:\n\t\t75% (192/256) chance of score +1 and continue",
+          "If the user's ally knows the move Helping Hand:\n\tScore +1 and terminate"
+        ],
+        fr: [
+          "Si la capacité ne peut pas mettre K.O. la cible et que les PV de l’allié du lanceur sont supérieurs à 0 % (après arrondi) :\n\tSi l’efficacité de la capacité est de 1/2× :\n\t\t75 % (192/256) de chances d’avoir un score -1 et continuation\n\n\tSi l’efficacité de la capacité est de 1/4× :\n\t\t75 % (192/256) de chances d’avoir un score -2 et continuation",
+          "Si la capacité inflige le plus de dégâts à la cible en tenant également compte de toutes les capacités de l’allié du lanceur (qu’il soit encore en vie ou non) :\n\t50 % (128/256) de chances d’avoir un score +1 et continuation",
+          "Si la capacité n’a pas reçu +1 au score lors de la vérification précédente :\n\tSi l’efficacité de la capacité est de 2× :\n\t\t60,9 % (156/256) de chances d’avoir un score +1 et continuation\n\n\tSi l’efficacité de la capacité est de 4× :\n\t\t75 % (192/256) de chances d’avoir un score +1 et continuation",
+          "Si l’allié du lanceur connaît la capacité Coup d’Main :\n\tScore +1 et arrêt"
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
+  rock_polish: {
+    id: "rock_polish",
+    routine: {
+      singles: {
+        en: [
+          "If Trick Room is currently active:\n\tScore -10 and terminate",
+          "If the user's ability is Simple, and its speed is boosted to +3 or more:\n\tScore -10 and terminate\n\nIf the user's current speed is boosted to +6:\n\tScore -10 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate",
+          "If the user will move before the foe:\n\tScore -3 and terminate\n\nOtherwise:\n\t72.7% (186/256) chance of score +3 and terminate"
+        ],
+        fr: [
+          "Si Distorsion est actuellement active :\n\tScore -10 et arrêt",
+          "Si le talent du lanceur est Simple et que sa vitesse est augmentée à +3 ou plus :\n\tScore -10 et arrêt\n\nSi la vitesse actuelle du lanceur est augmentée à +6 :\n\tScore -10 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
+          "Si le lanceur agit avant l’adversaire :\n\tScore -3 et arrêt\n\nSinon :\n\t72,7 % (186/256) de chances d’avoir un score +3 et arrêt"
+        ]
+      },
+      doublesEnemy: {
+        en: [
+        ],
+        fr: [
         ]
       },
       doublesAlly: {
@@ -11067,6 +11483,39 @@ window.moveAiRoutines = {
       }
     }
   },
+  seismic_toss: {
+    id: "seismic_toss",
+    routine: {
+      singles: {
+        en: [
+          "If the effectiveness of the move is 0x:\n\tScore -10 and terminate",
+          "If the target's ability is Wonder Guard, and the effectiveness of the move is not 2x:\n\tScore -10 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate"
+        ],
+        fr: [
+          "Si l’efficacité de la capacité est de 0× :\n\tScore -10 et arrêt",
+          "Si le talent de la cible est Garde Mystik et que l’efficacité de la capacité n’est pas de 2× :\n\tScore -10 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt"
+          ]
+      },
+      doublesEnemy: {
+        en: [
+          "If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):\n\t50% (128/256) chance of score +1 and continue"
+        ],
+        fr: [
+          "Si la capacité inflige le plus de dégâts à la cible en tenant également compte de toutes les capacités de l’allié du lanceur (qu’il soit encore en vie ou non) :\n\t50 % (128/256) de chances d’avoir un score +1 et continuation"
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
   selfdestruct: {
     id: "selfdestruct",
     routine: {
@@ -11357,7 +11806,7 @@ window.moveAiRoutines = {
           "If the target's ability is Motor Drive, and the target's current speed is not boosted to +6:\n\t37.5% (96/256) chance of score +3 and terminate\n\nIf the target's ability is Volt Absorb:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -12053,7 +12502,7 @@ window.moveAiRoutines = {
           "If the target's ability is Motor Drive, and the target's current speed is not boosted to +6:\n\t37.5% (96/256) chance of score +3 and terminate\n\nIf the target's ability is Volt Absorb:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -12077,6 +12526,49 @@ window.moveAiRoutines = {
         en: [
         ],
         fr: [
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
+  spike_cannon: {
+    id: "spike_cannon",
+    routine: {
+      singles: {
+        en: [
+          "If the effectiveness of the move is 0x:\n\tScore -10 and terminate",
+          "If the target's ability is Wonder Guard, and the effectiveness of the move is not 2x or 4x, and the user's ability is not Mold Breaker:\n\tScore -12 and terminate",
+          "If the move can KO the target:\n\tScore +4 and terminate",
+          "If the move cannot KO the target, and a different move the user knows would do more damage to the target:\n\tScore -1 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate"
+        ],
+        fr: [
+          "Si l’efficacité de la capacité est de 0× :\n\tScore -10 et arrêt",
+          "Si le talent de la cible est Garde Mystik, que l’efficacité de la capacité n’est ni 2× ni 4× et que le talent du lanceur n’est pas Brise Moule :\n\tScore -12 et arrêt",
+          "Si la capacité peut mettre K.O. la cible :\n\tScore +4 et arrêt",
+          "Si la capacité ne peut pas mettre K.O. la cible et qu’une autre capacité connue par le lanceur infligerait plus de dégâts à la cible :\n\tScore -1 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt"
+        ]
+      },
+      doublesEnemy: {
+        en: [
+          "If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):\n\tIf the effectiveness of the move is 1/2x:\n\t\t75% (192/256) chance of score -1 and continue\n\t\n\tIf the effectiveness of the move is 1/4x:\n\t\t75% (192/256) chance of score -2 and continue",
+          "If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):\n\t50% (128/256) chance of score +1 and continue",
+          "If the move did not receive a score +1 in the previous check:\n\tIf the effectiveness of the move is 2x:\n\t\t60.9% (156/256) chance of score +1 and continue\n\t\n\tIf the effectiveness of the move is 4x:\n\t\t75% (192/256) chance of score +1 and continue",
+          "If the user's ally knows the move Helping Hand:\n\tScore +1 and terminate"
+        ],
+        fr: [
+          "Si la capacité ne peut pas mettre K.O. la cible et que les PV de l’allié du lanceur sont supérieurs à 0 % (après arrondi) :\n\tSi l’efficacité de la capacité est de 1/2× :\n\t\t75 % (192/256) de chances d’avoir un score -1 et continuation\n\n\tSi l’efficacité de la capacité est de 1/4× :\n\t\t75 % (192/256) de chances d’avoir un score -2 et continuation",
+          "Si la capacité inflige le plus de dégâts à la cible en tenant également compte de toutes les capacités de l’allié du lanceur (qu’il soit encore en vie ou non) :\n\t50 % (128/256) de chances d’avoir un score +1 et continuation",
+          "Si la capacité n’a pas reçu +1 au score lors de la vérification précédente :\n\tSi l’efficacité de la capacité est de 2× :\n\t\t60,9 % (156/256) de chances d’avoir un score +1 et continuation\n\n\tSi l’efficacité de la capacité est de 4× :\n\t\t75 % (192/256) de chances d’avoir un score +1 et continuation",
+          "Si l’allié du lanceur connaît la capacité Coup d’Main :\n\tScore +1 et arrêt"
         ]
       },
       doublesAlly: {
@@ -12476,6 +12968,39 @@ window.moveAiRoutines = {
       }
     }
   },
+  string_shot: {
+    id: "string_shot",
+      routine: {
+      singles: {
+        en: [
+          "If the target's speed is reduced to -6:\n\tScore -10 and terminate\n\nIf the target's ability is certainly Speed Boost:\n\tScore -10 and terminate",
+          "If the target's ability is Clear Body or White Smoke:\n\tScore -10 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate",
+          "If the user will move before the target:\n\tScore -3 and terminate\n\nOtherwise:\n\t72.7% (186/256) chance of score +2 and terminate"
+        ],
+        fr: [
+          "Si la vitesse de la cible est diminuée à -6 :\n\tScore -10 et arrêt\n\nSi le talent de la cible est assurément Turbo :\n\tScore -10 et arrêt",
+          "Si le talent de la cible est Corps Sain ou Écran Fumée :\n\tScore -10 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
+          "Si le lanceur agit avant la cible :\n\tScore -3 et arrêt\n\nSinon :\n\t72,7 % (186/256) de chances d’avoir un score +2 et arrêt"
+        ]
+      },
+      doublesEnemy: {
+        en: [
+        ],
+        fr: [
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
   stun_spore: {
     id: "stun_spore",
     routine: {
@@ -12753,7 +13278,7 @@ window.moveAiRoutines = {
           "If the target's ability is Water Absorb or Dry Skin:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -13079,6 +13604,37 @@ window.moveAiRoutines = {
       }
     }
   },
+  tail_glow: {
+    id: "tail_glow",
+    routine: {
+      singles: {
+        en: [
+          "If the user's ability is Simple, and its special attack is boosted to +3 or more:\n\tScore -10 and terminate\n\nIf the user's current special attack is boosted to +6:\n\tScore -10 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate",
+          "If the user's special attack is boosted to +3 or more:\n\t60.9% (156/256) chance of score -1 and continue\n\nIf the user's HP is full and its special attack is boosted to under +3:\n\t50% (128/256) chance of score +2 and continue\n\nIf the user's HP is over 39% and under 71%:\n\t72.7% (186/256) chance of score -2 and terminate\n\nIf the user's HP is under 40%:\n\tScore -2 and terminate"
+        ],
+        fr: [
+          "Si le talent du lanceur est Simple et que son attaque spéciale est augmentée à +3 ou plus :\n\tScore -10 et arrêt\n\nSi l’attaque spéciale actuelle du lanceur est augmentée à +6 :\n\tScore -10 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
+          "Si l'attaque spéciale du lanceur est augmentée à +3 ou plus :\n\t60,9 % (156/256) de chances d’avoir un score -1 et continuation\n\nSi le lanceur a tous ses PV et que son Attaque Spéciale est augmentée à moins de +3 :\n\t50 % (128/256) de chances d’avoir un score +2 et continuation\n\nSi les PV du lanceur sont supérieurs à 39 % et inférieurs à 71 % :\n\t72,7 % (186/256) de chances d’avoir un score -2 et arrêt\n\nSi les PV du lanceur sont inférieurs à 40 % :\n\tScore -2 et arrêt"
+        ]
+      },
+      doublesEnemy: {
+        en: [
+        ],
+        fr: [
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
   tail_whip: {
     id: "tail_whip",
     routine: {
@@ -13244,6 +13800,53 @@ window.moveAiRoutines = {
       }
     }
   },
+  thief: {
+    id: "thief",
+    routine: {
+      singles: {
+        en: [
+          "If the effectiveness of the move is 0x:\n\tScore -10 and terminate",
+          "If the target's ability is Wonder Guard, and the effectiveness of the move is not 2x or 4x, and the user's ability is not Mold Breaker:\n\tScore -12 and terminate",
+          "If the move can KO the target:\n\tScore +4 and terminate",
+          "If the move cannot KO the target, and a different move the user knows would do more damage to the target:\n\tScore -1 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate",
+          "If the user is holding an item in the list below:\n\t80.5% (206/256) chance of score +1 and terminate\n\nOtherwise:\n\tScore -2 and terminate",
+          "Chesto Berry\nLum Berry\nBerry Juice\nOran Berry\nBrightPowder\nLax Incense\nLeftovers\nLight Ball\nThick Club\nOcca Berry\nPassho Berry\nWacan Berry\nRindo Berry\nYache Berry\nChople Berry\nKebia Berry\nShuca Berry\nCoba Berry\nPayapa Berry\nTanga Berry\nCharti Berry\nKasib Berry\nHaban Berry\nColbur Berry\nBabiri Berry\nChilan Berry\nBlack Sludge"
+        ],
+        fr: [
+          "Si l’efficacité de la capacité est de 0× :\n\tScore -10 et arrêt",
+          "Si le talent de la cible est Garde Mystik, que l’efficacité de la capacité n’est ni 2× ni 4× et que le talent du lanceur n’est pas Brise Moule :\n\tScore -12 et arrêt",
+          "Si la capacité peut mettre K.O. la cible :\n\tScore +4 et arrêt",
+          "Si la capacité ne peut pas mettre K.O. la cible et qu’une autre capacité connue par le lanceur infligerait plus de dégâts à la cible :\n\tScore -1 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
+          "Si le lanceur tient un objet de la liste ci-dessous :\n\t80,5 % (206/256) de chances d’avoir un score +1 et arrêt\n\nSinon :\n\tScore -2 et arrêt",
+          "Baie Maron\nBaie Prine\nJus de Baie\nBaie Oran\nPoudreclaire\nEncens Doux\nRestes\nBalle Lumière\nMasse Os\nBaie Chocco\nBaie Pocpoc\nBaie Parma\nBaie Ratam\nBaie Nanone\nBaie Pomroz\nBaie Kébia\nBaie Jouca\nBaie Cobaba\nBaie Yapap\nBaie Tanga\nBaie Charti\nBaie Sédra\nBaie Fraigo\nBaie Lampou\nBaie Babiri\nBaie Chilan\nBoue Noire"
+        ]
+      },
+      doublesEnemy: {
+        en: [
+          "If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):\n\tIf the effectiveness of the move is 1/2x:\n\t\t75% (192/256) chance of score -1 and continue\n\t\n\tIf the effectiveness of the move is 1/4x:\n\t\t75% (192/256) chance of score -2 and continue",
+          "If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):\n\t50% (128/256) chance of score +1 and continue",
+          "If the move did not receive a score +1 in the previous check:\n\tIf the effectiveness of the move is 2x:\n\t\t60.9% (156/256) chance of score +1 and continue\n\t\n\tIf the effectiveness of the move is 4x:\n\t\t75% (192/256) chance of score +1 and continue",
+          "If the user's ally knows the move Helping Hand:\n\tScore +1 and terminate"
+        ],
+        fr: [
+          "Si la capacité ne peut pas mettre K.O. la cible et que les PV de l’allié du lanceur sont supérieurs à 0 % (après arrondi) :\n\tSi l’efficacité de la capacité est de 1/2× :\n\t\t75 % (192/256) de chances d’avoir un score -1 et continuation\n\n\tSi l’efficacité de la capacité est de 1/4× :\n\t\t75 % (192/256) de chances d’avoir un score -2 et continuation",
+          "Si la capacité inflige le plus de dégâts à la cible en tenant également compte de toutes les capacités de l’allié du lanceur (qu’il soit encore en vie ou non) :\n\t50 % (128/256) de chances d’avoir un score +1 et continuation",
+          "Si la capacité n’a pas reçu +1 au score lors de la vérification précédente :\n\tSi l’efficacité de la capacité est de 2× :\n\t\t60,9 % (156/256) de chances d’avoir un score +1 et continuation\n\n\tSi l’efficacité de la capacité est de 4× :\n\t\t75 % (192/256) de chances d’avoir un score +1 et continuation",
+          "Si l’allié du lanceur connaît la capacité Coup d’Main :\n\tScore +1 et arrêt"
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
   thrash: {
     id: "thrash",
     routine: {
@@ -13327,7 +13930,7 @@ window.moveAiRoutines = {
           "If the target's ability is Motor Drive, and the target's current speed is not boosted to +6:\n\t37.5% (96/256) chance of score +3 and terminate\n\nIf the target's ability is Volt Absorb:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -13372,7 +13975,7 @@ window.moveAiRoutines = {
           "If the target's ability is Motor Drive, and the target's current speed is not boosted to +6:\n\t37.5% (96/256) chance of score +3 and terminate\n\nIf the target's ability is Volt Absorb:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -13417,7 +14020,7 @@ window.moveAiRoutines = {
           "If the target's ability is Motor Drive, and the target's current speed is not boosted to +6:\n\t37.5% (96/256) chance of score +3 and terminate\n\nIf the target's ability is Volt Absorb:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -13462,7 +14065,7 @@ window.moveAiRoutines = {
           "If the target's ability is Motor Drive, and the target's current speed is not boosted to +6:\n\t37.5% (96/256) chance of score +3 and terminate\n\nIf the target's ability is Volt Absorb:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -13503,7 +14106,7 @@ window.moveAiRoutines = {
         ],
         fr: [
           "Si la cible est de type Sol :\n\tScore -30 et arrêt",
-          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -13548,7 +14151,7 @@ window.moveAiRoutines = {
           "If the target's ability is Motor Drive, and the target's current speed is not boosted to +6:\n\t37.5% (96/256) chance of score +3 and terminate\n\nIf the target's ability is Volt Absorb:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -13660,6 +14263,33 @@ window.moveAiRoutines = {
           "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
           "Avec 50 % (128/256) de chances :\n\tAucune modification du score et arrêt\n\nSans condition :\n\tScore +1 et continuation\n\nSi le lanceur connaît la capacité Cyclone ou Hurlement :\n\t75 % (192/256) de chances d’avoir un score +1 et arrêt"
         ]
+      },
+      doublesEnemy: {
+        en: [
+        ],
+        fr: [
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
+  transform: {
+    id: "transform",
+    routine: {
+      singles: {
+        en: [
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate"
+        ],
+        fr: [
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt"
+          ]
       },
       doublesEnemy: {
         en: [
@@ -13970,7 +14600,52 @@ window.moveAiRoutines = {
           "Si la capacité ne peut pas mettre K.O. la cible et qu’une autre capacité connue par le lanceur infligerait plus de dégâts à la cible :\n\tScore -1 et arrêt",
           "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
           "Si l’efficacité de la capacité est de 1/2×, 1/4× ou 0× :\n\tScore -1 et arrêt",
-          "Si le lanceur n’a aucun autre Pokémon encore en état de combattre dans son équipe :\n\tAucune modification du score et arrêt\n\nSi le lanceur possède une capacité super efficace contre la cible :\n\t75 % (192/256) de chances d’avoir un score -2 et continuation\n\nSi aucune capacité connue par un membre de l’équipe encore en vie (en supposant qu’elle soit utilisée par le lanceur) n’infligerait plus de dégâts que la capacité la plus puissante du lanceur :\n\t75 % (192/256) de chances d’avoir un score -2 et arrêt\n\nSi les PV du lanceur sont supérieurs à 70 % :\n\t75 % (192/256) de chances d’avoir un score +1 et continuation\n\nSi le PV du lanceur est supérieur à 30 % :\n\t50 % (128/256) de chances d’avoir un score +1 et continuation\n\nSi les PV du lanceur sont inférieurs à 31 % :\n\t25 % (64/256) de chances d’avoir un score +1 et continuation\n\nSi le lanceur agit avant la cible :\n\tScore +1 et arrêt\nSinon :\n\t50 % (128/256) de chances d’avoir un score +1 et arrêt"
+          "Si le lanceur n’a aucun autre Pokémon encore en état de combattre dans son équipe :\n\tAucune modification du score et arrêt\n\nSi le lanceur possède une capacité super efficace contre la cible :\n\t75 % (192/256) de chances d’avoir un score -2 et continuation\n\nSi aucune capacité connue par un membre de l’équipe encore en vie (en supposant qu’elle soit utilisée par le lanceur) n’infligerait plus de dégâts que la capacité la plus puissante du lanceur :\n\t75 % (192/256) de chances d’avoir un score -2 et arrêt\n\nSi les PV du lanceur sont supérieurs à 70 % :\n\t75 % (192/256) de chances d’avoir un score +1 et continuation\n\nSi les PV du lanceur est supérieur à 30 % :\n\t50 % (128/256) de chances d’avoir un score +1 et continuation\n\nSi les PV du lanceur sont inférieurs à 31 % :\n\t25 % (64/256) de chances d’avoir un score +1 et continuation\n\nSi le lanceur agit avant la cible :\n\tScore +1 et arrêt\nSinon :\n\t50 % (128/256) de chances d’avoir un score +1 et arrêt"
+        ]
+      },
+      doublesEnemy: {
+        en: [
+          "If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):\n\tIf the effectiveness of the move is 1/2x:\n\t\t75% (192/256) chance of score -1 and continue\n\t\n\tIf the effectiveness of the move is 1/4x:\n\t\t75% (192/256) chance of score -2 and continue",
+          "If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):\n\t50% (128/256) chance of score +1 and continue",
+          "If the move did not receive a score +1 in the previous check:\n\tIf the effectiveness of the move is 2x:\n\t\t60.9% (156/256) chance of score +1 and continue\n\t\n\tIf the effectiveness of the move is 4x:\n\t\t75% (192/256) chance of score +1 and continue",
+          "If the user's ally knows the move Helping Hand:\n\tScore +1 and terminate"
+        ],
+        fr: [
+          "Si la capacité ne peut pas mettre K.O. la cible et que les PV de l’allié du lanceur sont supérieurs à 0 % (après arrondi) :\n\tSi l’efficacité de la capacité est de 1/2× :\n\t\t75 % (192/256) de chances d’avoir un score -1 et continuation\n\n\tSi l’efficacité de la capacité est de 1/4× :\n\t\t75 % (192/256) de chances d’avoir un score -2 et continuation",
+          "Si la capacité inflige le plus de dégâts à la cible en tenant également compte de toutes les capacités de l’allié du lanceur (qu’il soit encore en vie ou non) :\n\t50 % (128/256) de chances d’avoir un score +1 et continuation",
+          "Si la capacité n’a pas reçu +1 au score lors de la vérification précédente :\n\tSi l’efficacité de la capacité est de 2× :\n\t\t60,9 % (156/256) de chances d’avoir un score +1 et continuation\n\n\tSi l’efficacité de la capacité est de 4× :\n\t\t75 % (192/256) de chances d’avoir un score +1 et continuation",
+          "Si l’allié du lanceur connaît la capacité Coup d’Main :\n\tScore +1 et arrêt"
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
+  uproar: {
+    id: "uproar",
+    routine: {
+      singles: {
+        en: [
+          "If the effectiveness of the move is 0x:\n\tScore -10 and terminate",
+          "If the target's ability is Wonder Guard, and the effectiveness of the move is not 2x or 4x, and the user's ability is not Mold Breaker:\n\tScore -12 and terminate",
+          "If the target's ability is Soundproof, and the user's ability is not Mold Breaker:\n\tScore -10 and terminate",
+          "If the move can KO the target:\n\tScore +4 and terminate",
+          "If the move cannot KO the target, and a different move the user knows would do more damage to the target:\n\tScore -1 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate"
+        ],
+        fr: [
+          "Si l’efficacité de la capacité est de 0× :\n\tScore -10 et arrêt",
+          "Si le talent de la cible est Garde Mystik, que l’efficacité de la capacité n’est ni 2× ni 4× et que le talent du lanceur n’est pas Brise Moule :\n\tScore -12 et arrêt",
+          "Si le talent de la cible est Anti-Bruit et que le talent du lanceur n'est pas Brise Moule :\n\tScore -10 et arrêt",
+          "Si la capacité peut mettre K.O. la cible :\n\tScore +4 et arrêt",
+          "Si la capacité ne peut pas mettre K.O. la cible et qu’une autre capacité connue par le lanceur infligerait plus de dégâts à la cible :\n\tScore -1 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt"
         ]
       },
       doublesEnemy: {
@@ -14083,6 +14758,51 @@ window.moveAiRoutines = {
       }
     }
   },
+  vital_throw: {
+    id: "vital_throw",
+    routine: {
+      singles: {
+        en: [
+          "If the effectiveness of the move is 0x:\n\tScore -10 and terminate",
+          "If the target's ability is Wonder Guard, and the effectiveness of the move is not 2x or 4x, and the user's ability is not Mold Breaker:\n\tScore -12 and terminate",
+          "If the move can KO the target:\n\tScore +4 and terminate",
+          "If the move cannot KO the target, and a different move the user knows would do more damage to the target:\n\tScore -1 and terminate",
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate",
+          "If the user will move after the target, or the user's HP is over 60%:\n\tNo score change and terminate\n\nIf the user's HP is under 40%:\n\t80.5% (206/256) chance of score -1 and terminate\n\nOtherwise:\n\t23.9% (1957/8192) chance of score -1 and terminate"
+        ],
+        fr: [
+          "Si l’efficacité de la capacité est de 0× :\n\tScore -10 et arrêt",
+          "Si le talent de la cible est Garde Mystik, que l’efficacité de la capacité n’est ni 2× ni 4× et que le talent du lanceur n’est pas Brise Moule :\n\tScore -12 et arrêt",
+          "Si la capacité peut mettre K.O. la cible :\n\tScore +4 et arrêt",
+          "Si la capacité ne peut pas mettre K.O. la cible et qu’une autre capacité connue par le lanceur infligerait plus de dégâts à la cible :\n\tScore -1 et arrêt",
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
+          "Si le lanceur agit après la cible, ou que ses PV sont supérieurs à 60 % :\n\tAucune modification du score et arrêt\n\nSi les PV du lanceur sont inférieurs à 40 % :\n\t80,5% (206/256) de chances d’avoir un score -1 et arrêt\n\nnSinon :\n\t23,9% (1957/8192) de chances d’avoir un score -1 et arrêt"
+        ]
+      },
+      doublesEnemy: {
+        en: [
+          "If the move cannot KO the target, and the user's ally's HP is over 0% (after rounding):\n\tIf the effectiveness of the move is 1/2x:\n\t\t75% (192/256) chance of score -1 and continue\n\t\n\tIf the effectiveness of the move is 1/4x:\n\t\t75% (192/256) chance of score -2 and continue",
+          "If the move deals the most damage to the target when considering all of the user's ally's moves as well (regardless of if the ally is alive):\n\t50% (128/256) chance of score +1 and continue",
+          "If the move did not receive a score +1 in the previous check:\n\tIf the effectiveness of the move is 2x:\n\t\t60.9% (156/256) chance of score +1 and continue\n\t\n\tIf the effectiveness of the move is 4x:\n\t\t75% (192/256) chance of score +1 and continue",
+          "If the user's ally knows the move Helping Hand:\n\tScore +1 and terminate"
+        ],
+        fr: [
+          "Si la capacité ne peut pas mettre K.O. la cible et que les PV de l’allié du lanceur sont supérieurs à 0 % (après arrondi) :\n\tSi l’efficacité de la capacité est de 1/2× :\n\t\t75 % (192/256) de chances d’avoir un score -1 et continuation\n\n\tSi l’efficacité de la capacité est de 1/4× :\n\t\t75 % (192/256) de chances d’avoir un score -2 et continuation",
+          "Si la capacité inflige le plus de dégâts à la cible en tenant également compte de toutes les capacités de l’allié du lanceur (qu’il soit encore en vie ou non) :\n\t50 % (128/256) de chances d’avoir un score +1 et continuation",
+          "Si la capacité n’a pas reçu +1 au score lors de la vérification précédente :\n\tSi l’efficacité de la capacité est de 2× :\n\t\t60,9 % (156/256) de chances d’avoir un score +1 et continuation\n\n\tSi l’efficacité de la capacité est de 4× :\n\t\t75 % (192/256) de chances d’avoir un score +1 et continuation",
+          "Si l’allié du lanceur connaît la capacité Coup d’Main :\n\tScore +1 et arrêt"
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
   volt_tackle: {
     id: "volt_tackle",
     routine: {
@@ -14125,7 +14845,7 @@ window.moveAiRoutines = {
           "If the target's ability is Motor Drive, and the target's current speed is not boosted to +6:\n\t37.5% (96/256) chance of score +3 and terminate\n\nIf the target's ability is Volt Absorb:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Motorisé et que la vitesse actuelle de la cible n'est pas augmentée à +6 :\n\t37,5 % (96/256) de chances d’avoir un score +3 et arrêt\n\nSi le talent de la cible est Absorb Volt :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -14217,7 +14937,7 @@ window.moveAiRoutines = {
           "If the target's ability is Water Absorb or Dry Skin:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -14262,7 +14982,7 @@ window.moveAiRoutines = {
           "If the target's ability is Water Absorb or Dry Skin:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -14286,6 +15006,39 @@ window.moveAiRoutines = {
         en: [
         ],
         fr: [
+        ]
+      },
+      doublesAlly: {
+        en: [
+          "Unconditionally:\n\tScore -30 and terminate"
+        ],
+        fr: [
+          "Sans condition :\n\tScore -30 et arrêt"
+        ]
+      }
+    }
+  },
+  water_spout: {
+    id: "water_spout",
+    routine: {
+      singles: {
+        en: [
+          "If the effectiveness of the move is 4x:\n\t68.8% (176/256) chance of score +2 and terminate",
+          "If the effectiveness of the move is 1/2x, 1/4x, or 0x:\n\tScore -1 and terminate",
+          "If the user will attack after the target:\n\tIf the target's HP is over 70%:\n\t\tNo scoring change and terminate\n\tElse:\n\t\tScore -1 and terminate\n\nIf the target's HP is over 50%:\n\tNo score change and terminate\n\nOtherwise:\n\tScore -1 and terminate"
+        ],
+        fr: [
+          "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
+          "Si l’efficacité de la capacité est de 1/2×, 1/4× ou 0× :\n\tScore -1 et arrêt",
+          "Si le lanceur attaque après la cible :\n\tSi les PV de la cible sont supérieurs à 70 % :\n\t\tAucune modification du score et arrêt\n\tSinon :\n\t\tScore -1 et arrêt\n\nSi les PV de la cible sont supérieurs à 50 % :\n\tAucune modification du score et arrêt\n\nSinon :\n\tScore -1 et arrêt"
+        ]
+      },
+      doublesEnemy: {
+        en: [
+          "If the target's ally's ability is certainly Storm Drain:\n\tScore -1 and continue\n\nIf the user's ally's ability is Storm Drain:\n\tScore -10 and terminate"
+        ],
+        fr: [
+          "Si le talent de l'allié de la cible est certainement Lavabo :\n\tScore -1 et continuation\n\nSi le talent de l'allié du lanceur est Lavabo :\n\tScore -10 et arrêt"
         ]
       },
       doublesAlly: {
@@ -14338,7 +15091,7 @@ window.moveAiRoutines = {
           "If the target's ability is Water Absorb or Dry Skin:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -14428,7 +15181,7 @@ window.moveAiRoutines = {
           "If the target's ability is Water Absorb or Dry Skin:\n\tIf the target is at full HP:\n\t\tScore -10 and terminate\n\t\n\tIf the target's HP is over 90%:\n\t\tNo scoring change and terminate\n\t\n\tIf the target's HP is over 75%:\n\t\t25% (64/256) chance of score +3 and terminate\n\t\n\tIf the target's HP is over 50%:\n\t\t50% (128/256) chance of score +3 and terminate\n\t\n\tOtherwise:\n\t\t75% (192/256) chance of score +3 and terminate\n\nOtherwise:\n\tScore -30 and terminate"
         ],
         fr: [
-          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi le PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi le PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi le PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
+          "Si le talent de la cible est Absorb Eau ou Peau Sèche :\n\tSi la cible a tous ses PV :\n\t\tScore -10 et arrêt\n\n\tSi les PV de la cible est supérieur à 90 % :\n\t\tAucune modification du score et arrêt\n\n\tSi les PV de la cible est supérieur à 75 % :\n\t\t25 % (64/256) de chances d’avoir un score +3 et arrêt\n\n\tSi les PV de la cible est supérieur à 50 % :\n\t\t50 % (128/256) de chances d’avoir un score +3 et arrêt\n\n\tSinon :\n\t\t75 % (192/256) de chances d’avoir un score +3 et arrêt\n\nSinon :\n\tScore -30 et arrêt"
         ]
       }
     }
@@ -14733,7 +15486,7 @@ window.moveAiRoutines = {
           "Si l’efficacité de la capacité est de 0× :\n\tScore -10 et arrêt",
           "Si le talent de la cible est Garde Mystik, que l’efficacité de la capacité n’est ni 2× ni 4× et que le talent du lanceur n’est pas Brise Moule :\n\tScore -12 et arrêt",
           "Si l’efficacité de la capacité est de 4× :\n\t68,8 % (176/256) de chances d’avoir un score +2 et arrêt",
-          "Si l'efficacité de la capacité est de 1/2×, 1/4× ou 0×, ou si le PV de la cible est inférieur à 50 % :\n\tScore -1 et arrêt\n\nSi la cible a tous ses PV :\n\tScore +1 et continuation\n\nSi la cible a tous ses PV et que le lanceur agira avant elle :\n\tScore +1 et continuation\n\nSi le PV de la cible est supérieur à 85 % :\n\t90,2 % (231/256) de chances d’avoir un score +1 et arrêt"
+          "Si l'efficacité de la capacité est de 1/2×, 1/4× ou 0×, ou si les PV de la cible est inférieur à 50 % :\n\tScore -1 et arrêt\n\nSi la cible a tous ses PV :\n\tScore +1 et continuation\n\nSi la cible a tous ses PV et que le lanceur agira avant elle :\n\tScore +1 et continuation\n\nSi les PV de la cible est supérieur à 85 % :\n\t90,2 % (231/256) de chances d’avoir un score +1 et arrêt"
         ]
       },
       doublesEnemy: {

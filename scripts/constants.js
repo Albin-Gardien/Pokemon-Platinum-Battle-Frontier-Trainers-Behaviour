@@ -79,6 +79,7 @@ const pokemonSpriteSlugOverrides = {
 };
 
 const itemSpriteMap = {
+    apicot_berry: "berry/apicot",
     aspear_berry: "berry/aspear",
     big_root: "hold-item/big-root",
     black_belt: "hold-item/black-belt",
@@ -97,10 +98,12 @@ const itemSpriteMap = {
     colbur_berry: "berry/colbur",
     damp_rock: "hold-item/damp-rock",
     deepseascale: "evo-item/deep-sea-scale",
-    dragon_fang: "hold-item/dragon_fang",
+    dragon_fang: "hold-item/dragon-fang",
     expert_belt: "hold-item/expert-belt",
+    flame_orb: "hold-item/flame-orb",
     focus_band: "hold-item/focus-band",
     focus_sash: "hold-item/focus-sash",
+    ganlon_berry: "berry/ganlon",
     grip_claw: "hold-item/grip-claw",
     haban_berry: "berry/haban",
     hard_stone: "hold-item/hard-stone",
@@ -138,6 +141,7 @@ const itemSpriteMap = {
     poison_barb: "hold-item/poison-barb",
     power_herb: "hold-item/power-herb",
     quick_claw: "hold-item/quick-claw",
+    quick_powder: "hold-item/quick-powder",
     rawst_berry: "berry/rawst",
     razor_claw: "evo-item/razor-claw",
     razor_fang: "evo-item/razor-fang",
@@ -153,9 +157,11 @@ const itemSpriteMap = {
     silk_scarf: "hold-item/silk-scarf",
     silverpowder: "hold-item/silver-powder",
     sitrus_berry: "berry/sitrus",
+    smooth_rock: "hold-item/smooth-rock",
     soft_sand: "hold-item/soft-sand",
     spell_tag: "hold-item/spell-tag",
     stick: "hold-item/stick",
+    sticky_barb: "hold-item/sticky-barb",
     thick_club: "hold-item/thick-club",
     toxic_orb: "hold-item/toxic-orb",
     twistedspoon: "hold-item/twisted-spoon",
@@ -182,6 +188,32 @@ const dom = {
     factorySeriesLabel: document.getElementById("factory-series-label"),
     factorySeriesField: document.getElementById("factory-series-field"),
     factorySeriesSelect: document.getElementById("factory-series-select"),
+
+    hallControls: {
+        container: document.getElementById("hall-controls"),
+
+        encounterField: document.getElementById("hall-encounter-field"),
+        encounterLabel: document.getElementById("hall-encounter-label"),
+        encounterSelect: document.getElementById("hall-encounter-select"),
+
+        playerPokemonField: document.getElementById("hall-player-pokemon-field"),
+        playerPokemonLabel: document.getElementById("hall-player-pokemon-label"),
+        playerPokemonInput: document.getElementById("hall-player-pokemon-input"),
+        playerPokemonSuggestions: document.getElementById("hall-player-pokemon-suggestions"),
+        playerPokemonClearButton: document.getElementById("hall-player-pokemon-clear-button"),
+
+        typeField: document.getElementById("hall-type-field"),
+        typeLabel: document.getElementById("hall-type-label"),
+        typeSelect: document.getElementById("hall-type-select"),
+
+        rankField: document.getElementById("hall-rank-field"),
+        rankLabel: document.getElementById("hall-rank-label"),
+        rankSelect: document.getElementById("hall-rank-select"),
+
+        advancedTypesField: document.getElementById("hall-advanced-types-field"),
+        advancedTypesLabel: document.getElementById("hall-advanced-types-label"),
+        advancedTypesInput: document.getElementById("hall-advanced-types-input")
+    },
 
     levelLabel: document.getElementById("level-label"),
     levelInput: document.getElementById("level-input"),

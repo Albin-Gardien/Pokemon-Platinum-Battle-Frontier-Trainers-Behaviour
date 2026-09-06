@@ -11,6 +11,7 @@
     <script src="data/trainer_teams.js"></script>
     <script src="data/frontier_mons.js"></script>
     <script src="data/factory_pools.js"></script>
+    <script src="data/hall_mons.js"></script>
     <script src="data/translations.js"></script>
     <script src="data/moves.js"></script>
     <script src="data/moves_ai_routine.js"></script>
@@ -32,6 +33,40 @@
                     <div id="factory-series-field" class="factory-series-field" hidden>
                         <label id="factory-series-label" for="factory-series-select"></label>
                         <select id="factory-series-select"></select>
+                    </div>
+
+                    <div id="hall-controls" class="hall-controls" hidden>
+                        <label id="hall-encounter-field" class="hall-control-field">
+                            <span id="hall-encounter-label"></span>
+                            <select id="hall-encounter-select"></select>
+                        </label>
+
+                        <label id="hall-player-pokemon-field" class="hall-control-field" hidden>
+                            <span id="hall-player-pokemon-label"></span>
+
+                            <div class="autocomplete-field hall-player-pokemon-autocomplete">
+                                <input type="text" id="hall-player-pokemon-input" autocomplete="off" />
+
+                                <button type="button" id="hall-player-pokemon-clear-button" class="search-clear-button" aria-label="Effacer la sélection">×</button>
+
+                                <div id="hall-player-pokemon-suggestions" class="suggestions-menu" hidden></div>
+                            </div>
+                        </label>
+
+                        <label id="hall-type-field" class="hall-control-field">
+                            <span id="hall-type-label"></span>
+                            <select id="hall-type-select"></select>
+                        </label>
+
+                        <label id="hall-rank-field" class="hall-control-field">
+                            <span id="hall-rank-label"></span>
+                            <select id="hall-rank-select"></select>
+                        </label>
+
+                        <label id="hall-advanced-types-field" class="hall-control-field">
+                            <span id="hall-advanced-types-label"></span>
+                            <input type="number" id="hall-advanced-types-input" value="0" min="0" max="16" step="1" />
+                        </label>
                     </div>
 
                     <div id="trainer-selectors-container" class="trainer-selectors-container">
@@ -63,7 +98,7 @@
                     <div class="trainer-meta-controls">
                         <label for="level-input" class="level-field">
                             <span id="level-label"></span>
-                            <input type="number" id="level-input" class="level-input" value="50" min="1" max="100" />
+                            <input type="number" id="level-input" class="level-input" value="50" min="45" max="55" step="1" />
                         </label>
 
                         <div class="series-filter-dropdown">
@@ -94,8 +129,8 @@
                             <span id="facility-factory-label"></span>
                         </label>
 
-                        <label class="battle-mode-option is-future">
-                            <input type="radio" name="facility-mode" value="hall" disabled />
+                        <label class="battle-mode-option">
+                            <input type="radio" name="facility-mode" value="hall" />
                             <span id="facility-hall-label"></span>
                         </label>
                     </div>
@@ -307,5 +342,6 @@
     <script src="scripts/render-table.js"></script>
     <script src="scripts/pokemon-details.js"></script>
     <script src="scripts/factory-player-team.js"></script>
+    <script src="scripts/hall-controls.js"></script>
 </body>
 </html>

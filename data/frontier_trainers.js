@@ -1754,7 +1754,7 @@ window.frontierTrainers = [
     id: "ninja_boy_vance",
     names: {
       en: "Vance",
-      fr: "Vance"
+      fr: "Valdo"
     },
     ivTier: 15,
     poolId: "ninja_boy_vance"

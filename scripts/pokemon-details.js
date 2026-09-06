@@ -14,8 +14,11 @@ function getOpponentSlotDom(slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
 }
 
 function usesSharedOpponentTeamAcrossSlots() {
-    return battleState.format === "doubles" ||
-        (isFactoryMode() && battleState.format === "multi");
+    if (isHallMode()) {
+        return false;
+    }
+
+    return battleState.format === "doubles" || (isFactoryMode() && battleState.format === "multi");
 }
 
 function isSpeciesSelectedInOtherOpponentSlot(speciesId, slotIndex) {
@@ -67,8 +70,41 @@ function getPokemonDisplayName(mon) {
     return mainName === secondaryName ? mainName : `${mainName} (${secondaryName})`;
 }
 
+function selectHallOpponentPokemonAndRender(mon, activeSlotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
+    if (!mon || !hasBattlePokemonSourceForOpponentSlot(PRIMARY_OPPONENT_SLOT_INDEX)) {
+        return;
+    }
+
+    const opponentCount = getActiveOpponentCount();
+
+    battleState.activeOpponentSlotIndex = activeSlotIndex;
+
+    for (let slotIndex = 0; slotIndex < opponentCount; slotIndex++) {
+        const opponentState = getOpponentBattleState(slotIndex);
+        const slotDom = getOpponentSlotDom(slotIndex);
+
+        resetOpponentBattleState(slotIndex);
+
+        opponentState.speciesId = mon.speciesId;
+        opponentState.possibleSetIds = new Set([mon.id]);
+
+        slotDom.input.value = getName(mon);
+        slotDom.select.value = mon.speciesId;
+        slotDom.suggestions.hidden = true;
+
+        renderSelectedPokemonDetails(mon.speciesId, slotIndex);
+    }
+
+    updateSelectedPokemonPresence();
+}
+
 function selectSingleSetFromTable(mon, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
     if (!hasBattlePokemonSourceForOpponentSlot(slotIndex) || !mon) {
+        return;
+    }
+
+    if (isHallMode()) {
+        selectHallOpponentPokemonAndRender(mon, slotIndex);
         return;
     }
 
@@ -100,9 +136,16 @@ function selectSingleSetFromTable(mon, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) 
 }
 
 function selectOpponentPokemonAndRender(mon, slotIndex = PRIMARY_OPPONENT_SLOT_INDEX) {
-    if (!hasBattlePokemonSourceForOpponentSlot(slotIndex) ||
-        !mon ||
-        isSpeciesSelectedInOtherOpponentSlot(mon.speciesId, slotIndex)) {
+    if (!hasBattlePokemonSourceForOpponentSlot(slotIndex) || !mon) {
+        return;
+    }
+
+    if (isHallMode()) {
+        selectHallOpponentPokemonAndRender(mon, slotIndex);
+        return;
+    }
+
+    if (isSpeciesSelectedInOtherOpponentSlot(mon.speciesId, slotIndex)) {
         return;
     }
 
@@ -177,7 +220,30 @@ function refreshOpponentBattleInterface() {
     dom.opponentSearchContainer.hidden = visibleOpponentCount === 0;
 }
 
+function clearHallOpponentPokemonSelection() {
+    const opponentCount = getActiveOpponentCount();
+
+    for (let slotIndex = 0; slotIndex < opponentCount; slotIndex++) {
+        const slotDom = getOpponentSlotDom(slotIndex);
+
+        resetOpponentBattleState(slotIndex);
+
+        slotDom.input.value = "";
+        slotDom.select.value = "";
+        slotDom.suggestions.hidden = true;
+        slotDom.details.replaceChildren();
+        slotDom.details.hidden = true;
+    }
+
+    updateSelectedPokemonPresence();
+}
+
 function clearOpponentPokemonSelection(slotIndex, refreshOtherSlot = true) {
+    if (isHallMode()) {
+        clearHallOpponentPokemonSelection();
+        return;
+    }
+
     const slotDom = getOpponentSlotDom(slotIndex);
 
     resetOpponentBattleState(slotIndex);
@@ -441,7 +507,81 @@ function buildDoublesAiRoutineBlock(moveId) {
     return block;
 }
 
+function getFactorySeriesNumber() {
+    const match = selectedFactorySeriesId.match(/\d+/);
+
+    return match ? Number(match[0]) : 1;
+}
+
+function getHallAiDisplayProfile() {
+    const rank = getEffectiveHallRank();
+
+    if (rank === null) {
+        return { showSinglesRoutine: false, messageKey: "hallAiRankRequired" };
+    }
+
+    if (rank <= 3) {
+        return { showSinglesRoutine: false, messageKey: "aiRandom" };
+    }
+
+    if (rank <= 7) {
+        const isRank7NormalBattle = rank === 7 && !isHallArgentaBattle();
+
+        return { showSinglesRoutine: true, messageKey: isRank7NormalBattle ? "hallRank7AiNote" : "aiBasicOnly" };
+    }
+
+    return { showSinglesRoutine: true, messageKey: null };
+}
+
+function getFactoryAiDisplayProfile() {
+    const seriesNumber = getFactorySeriesNumber();
+
+    if (seriesNumber <= 2) {
+        return { showSinglesRoutine: false, messageKey: "aiRandom" };
+    }
+
+    if (seriesNumber === 3 && battleState.format === "singles") {
+        return { showSinglesRoutine: true, messageKey: "factorySeries3AiNote" };
+    }
+
+    if (seriesNumber <= 4) {
+        return { showSinglesRoutine: true, messageKey: "aiBasicOnly" };
+    }
+
+    return { showSinglesRoutine: true, messageKey: null };
+}
+
+function getBattleAiDisplayProfile() {
+    if (isHallMode()) {
+        return getHallAiDisplayProfile();
+    }
+
+    if (isFactoryMode()) {
+        return getFactoryAiDisplayProfile();
+    }
+
+    return { showSinglesRoutine: true, messageKey: null };
+}
+
+function buildAiModeNotice(messageKey) {
+    const notice = document.createElement("p");
+
+    notice.className = "ai-mode-notice";
+    notice.textContent = translate("ui", messageKey);
+
+    return notice;
+}
+
 function buildAiRoutineAccordion(visibleSets) {
+    const profile = getBattleAiDisplayProfile();
+    const wrapper = document.createElement("div");
+
+    wrapper.className = "ai-routine-wrapper";
+
+    if (profile.messageKey) {
+        wrapper.appendChild(buildAiModeNotice(profile.messageKey));
+    }
+
     const moveIds = getUniqueVisibleMoveIds(visibleSets);
 
     const details = document.createElement("details");
@@ -455,17 +595,22 @@ function buildAiRoutineAccordion(visibleSets) {
     content.className = "ai-routine-content";
 
     for (const moveId of moveIds) {
-        content.appendChild(buildMoveAiRoutineBlock(moveId));
+        const moveBlock = buildMoveAiRoutineBlock(moveId, profile.showSinglesRoutine);
+
+        if (moveBlock) {
+            content.appendChild(moveBlock);
+        }
     }
 
-    details.append(summary, content);
+    if (content.childElementCount > 0) {
+        details.append(summary, content);
+        wrapper.appendChild(details);
+    }
 
-    return details;
+    return wrapper;
 }
 
-function buildMoveAiRoutineBlock(moveId) {
-    const singlesTexts = getMoveAiRoutineTexts(moveId, "singles");
-
+function buildMoveAiRoutineBlock(moveId, showSinglesRoutine = true) {
     const details = document.createElement("details");
     details.className = "ai-routine-move";
 
@@ -473,28 +618,36 @@ function buildMoveAiRoutineBlock(moveId) {
     summary.className = "ai-routine-move-title";
     summary.textContent = getMoveName(moveId);
 
-    const moveType = getMoveType(moveId);
-    applyTypeColor(summary, moveType);
+    applyTypeColor(summary, getMoveType(moveId));
 
     details.appendChild(summary);
 
-    if (singlesTexts.length === 0) {
-        const missing = document.createElement("p");
-        missing.className = "ai-routine-missing";
-        missing.textContent = translate("ui", "aiRoutineMissingData");
+    let hasContent = false;
 
-        details.appendChild(missing);
-    } else {
-        details.appendChild(buildAiRoutineList(singlesTexts));
+    if (showSinglesRoutine) {
+        const singlesTexts = getMoveAiRoutineTexts(moveId, "singles");
+
+        if (singlesTexts.length === 0) {
+            const missing = document.createElement("p");
+            missing.className = "ai-routine-missing";
+            missing.textContent = translate("ui", "aiRoutineMissingData");
+
+            details.appendChild(missing);
+        } else {
+            details.appendChild(buildAiRoutineList(singlesTexts));
+        }
+
+        hasContent = true;
     }
 
     const doublesBlock = buildDoublesAiRoutineBlock(moveId);
 
     if (doublesBlock) {
         details.appendChild(doublesBlock);
+        hasContent = true;
     }
 
-    return details;
+    return hasContent ? details : null;
 }
 
 function buildFactoryDetailGroupTitle(group) {
@@ -558,9 +711,15 @@ function renderSelectedPokemonDetails(speciesId, slotIndex = PRIMARY_OPPONENT_SL
     } else {
         for (const mon of visibleSets) {
             const iv = getBattlePokemonIv(mon);
-            const stats = calculateStats(mon, iv, level);
+            const battleLevel = getBattlePokemonLevel(mon, level);
 
-            container.appendChild(buildPokemonDetailCard(mon, stats, iv, slotIndex));
+            const stats = Number.isInteger(iv) && Number.isInteger(battleLevel)
+                    ? calculateStats(mon, iv, battleLevel)
+                    : null;
+
+            container.appendChild(
+                buildPokemonDetailCard(mon, stats, iv, slotIndex)
+            );
         }
     }
 
@@ -632,25 +791,45 @@ function buildPokemonDetailCard(mon, stats, ivTier, slotIndex) {
     const info = document.createElement("div");
     info.className = "pokemon-detail-info";
 
-    const infoLines = [
-        buildTypeInfoLine(mon.types),
-        buildAbilitiesInfoLine(mon.abilities),
-        buildNatureInfoLine(mon.nature)
-    ];
+    const infoLines = [ buildTypeInfoLine(mon.types), buildAbilitiesInfoLine(mon.abilities), buildNatureInfoLine(mon.nature) ];
     if (!isArcadeMode()) {
         infoLines.push(buildItemInfoLine(mon.item, getItemSpriteUrl(mon.item)));
     }
-    infoLines.push(buildSimpleInfoLine(translate("columns", "iv"), ivTier));
+    if (isHallMode()) {
+        infoLines.push(buildSimpleInfoLine(translate("ui", "levelLabel"), getBattlePokemonLevel(mon, getSelectedLevel()) ?? "—"));
+
+        const abilityPairNote = buildHallAbilityPairNote(mon, slotIndex);
+
+        if (abilityPairNote) {
+            infoLines.push(abilityPairNote);
+        }
+    }
+    infoLines.push(buildSimpleInfoLine(translate("columns", "iv"), ivTier ?? "—"));
 
     info.append(...infoLines);
 
-    const statsBlock = buildStatsBlock(stats);
     const movesBlock = buildMovesBlock(mon, slotIndex);
+    content.append(sprite, info);
 
-    content.append(sprite, info, statsBlock);
+    if (stats) {
+        content.appendChild(buildStatsBlock(stats));
+    }
+
     card.append(title, content, movesBlock);
 
     return card;
+}
+
+function buildHallAbilityPairNote(mon, slotIndex) {
+    if (!isHallMode() || getActiveOpponentCount() !== 2 || mon.abilities.length < 2 || slotIndex !== PRIMARY_OPPONENT_SLOT_INDEX) {
+        return null;
+    }
+
+    const note = document.createElement("p");
+    note.className = "hall-ability-note";
+    note.textContent = translate("ui", "hallAbilityPairNote");
+
+    return note;
 }
 
 function buildSimpleInfoLine(label, value) {
@@ -895,6 +1074,20 @@ function buildMovesBlock(mon, slotIndex) {
     grid.className = "moves-grid";
 
     mon.moves.forEach((moveId, moveIndex) => {
+        if (!moveId) {
+            const move = document.createElement("div");
+            move.className = "move-detail";
+
+            const label = document.createElement("span");
+            label.className = "move-detail-name";
+            label.textContent = "—";
+
+            move.appendChild(label);
+            grid.appendChild(move);
+
+            return;
+        }
+
         const maxPp = getMovePowerPoints(moveId);
         const currentPp = getCurrentMovePp(mon, moveId, moveIndex, slotIndex);
 

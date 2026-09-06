@@ -305,6 +305,15 @@ window.moves = {
     power_points: 10
   },
 
+  bonemerang: {
+    id: "bonemerang",
+    names: { en: "Bonemerang", fr: "Osmerang" },
+    battleEffect: "MultiHit",
+    type: "ground",
+    damageFormula: "standard_damage",
+    power_points: 10
+  },
+
   bounce: {
     id: "bounce",
     names: { en: "Bounce", fr: "Rebond" },
@@ -447,6 +456,15 @@ window.moves = {
     type: "flying",
     damageFormula: "standard_damage",
     power_points: 20
+  },
+
+  clamp: {
+    id: "clamp",
+    names: { en: "Clamp", fr: "Claquoir" },
+    battleEffect: "Trap",
+    type: "water",
+    damageFormula: "standard_damage",
+    power_points: 10
   },
 
   close_combat: {
@@ -1133,6 +1151,15 @@ window.moves = {
     power_points: 20
   },
 
+  force_palm: {
+    id: "force_palm",
+    names: { en: "Force Palm", fr: "Forte-Paume" },
+    battleEffect: null,
+    type: "fighting",
+    damageFormula: "standard_damage",
+    power_points: 10
+  },
+
   foresight: {
     id: "foresight",
     names: { en: "Foresight", fr: "Clairvoyance" },
@@ -1401,6 +1428,15 @@ window.moves = {
     type: "fighting",
     damageFormula: "standard_damage",
     power_points: 20
+  },
+
+  hidden_power: {
+    id: "hidden_power",
+    names: { en: "Hidden Power", fr: "Puissance Cachée" },
+    battleEffect: "HiddenPower",
+    type: "normal",
+    damageFormula: "non_standard_damage",
+    power_points: 15
   },
 
   horn_drill: {
@@ -2114,6 +2150,15 @@ window.moves = {
     power_points: 5
   },
 
+  petal_dance: {
+    id: "petal_dance",
+    names: { en: "Petal Dance", fr: "Danse-Fleur" },
+    battleEffect: null,
+    type: "grass",
+    damageFormula: "standard_damage",
+    power_points: 20
+  },
+
   pin_missile: {
     id: "pin_missile",
     names: { en: "Pin Missile", fr: "Dard-Nuée" },
@@ -2159,6 +2204,15 @@ window.moves = {
     power_points: 35
   },
 
+  poison_sting: {
+    id: "poison_sting",
+    names: { en: "Poison Sting", fr: "Dard-Venin" },
+    battleEffect: null,
+    type: "poison",
+    damageFormula: "standard_damage",
+    power_points: 35
+  },
+
   poison_tail: {
     id: "poison_tail",
     names: { en: "Poison Tail", fr: "Queue-Poison" },
@@ -2175,6 +2229,15 @@ window.moves = {
     type: "rock",
     damageFormula: "standard_damage",
     power_points: 20
+  },
+
+  power_swap: {
+    id: "power_swap",
+    names: { en: "Power Swap", fr: "Permuforce" },
+    battleEffect: "PowerSwap",
+    type: "psychic",
+    damageFormula: "no_damage",
+    power_points: 10
   },
 
   power_trick: {
@@ -2247,6 +2310,15 @@ window.moves = {
     type: "psychic",
     damageFormula: "standard_damage",
     power_points: 20
+  },
+
+  psycho_shift: {
+    id: "psych_shift",
+    names: { en: "Psycho Shift", fr: "Échange Psy" },
+    battleEffect: "PsychoShift",
+    type: "psychic",
+    damageFormula: "no_damage",
+    power_points: 10
   },
 
   psywave: {
@@ -2402,6 +2474,24 @@ window.moves = {
     power_points: 10
   },
 
+  rock_climb: {
+    id: "rock_climb",
+    names: { en: "Rock Climb", fr: "Escalade" },
+    battleEffect: null,
+    type: "normal",
+    damageFormula: "standard_damage",
+    power_points: 20
+  },
+
+  rock_polish: {
+    id: "rock_polish",
+    names: { en: "Rock Polish", fr: "Poliroche" },
+    battleEffect: "UserSpeedUp2",
+    type: "rock",
+    damageFormula: "no_damage",
+    power_points: 20
+  },
+
   rock_slide: {
     id: "rock_slide",
     names: { en: "Rock Slide", fr: "Éboulement" },
@@ -2553,6 +2643,15 @@ window.moves = {
     type: "grass",
     damageFormula: "standard_damage",
     power_points: 15
+  },
+
+  seismic_toss: {
+    id: "seismic_toss",
+    names: { en: "Seismic Toss", fr: "Frappe Atlas" },
+    battleEffect: "DamageIsLevel",
+    type: "fighting",
+    damageFormula: "non_standard_damage",
+    power_points: 20
   },
 
   selfdestruct: {
@@ -2789,6 +2888,15 @@ window.moves = {
     power_points: 10
   },
 
+  spike_cannon: {
+    id: "spike_cannon",
+    names: { en: "Spike Cannon", fr: "Picanon" },
+    battleEffect: "MultiHit",
+    type: "normal",
+    damageFormula: "standard_damage",
+    power_points: 15
+  },
+
   spikes: {
     id: "spikes",
     names: { en: "Spikes", fr: "Picots" },
@@ -2886,6 +2994,15 @@ window.moves = {
     type: "normal",
     damageFormula: "standard_damage",
     power_points: 15
+  },
+
+  string_shot: {
+    id: "string_shot",
+    names: { en: "String Shot", fr: "Sécrétion" },
+    battleEffect: "TargetSpeedDown1",
+    type: "bug",
+    damageFormula: "no_damage",
+    power_points: 40
   },
 
   stun_spore: {
@@ -3041,6 +3158,15 @@ window.moves = {
     power_points: 35
   },
 
+  tail_glow: {
+    id: "tail_glow",
+    names: { en: "Tail Glow", fr: "Lumiqueue" },
+    battleEffect: "UserSpattackUp2",
+    type: "bug",
+    damageFormula: "no_damage",
+    power_points: 20
+  },
+
   tail_whip: {
     id: "tail_whip",
     names: { en: "Tail Whip", fr: "Mimi-Queue" },
@@ -3084,6 +3210,15 @@ window.moves = {
     type: "normal",
     damageFormula: "no_damage",
     power_points: 20
+  },
+
+  thief: {
+    id: "thief",
+    names: { en: "Thief", fr: "Larcin" },
+    battleEffect: "StealItem",
+    type: "dark",
+    damageFormula: "standard_damage",
+    power_points: 40
   },
 
   thrash: {
@@ -3185,6 +3320,15 @@ window.moves = {
     power_points: 20
   },
 
+  transform: {
+    id: "transform",
+    names: { en: "Morphing", fr: "Transform" },
+    battleEffect: null,
+    type: "normal",
+    damageFormula: "no_damage",
+    power_points: 10
+  },
+
   tri_attack: {
     id: "tri_attack",
     names: { en: "Tri Attack", fr: "Triplattaque" },
@@ -3257,6 +3401,15 @@ window.moves = {
     power_points: 20
   },
 
+  uproar: {
+    id: "uproar",
+    names: { en: "Uproar", fr: "Brouhaha" },
+    battleEffect: null,
+    type: "normal",
+    damageFormula: "standard_damage",
+    power_points: 10
+  },
+
   vacuum_wave: {
     id: "vacuum_wave",
     names: { en: "Vacuum Wave", fr: "Onde Vide" },
@@ -3273,6 +3426,15 @@ window.moves = {
     type: "normal",
     damageFormula: "standard_damage",
     power_points: 30
+  },
+
+  vital_throw: {
+    id: "vital_throw",
+    names: { en: "Vital Throw", fr: "Corps Perdu" },
+    battleEffect: "VitalThrow",
+    type: "fighting",
+    damageFormula: "standard_damage",
+    power_points: 10
   },
 
   volt_tackle: {
@@ -3318,6 +3480,15 @@ window.moves = {
     type: "water",
     damageFormula: "no_damage",
     power_points: 15
+  },
+
+  water_spout: {
+    id: "water_spout",
+    names: { en: "Water Spout", fr: "Giclédo" },
+    battleEffect: "HighHpHighDamage",
+    type: "water",
+    damageFormula: "standard_damage",
+    power_points: 5
   },
 
   waterfall: {

@@ -61,12 +61,39 @@ function getSelectedLevel() {
         return 50;
     }
 
-    if (Number.isInteger(level) && level >= 1 && level <= 100) {
+    if (isHallMode()) {
+        if (Number.isInteger(level) && level >= 30 && level <= 100) {
+            return level;
+        }
+
+        dom.levelInput.value = 50;
+        return 50;
+    }
+
+    if (Number.isInteger(level) && level >= 45 && level <= 55) {
         return level;
     }
 
     dom.levelInput.value = 50;
     return 50;
+}
+
+function updateLevelInputConstraints() {
+    if (isFactoryMode()) {
+        dom.levelInput.min = "50";
+        dom.levelInput.max = "100";
+        dom.levelInput.step = "50";
+    } else if (isHallMode()) {
+        dom.levelInput.min = "30";
+        dom.levelInput.max = "100";
+        dom.levelInput.step = "1";
+    } else {
+        dom.levelInput.min = "45";
+        dom.levelInput.max = "55";
+        dom.levelInput.step = "1";
+    }
+
+    getSelectedLevel();
 }
 
 function getTrainerMonsForLevel(trainer) {

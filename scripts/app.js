@@ -63,6 +63,10 @@ function isFactoryMode() {
     return selectedFacilityMode === "factory";
 }
 
+function isHallMode() {
+    return selectedFacilityMode === "hall";
+}
+
 function getFactorySeriesData() {
     const levelKey = getFactoryPoolLevelKey();
 
@@ -101,12 +105,15 @@ function populateFactorySeriesSelect() {
 
 function updateFacilitySelectionControls() {
     const factoryMode = isFactoryMode();
+    const hallMode = isHallMode();
+    const usesTrainerSelection = !factoryMode && !hallMode;
 
-    dom.trainerLabel.hidden = factoryMode;
-    dom.trainerSelectorsContainer.hidden = factoryMode;
-    dom.seriesFilterDropdown.hidden = factoryMode;
+    dom.trainerLabel.hidden = !usesTrainerSelection;
+    dom.trainerSelectorsContainer.hidden = !usesTrainerSelection;
+    dom.seriesFilterDropdown.hidden = !usesTrainerSelection;
 
     dom.factorySeriesField.hidden = !factoryMode;
+    dom.hallControls.container.hidden = !hallMode;
 }
 
 function handleFactorySeriesChange(event) {
@@ -136,8 +143,12 @@ function applyOpponentSlotLanguage() {
         const labelKey = getActiveOpponentCount() === 2 ? `opponentPokemonLabel${slotIndex + 1}` : "opponentPokemonLabel";
 
         slotDom.label.textContent = translate("ui", labelKey);
-        slotDom.input.placeholder = translate("ui", "opponentPokemonPlaceholder");
+        slotDom.input.placeholder = translate("ui", "pokemonPlaceholder");
     });
+}
+
+function applyLevelInputLanguage() {
+    dom.levelLabel.textContent = translate("ui", isHallMode() ? "playerLevelLabel" : "levelLabel");
 }
 
 function applyLanguage() {
@@ -145,7 +156,7 @@ function applyLanguage() {
 
     document.title = translate("ui", "pageTitle");
     dom.pageTitle.textContent = translate("ui", "pageTitle");
-    dom.levelLabel.textContent = translate("ui", "levelLabel");
+    applyLevelInputLanguage();
     dom.languageToggle.textContent = currentLang === "fr" ? "EN" : "FR";
 
     dom.facilityModeLabel.textContent = translate("ui", "facilityModeLabel");
@@ -168,6 +179,7 @@ function applyLanguage() {
     populateFactorySeriesSelect();
     updateFacilitySelectionControls();
     applyFactoryPlayerTeamLanguage();
+    applyHallControlsLanguage();
     applySearchClearButtonLanguage();
 
     for (let trainerIndex = 0; trainerIndex < getActiveTrainerCount(); trainerIndex++) {
@@ -203,12 +215,15 @@ function applyTrainerSlotLanguage() {
 function applySearchClearButtonLanguage() {
     const label = translate("ui", "clearSearch");
 
-    const searchSlots = [...dom.trainerSlots, ...dom.opponentSlots, ...dom.factoryPlayerTeam.slots];
+    const searchSlots = [ ...dom.trainerSlots, ...dom.opponentSlots, ...dom.factoryPlayerTeam.slots ];
 
     searchSlots.forEach((slotDom) => {
         slotDom.clearButton.title = label;
         slotDom.clearButton.setAttribute("aria-label", label);
     });
+
+    dom.hallControls.playerPokemonClearButton.title = label;
+    dom.hallControls.playerPokemonClearButton.setAttribute("aria-label", label);
 }
 
 // Switches between French and English.
@@ -253,8 +268,13 @@ function handleFacilityModeChange(event) {
 
     const factoryTransition = previousFacilityMode === "factory" || selectedFacilityMode === "factory";
 
+    const hallTransition = previousFacilityMode === "hall" || selectedFacilityMode === "hall";
+
     if (factoryTransition) {
         resetFactoryPlayerTeam();
+    }
+
+    if (factoryTransition || hallTransition) {
         resetAllOpponentBattleStates();
         resetAllTrainerBattleExclusions();
 
@@ -266,9 +286,10 @@ function handleFacilityModeChange(event) {
         dom.resultsContainer.classList.remove("has-selected-pokemon");
     }
 
-    getSelectedLevel();
-
+    updateLevelInputConstraints();
     updateFacilitySelectionControls();
+    applyLevelInputLanguage();
+    updateHallControlsForBattleFormat();
     populateFactorySeriesSelect();
 
     if (isArcadeMode()) {
@@ -288,6 +309,8 @@ function handleBattleFormatChange(event) {
     const previousFormat = battleState.format;
 
     battleState.format = event.target.value;
+    applyLevelInputLanguage();
+    updateHallControlsForBattleFormat();
 
     if (isFactoryMode() && previousFormat !== battleState.format) {
         resetFactoryPlayerTeam();
@@ -334,6 +357,7 @@ function handleBattleFormatChange(event) {
 
 function initApp() {
     applyLanguage();
+    updateLevelInputConstraints();
 
     bindTrainerSlotEvents(0);
     bindTrainerSlotEvents(1);
@@ -344,6 +368,7 @@ function initApp() {
     bindBattleExclusionEvents(0);
     bindBattleExclusionEvents(1);
     bindFactoryPlayerTeamEvents();
+    bindHallControlEvents();
 
     dom.languageToggle.addEventListener("click", toggleLanguage);
 
@@ -375,12 +400,18 @@ function initApp() {
     dom.levelInput.addEventListener("change", () => {
         getSelectedLevel();
 
+        if (isHallMode()) {
+            renderBattleResults();
+            refreshSelectedOpponentViews();
+            return;
+        }
+
         if (isFactoryMode()) {
             resetFactoryPlayerTeam();
             populateFactorySeriesSelect();
         }
 
-        const sourceCount = isFactoryMode() ? 1 : getActiveTrainerCount();
+        const sourceCount = isFactoryMode() || isHallMode() ? 1 : getActiveTrainerCount();
 
         const hasSource = Array.from(
             { length: sourceCount },
